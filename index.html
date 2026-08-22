@@ -362,15 +362,33 @@
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 3px 0 #000;
     color:var(--text-light); cursor:pointer; font-family:inherit; font-size:0.48rem; line-height:1.5;
     display:flex; flex-direction:column; align-items:center; gap:2px;
+    touch-action: manipulation; user-select:none;
+    transition: filter 0.1s ease;
   }
+  .consumable-btn:hover:not(:disabled){ filter:brightness(1.25); }
   .consumable-btn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
   .consumable-btn:disabled{ opacity:0.35; cursor:not-allowed; }
-  .consumable-btn .cIcon{ font-size:18px; line-height:1; }
+  .consumable-btn .cIcon{ font-size:18px; line-height:1; pointer-events:none; }
+  .consumable-btn .cLabel{ pointer-events:none; }
   .consumable-btn .cCount{
     position:absolute; top:-8px; right:-8px; background: var(--amber); color:#2a1a08;
     border:2px solid #000; border-radius:50%; width:18px; height:18px; font-size:0.42rem;
     display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
   }
+  .consumable-btn.buff-active{
+    border-color: var(--success);
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 3px 0 #000, 0 0 10px rgba(125,255,176,0.7);
+    animation: buffPulse 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes buffPulse{ 0%{ filter:brightness(1); } 100%{ filter:brightness(1.3); } }
+  .consumable-btn .cBuffTimer{
+    position:absolute; bottom:-8px; left:50%; transform:translateX(-50%);
+    background:#000; color:var(--success); border:2px solid var(--success);
+    border-radius:6px; padding:0 4px; font-size:0.4rem; white-space:nowrap;
+    pointer-events:none;
+  }
+  .consumable-btn .cBuffTimer:empty{ display:none; }
 
   /* ---------- OVERLAYS / MODALS ---------- */
   .hidden{ display:none !important; }
@@ -743,7 +761,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -778,7 +796,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.2</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
@@ -814,7 +832,16 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Fixed unresponsive Ingredient Charm buttons (Stir Frenzy, Time Freeze, Golden Droplet) — they were being fully rebuilt every animation frame, which destroyed the button under the player's tap before the click could register.</li>
+          <li>Charm buttons are now built once and updated in place, keeping their event listeners intact.</li>
+          <li>Added a glowing pulse + live countdown on charm buttons while their buff is active, plus clearer hover/press feedback.</li>
+          <li>Badge overlays (count, buff timer) no longer intercept clicks meant for the button underneath.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.1</div>
         <ul class="changelog-list">
           <li>Replaced every raw Unicode emoji with unified, retro-styled inline SVG pixel icons for consistent visuals across iOS, Android, Windows, and macOS.</li>
           <li>Added a shared icon sprite and helper covering currency, synergy tags, relic/consumable art, and pause menu indicators.</li>
@@ -1300,18 +1327,46 @@
     });
   }
 
+  function getConsumableBuffTimer(id){
+    if(id === 'stirFrenzy') return state.stirFrenzyTimer || 0;
+    if(id === 'timeFreeze') return state.timeFreezeTimer || 0;
+    return 0;
+  }
+
   function renderConsumables(){
     if(!consumableButtons) return;
-    consumableButtons.innerHTML = '';
+    // Build the buttons once and reuse them on every subsequent call.
+    // Rebuilding the DOM (innerHTML='') every frame — this function is
+    // invoked from updateUI(), which runs on every animation frame while
+    // brewing — was destroying/recreating the buttons out from under the
+    // player's click, which made the charms appear completely unresponsive.
+    if(consumableButtons.children.length !== CONSUMABLES.length){
+      consumableButtons.innerHTML = '';
+      CONSUMABLES.forEach(c => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'consumable-btn';
+        btn.dataset.cid = c.id;
+        btn.title = c.desc;
+        btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' +
+          '<span class="cLabel">' + c.name + '</span>' +
+          '<span class="cCount">0</span>' +
+          '<span class="cBuffTimer"></span>';
+        btn.addEventListener('pointerdown', (e) => { e.preventDefault(); useConsumable(c.id); }, { passive:false });
+        consumableButtons.appendChild(btn);
+      });
+    }
     CONSUMABLES.forEach(c => {
+      const btn = consumableButtons.querySelector('[data-cid="' + c.id + '"]');
+      if(!btn) return;
       const count = (state.consumables && state.consumables[c.id]) || 0;
-      const btn = document.createElement('button');
-      btn.className = 'consumable-btn';
+      const buffTime = getConsumableBuffTimer(c.id);
       btn.disabled = count <= 0 || state.phase !== 'brewing';
-      btn.title = c.desc;
-      btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' + c.name + '<span class="cCount">' + count + '</span>';
-      btn.addEventListener('click', () => useConsumable(c.id));
-      consumableButtons.appendChild(btn);
+      btn.classList.toggle('buff-active', buffTime > 0);
+      const countEl = btn.querySelector('.cCount');
+      if(countEl) countEl.textContent = count;
+      const timerEl = btn.querySelector('.cBuffTimer');
+      if(timerEl) timerEl.textContent = buffTime > 0 ? buffTime.toFixed(1) + 's' : '';
     });
   }
 
