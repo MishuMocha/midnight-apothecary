@@ -29,6 +29,23 @@
 
   *{ box-sizing:border-box; touch-action:manipulation; image-rendering:pixelated; }
 
+  /* ---------- INLINE SVG ICON SYSTEM ---------- */
+  .icon{
+    width:1.1em; height:1.1em; vertical-align:-0.15em;
+    display:inline-block; fill:currentColor; flex-shrink:0;
+  }
+  .ic-gold{ color:#ffd043; }
+  .ic-mana{ color:#c9a6ff; }
+  .ic-fire{ color:#ff7a3d; }
+  .ic-frost{ color:#8fd0f5; }
+  .ic-arcane{ color:#c186ff; }
+  .ic-chaos{ color:#ff4d6a; }
+  .ic-lock{ color:#8a7fa0; }
+  .ic-check{ color:#7dffb0; }
+  .ic-danger{ color:#ff5d6c; }
+  .ic-amber{ color:#f4b860; }
+  .ic-dim{ color:#a893c9; }
+
   html, body{
     margin:0; padding:0; height:100%; width:100%;
     overflow:hidden;
@@ -493,6 +510,177 @@
 </head>
 <body oncontextmenu="return false;">
 
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+<defs>
+
+<symbol id="icon-coin" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="9" fill="currentColor"/>
+  <circle cx="12" cy="12" r="9" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
+  <circle cx="12" cy="12" r="6" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.2"/>
+</symbol>
+
+<symbol id="icon-sparkle" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
+  <path fill="currentColor" opacity="0.8" d="M19 15l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/>
+</symbol>
+
+<symbol id="icon-droplet" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2C9 7 5 11 5 15a7 7 0 0014 0c0-4-4-8-7-13z"/>
+</symbol>
+
+<symbol id="icon-fire" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2c1 3-2 4-2 7a3 3 0 003 3c2 0 3-1.5 3-3.5 2 2 3 4 3 6.5a6 6 0 01-12 0c0-5 3-7 5-13z"/>
+</symbol>
+
+<symbol id="icon-frost" viewBox="0 0 24 24">
+  <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <line x1="12" y1="2" x2="12" y2="22"/>
+    <line x1="3" y1="7" x2="21" y2="17"/>
+    <line x1="3" y1="17" x2="21" y2="7"/>
+    <line x1="12" y1="2" x2="9" y2="5"/>
+    <line x1="12" y1="2" x2="15" y2="5"/>
+    <line x1="12" y1="22" x2="9" y2="19"/>
+    <line x1="12" y1="22" x2="15" y2="19"/>
+  </g>
+</symbol>
+
+<symbol id="icon-arcane" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2l6 5-2 9-4 6-4-6-2-9z"/>
+  <path fill="rgba(255,255,255,0.35)" d="M12 2l6 5-6 3z"/>
+</symbol>
+
+<symbol id="icon-chaos" viewBox="0 0 24 24">
+  <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 12c0-4 4-6 6-4s0 7-4 7-6-4-4-8 8-6 10-2"/>
+</symbol>
+
+<symbol id="icon-lock" viewBox="0 0 24 24">
+  <rect x="5" y="11" width="14" height="10" rx="1.5" fill="currentColor"/>
+  <path fill="none" stroke="currentColor" stroke-width="2" d="M8 11V8a4 4 0 018 0v3"/>
+</symbol>
+
+<symbol id="icon-check" viewBox="0 0 24 24">
+  <path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M4 12l5 5L20 6"/>
+</symbol>
+
+<symbol id="icon-hourglass" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M6 2h12v2l-5 6 5 6v2H6v-2l5-6-5-6z"/>
+</symbol>
+
+<symbol id="icon-gear" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 8a4 4 0 100 8 4 4 0 000-8zm9 3h-2.1a6.9 6.9 0 00-.7-1.7l1.5-1.5-1.5-1.5-1.5 1.5A6.9 6.9 0 0015 6.1V4h-2v2.1a6.9 6.9 0 00-1.7.7L9.8 5.3 8.3 6.8l1.5 1.5A6.9 6.9 0 009.1 10H7v2h2.1c.1.6.4 1.2.7 1.7l-1.5 1.5 1.5 1.5 1.5-1.5c.5.3 1.1.6 1.7.7V18h2v-2.1c.6-.1 1.2-.4 1.7-.7l1.5 1.5 1.5-1.5-1.5-1.5c.3-.5.6-1.1.7-1.7H21z"/>
+</symbol>
+
+<symbol id="icon-pause" viewBox="0 0 24 24">
+  <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+  <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-scroll" viewBox="0 0 24 24">
+  <path fill="currentColor" opacity="0.9" d="M4 4a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2zm3 3h9v2H7zm0 4h9v2H7zm0 4h6v2H7z"/>
+  <circle cx="5" cy="4" r="2" fill="currentColor"/>
+  <circle cx="5" cy="20" r="2" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-flask" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M9 2h6v2l1 2v3l4 8a2 2 0 01-2 3H6a2 2 0 01-2-3l4-8V6l1-2z"/>
+  <rect x="8" y="1" width="8" height="2" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-moon" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M14 2a10 10 0 108 16 8 8 0 01-8-16z"/>
+</symbol>
+
+<symbol id="icon-skull" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2a8 8 0 00-8 8c0 3 1.5 5 3 6.5V19a1 1 0 001 1h1v2h2v-2h2v2h2v-2h1a1 1 0 001-1v-2.5c1.5-1.5 3-3.5 3-6.5a8 8 0 00-8-8z"/>
+  <circle cx="9" cy="10" r="1.6" fill="#000"/>
+  <circle cx="15" cy="10" r="1.6" fill="#000"/>
+</symbol>
+
+<symbol id="icon-feather" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M20 3c-6 0-14 4-14 12 0 3 2 5 4 6l9-9-8 9c1 .6 2 1 3 1 8 0 12-8 12-14 0-2-3-5-6-5z"/>
+</symbol>
+
+<symbol id="icon-ice" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M4 6l8-4 8 4v12l-8 4-8-4z"/>
+  <path fill="rgba(255,255,255,0.3)" d="M4 6l8 4v12l-8-4z"/>
+</symbol>
+
+<symbol id="icon-rainbow" viewBox="0 0 24 24">
+  <g fill="none" stroke-width="2.4">
+    <path stroke="#ff6b6b" d="M2 20a10 10 0 0120 0"/>
+    <path stroke="#ffd166" d="M5 20a7 7 0 0114 0"/>
+    <path stroke="#6bc6ff" d="M8 20a4 4 0 018 0"/>
+  </g>
+</symbol>
+
+<symbol id="icon-urn" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M9 2h6v2h-6zM7 5h10l1 3H6zM6 9h12l-2 12H8z"/>
+</symbol>
+
+<symbol id="icon-lightning" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M13 2L4 14h6l-2 8 10-13h-6z"/>
+</symbol>
+
+<symbol id="icon-cat" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M5 3l3 5h8l3-5 1 9a7 7 0 01-7 7h-2a7 7 0 01-7-7z"/>
+  <circle cx="9.5" cy="12.5" r="1" fill="#000"/>
+  <circle cx="14.5" cy="12.5" r="1" fill="#000"/>
+</symbol>
+
+<symbol id="icon-pepper" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M8 4c1-1.5 3-2 4-1s0 2-1 3c3-1 6 0 7 3 1.5 4-2 10-8 10-5 0-8-4-7-8 1-3 3-5 5-7z"/>
+  <path fill="#3a7d2c" d="M8 4c1-1.5 3-2 4-1-1 .5-1.5 1-2 2z"/>
+</symbol>
+
+<symbol id="icon-biohazard" viewBox="0 0 24 24">
+  <g fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="6" r="2.6"/>
+    <circle cx="7" cy="15" r="2.6"/>
+    <circle cx="17" cy="15" r="2.6"/>
+    <circle cx="12" cy="12" r="2.2"/>
+  </g>
+</symbol>
+
+<symbol id="icon-explosion" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 1l2 6 6-2-3 6 5 3-6 2 1 6-5-4-5 4 1-6-6-2 5-3-3-6 6 2z"/>
+</symbol>
+
+<symbol id="icon-jar" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M8 2h8v3l2 2v13a2 2 0 01-2 2H8a2 2 0 01-2-2V7l2-2z"/>
+  <rect x="7" y="1" width="10" height="2" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-refresh" viewBox="0 0 24 24">
+  <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 12a8 8 0 0114-5.3M20 12a8 8 0 01-14 5.3"/>
+  <path fill="currentColor" d="M18 3v5h-5zM6 21v-5h5z"/>
+</symbol>
+
+<symbol id="icon-trash" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M6 7h12l-1 14H7z"/>
+  <rect x="4" y="5" width="16" height="2" fill="currentColor"/>
+  <path fill="currentColor" d="M9 3h6l1 2H8z"/>
+</symbol>
+
+<symbol id="icon-spoon" viewBox="0 0 24 24">
+  <ellipse cx="9" cy="6" rx="5" ry="4" fill="currentColor"/>
+  <rect x="14" y="9" width="3" height="13" rx="1.5" fill="currentColor" transform="rotate(20 15.5 15.5)"/>
+</symbol>
+
+<symbol id="icon-bubbles" viewBox="0 0 24 24">
+  <circle cx="8" cy="15" r="5" fill="currentColor"/>
+  <circle cx="16" cy="10" r="3.5" fill="currentColor" opacity="0.85"/>
+  <circle cx="17" cy="18" r="2.4" fill="currentColor" opacity="0.7"/>
+</symbol>
+
+<symbol id="icon-warning" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2L23 21H1z"/>
+  <rect x="11" y="9" width="2" height="6" fill="#000"/>
+  <rect x="11" y="16" width="2" height="2" fill="#000"/>
+</symbol>
+
+</defs>
+</svg>
+
 <div id="bgSky"></div>
 <div id="ambientSparkles"></div>
 
@@ -501,8 +689,8 @@
   <div id="topbar" class="pixel-panel">
     <div id="roundLabel">ORDER 1</div>
     <div class="top-actions">
-      <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)">⚙ ⏸</button>
-      <div id="goldDisplay">🪙 <span id="goldValue">0</span></div>
+      <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)"><svg class="icon"><use href="#icon-gear"></use></svg> <svg class="icon"><use href="#icon-pause"></use></svg></button>
+      <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
     </div>
     <div id="relicTray"></div>
     <div id="mainSynergyRow" class="tag-row"></div>
@@ -525,7 +713,7 @@
     <div id="cauldron">
       <div id="liquidPixel"></div>
       <img id="cauldronImg" src="cauldron.png" alt="cauldron" draggable="false">
-      <div id="catFamiliar">🐈‍⬛</div>
+      <div id="catFamiliar"><svg class="icon"><use href="#icon-cat"></use></svg></div>
       <div id="fxLayer"></div>
       <div id="numbersLayer"></div>
     </div>
@@ -533,19 +721,19 @@
 
   <div id="upgradesPanel">
     <button class="upgradeBtn" id="buyStirBtn">
-      <div class="upgradeTitle">🥄 STIRRING<br>POWER</div>
+      <div class="upgradeTitle"><svg class="icon"><use href="#icon-spoon"></use></svg> STIRRING<br>POWER</div>
       <div class="upgradeSub" id="stirSub">Lv 0 · +0.0/click</div>
-      <div class="upgradeCost" id="stirCost">Cost: 20 ✨</div>
+      <div class="upgradeCost" id="stirCost">Cost: 20 <svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg></div>
     </button>
     <button class="upgradeBtn" id="buyBubbleBtn">
-      <div class="upgradeTitle">🫧 ENCHANTED<br>BUBBLERS</div>
+      <div class="upgradeTitle"><svg class="icon"><use href="#icon-bubbles"></use></svg> ENCHANTED<br>BUBBLERS</div>
       <div class="upgradeSub" id="bubbleSub">Lv 0 · +0.0/sec</div>
-      <div class="upgradeCost" id="bubbleCost">Cost: 30 ✨</div>
+      <div class="upgradeCost" id="bubbleCost">Cost: 30 <svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg></div>
     </button>
   </div>
 
   <div id="consumablesPanel" class="pixel-panel">
-    <div class="consumable-label">🧪 INGREDIENT CHARMS</div>
+    <div class="consumable-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> INGREDIENT CHARMS</div>
     <div id="consumableButtons" class="consumable-row"></div>
   </div>
 
@@ -554,8 +742,8 @@
 <!-- START OVERLAY -->
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
-    <h1>🌙 THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6</div>
+    <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -568,9 +756,9 @@
     <p id="shopSummary">Surplus converted to Gold.</p>
     <div id="synergySummary"></div>
     <div id="shopCards"></div>
-    <div style="font-size:0.58rem; color:var(--amber-glow); margin:14px 0 4px; text-align:left;">🧪 INGREDIENTS FOR SALE</div>
+    <div style="font-size:0.58rem; color:var(--amber-glow); margin:14px 0 4px; text-align:left;"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> INGREDIENTS FOR SALE</div>
     <div id="consumableShop" style="display:flex; flex-direction:column; gap:12px;"></div>
-    <button class="smallBtn" id="rerollBtn">🔄 REROLL SHOP (5 🪙)</button>
+    <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon ic-gold"><use href="#icon-coin"></use></svg>)</button>
     <br>
     <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
   </div>
@@ -579,7 +767,7 @@
 <!-- GAME OVER OVERLAY -->
 <div class="overlay hidden" id="gameoverOverlay">
   <div class="panelCard pixel-panel">
-    <h1>🫙 THE CAULDRON<br>BOILED OVER!</h1>
+    <h1><svg class="icon ic-danger"><use href="#icon-jar"></use></svg> THE CAULDRON<br>BOILED OVER!</h1>
     <p>The order was not fulfilled in time. Instability consumed the brew.</p>
     <div id="statsList"></div>
     <button class="pixel-btn bigBtn" id="restartBtn">START NEW BREW</button>
@@ -589,21 +777,21 @@
 <!-- PAUSE OVERLAY -->
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
-    <h1>⏸ GAME PAUSED</h1>
-    <div class="pause-ver-tag">✨ Current Build: Alpha v0.6</div>
+    <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.1</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
       <div class="modal-btn-row">
-        <button class="smallBtn" id="settingsBtn">⚙ SETTINGS</button>
-        <button class="smallBtn" id="changelogBtn">📜 VERSION HISTORY</button>
+        <button class="smallBtn" id="settingsBtn"><svg class="icon"><use href="#icon-gear"></use></svg> SETTINGS</button>
+        <button class="smallBtn" id="changelogBtn"><svg class="icon ic-amber"><use href="#icon-scroll"></use></svg> VERSION HISTORY</button>
       </div>
     </div>
 
     <!-- SETTINGS SUBPANEL -->
     <div class="modal-subpanel hidden" id="settingsSubpanel">
       <div class="subpanel-header">
-        <span>⚙ AUDIO &amp; SAVE SETTINGS</span>
+        <span><svg class="icon"><use href="#icon-gear"></use></svg> AUDIO &amp; SAVE SETTINGS</span>
         <button class="subpanel-close" id="closeSettingsBtn">✕ CLOSE</button>
       </div>
       <div class="setting-row">
@@ -615,18 +803,26 @@
         <span id="sfxStatusText" style="color:var(--success);">ACTIVE</span>
       </div>
       <div class="setting-row" style="margin-top:14px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:10px;">
-        <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;">🗑 RESET PROGRESS / NEW RUN</button>
+        <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;"><svg class="icon"><use href="#icon-trash"></use></svg> RESET PROGRESS / NEW RUN</button>
       </div>
     </div>
 
     <!-- CHANGELOG SUBPANEL -->
     <div class="modal-subpanel hidden" id="changelogSubpanel">
       <div class="subpanel-header">
-        <span>📜 VERSION HISTORY</span>
+        <span><svg class="icon ic-amber"><use href="#icon-scroll"></use></svg> VERSION HISTORY</span>
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.6 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Replaced every raw Unicode emoji with unified, retro-styled inline SVG pixel icons for consistent visuals across iOS, Android, Windows, and macOS.</li>
+          <li>Added a shared icon sprite and helper covering currency, synergy tags, relic/consumable art, and pause menu indicators.</li>
+          <li>Icons now tint to match their theme (gold coin, icy frost, fiery ember, arcane violet, chaos crimson).</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6</div>
         <ul class="changelog-list">
           <li>Implemented persistent Save &amp; Load system via browser localStorage (apothecary_save_v1).</li>
           <li>Auto-saves state on completed orders, shop transactions, upgrade purchases, and every 10s.</li>
@@ -635,7 +831,7 @@
         </ul>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.5</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.5</div>
         <ul class="changelog-list">
           <li>Rendering performance optimizations specifically tuned for Firefox / Gecko layout engines.</li>
           <li>Applied strict CSS containment (contain: layout paint style) and pointer-events isolation on particle containers.</li>
@@ -645,9 +841,9 @@
         </ul>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.4</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.4</div>
         <ul class="changelog-list">
-          <li>Overhauled Synergy Tags with fixed Set Tier milestones: 🔥 Fire (2: +30% Click Power, 4: Overheat Surge), ❄ Frost (2: +3s Deadline, 4: Chill State), 🔮 Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).</li>
+          <li>Overhauled Synergy Tags with fixed Set Tier milestones: <svg class="icon ic-fire"><use href="#icon-fire"></use></svg> Fire (2: +30% Click Power, 4: Overheat Surge), <svg class="icon ic-frost"><use href="#icon-frost"></use></svg> Frost (2: +3s Deadline, 4: Chill State), <svg class="icon ic-arcane"><use href="#icon-arcane"></use></svg> Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).</li>
           <li>Added 5 new relics (Ashen Sigil, Phoenix Down, Glacial Core, Winter's Grasp, Arcane Conduit) so every tiered tag can reach its 4-piece milestone.</li>
           <li>Synergy badges on the top bar and shop are now interactive — tap or hover to see a retro tooltip with active tiers and the next threshold.</li>
           <li>Boosted synergy badges now glow with a pulsing amber border once a tier is unlocked.</li>
@@ -655,16 +851,16 @@
         </ul>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.3</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.3</div>
         <ul class="changelog-list">
           <li>Added consumable Ingredient Charms (Stir Frenzy, Time Freeze, Golden Droplet) — one-time boosts usable mid-shift.</li>
           <li>Introduced Corrupted Relics (Cursed Ember, Unstable Brew) — massive power with dangerous drawbacks.</li>
-          <li>Added Synergy Tags (🔥 Fire, ❄️ Frost, 🔮 Arcane, ☠️ Chaos) — collecting multiple relics of the same tag multiplies their passives.</li>
+          <li>Added Synergy Tags (<svg class="icon ic-fire"><use href="#icon-fire"></use></svg> Fire, <svg class="icon ic-frost"><use href="#icon-frost"></use></svg> Frost, <svg class="icon ic-arcane"><use href="#icon-arcane"></use></svg> Arcane, <svg class="icon ic-chaos"><use href="#icon-chaos"></use></svg> Chaos) — collecting multiple relics of the same tag multiplies their passives.</li>
           <li>Expanded the Apothecary Shop with a dedicated Ingredients section and a live Synergy tracker.</li>
         </ul>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.2</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.2</div>
         <ul class="changelog-list">
           <li>Increased font sizes across relic cards, upgrades, and descriptions for desktop readability.</li>
           <li>Overhauled Order Deadline bar with pure crimson gradients and smooth liquid wave shimmer.</li>
@@ -672,7 +868,7 @@
         </ul>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.1</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.1</div>
         <ul class="changelog-list">
           <li>Rebalanced gold economy and quota exponential scaling.</li>
           <li>Upgraded cauldron visuals to transparent pixel art.</li>
@@ -715,10 +911,10 @@
   const SYNERGY_BONUS_PER_EXTRA = 0.25;
 
   const TAG_INFO = {
-    fire:   { icon:'🔥', label:'Fire' },
-    frost:  { icon:'❄️', label:'Frost' },
-    arcane: { icon:'🔮', label:'Arcane' },
-    chaos:  { icon:'☠️', label:'Chaos' },
+    fire:   { icon:'fire', label:'Fire' },
+    frost:  { icon:'frost', label:'Frost' },
+    arcane: { icon:'arcane', label:'Arcane' },
+    chaos:  { icon:'chaos', label:'Chaos' },
   };
 
   // Fixed synergy set-tier milestones. Chaos has no defined tiers and instead
@@ -739,59 +935,59 @@
   };
 
   const RELICS = [
-    { id:'dragonfire', name:"Dragonfire Pepper", icon:'🌶️', cost:22, tags:['fire'],
+    { id:'dragonfire', name:"Dragonfire Pepper", icon:'pepper', cost:22, tags:['fire'],
       desc:"Clicks generate +40% Mana, but every 10 clicks burns away 0.2s from the order deadline.",
       liquidTheme:'dragonfire' },
-    { id:'whisk', name:"Familiar's Whisk", icon:'🐈‍⬛', cost:28, tags:['arcane'],
+    { id:'whisk', name:"Familiar's Whisk", icon:'cat', cost:28, tags:['arcane'],
       desc:"A spectral cat stirs the pot every second, generating 6% of your click power as bonus Mana/sec.",
       liquidTheme:null },
-    { id:'moonstone', name:"Moonstone Dust", icon:'🌙', cost:26, tags:['frost'],
+    { id:'moonstone', name:"Moonstone Dust", icon:'moon', cost:26, tags:['frost'],
       desc:"Every 5th click triggers a Critical Surge, yielding 3x Mana for that tap.",
       liquidTheme:'moonstone' },
-    { id:'hourglass', name:"Stasis Hourglass", icon:'⏳', cost:18, tags:['frost'],
+    { id:'hourglass', name:"Stasis Hourglass", icon:'hourglass', cost:18, tags:['frost'],
       desc:"Adds +8 seconds to the deadline of every order from now on.",
       liquidTheme:null },
-    { id:'bifrost', name:"Bifrost Blossom", icon:'🌈', cost:24, tags:['chaos'],
+    { id:'bifrost', name:"Bifrost Blossom", icon:'rainbow', cost:24, tags:['chaos'],
       desc:"Every tap has a 10% chance to also yield 1 Gold Coin directly.",
       liquidTheme:'bifrost' },
-    { id:'crucible', name:"Philosopher's Crucible", icon:'⚱️', cost:32, tags:['arcane'],
+    { id:'crucible', name:"Philosopher's Crucible", icon:'urn', cost:32, tags:['arcane'],
       desc:"Increases the Gold conversion rate for surplus Mana by 50%.",
       liquidTheme:'crucible' },
-    { id:'starter', name:"Alchemist's Starter", icon:'📜', cost:28, tags:['arcane'],
+    { id:'starter', name:"Alchemist's Starter", icon:'scroll', cost:28, tags:['arcane'],
       desc:"Instantly satisfies 10% of the required quota at the start of every order.",
       liquidTheme:null },
-    { id:'catalyst', name:"Volatile Catalyst", icon:'⚡', cost:26, tags:['chaos'],
+    { id:'catalyst', name:"Volatile Catalyst", icon:'lightning', cost:26, tags:['chaos'],
       desc:"Mana generated per second is boosted +40%, but quotas increase by an extra 10%.",
       liquidTheme:null },
-    { id:'cursedEmber', name:"Cursed Ember", icon:'💀', cost:30, tags:['fire'], corrupted:true,
+    { id:'cursedEmber', name:"Cursed Ember", icon:'skull', cost:30, tags:['fire'], corrupted:true,
       desc:"CORRUPTED: Clicks generate +90% Mana, but every tap has a 6% chance to scorch away 1 second from the deadline.",
       liquidTheme:'dragonfire' },
-    { id:'unstableBrew', name:"Unstable Brew", icon:'☣️', cost:34, tags:['chaos'], corrupted:true,
+    { id:'unstableBrew', name:"Unstable Brew", icon:'biohazard', cost:34, tags:['chaos'], corrupted:true,
       desc:"CORRUPTED: Mana generated per second is boosted +150%, but bubbles may violently rupture — 8% chance every second to burn away 0.5s from the deadline.",
       liquidTheme:null },
-    { id:'ashenSigil', name:"Ashen Sigil", icon:'🔥', cost:22, tags:['fire'],
+    { id:'ashenSigil', name:"Ashen Sigil", icon:'fire', cost:22, tags:['fire'],
       desc:"Residual embers linger in the pot, adding +15% Mana to every tap.",
       liquidTheme:null },
-    { id:'phoenixDown', name:"Phoenix Down", icon:'🪶', cost:26, tags:['fire'],
+    { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
       desc:"Phoenix ash infuses the brew, adding +20% Mana to every tap.",
       liquidTheme:null },
-    { id:'glacialCore', name:"Glacial Core", icon:'🧊', cost:20, tags:['frost'],
+    { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:20, tags:['frost'],
       desc:"A shard of eternal ice adds +5 seconds to the deadline of every order.",
       liquidTheme:null },
-    { id:'wintersGrasp', name:"Winter's Grasp", icon:'🥶', cost:24, tags:['frost'],
+    { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
       desc:"Every Critical Surge also freezes the deadline for 0.5 seconds.",
       liquidTheme:null },
-    { id:'arcaneConduit', name:"Arcane Conduit", icon:'🔯', cost:30, tags:['arcane'],
+    { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcane', cost:30, tags:['arcane'],
       desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
       liquidTheme:null },
   ];
 
   const CONSUMABLES = [
-    { id:'stirFrenzy', name:'Stir Frenzy', icon:'🌀', cost:15,
+    { id:'stirFrenzy', name:'Stir Frenzy', icon:'chaos', cost:15,
       desc:'Instantly triples your click power for 4 seconds.' },
-    { id:'timeFreeze', name:'Time Freeze', icon:'🧊', cost:18,
+    { id:'timeFreeze', name:'Time Freeze', icon:'ice', cost:18,
       desc:'Freezes the order deadline for 3 seconds.' },
-    { id:'goldenDrop', name:'Golden Droplet', icon:'💧', cost:16,
+    { id:'goldenDrop', name:'Golden Droplet', icon:'droplet', cost:16,
       desc:'Instantly brews 15% of the current quota as bonus Mana.' },
   ];
 
@@ -842,6 +1038,7 @@
      DOM REFS
   ========================================================= */
   const $ = (id) => document.getElementById(id);
+  function icon(name, cls){ return '<svg class="icon ' + (cls||'') + '"><use href="#icon-' + name + '"></use></svg>'; }
   const roundLabel = $('roundLabel');
   const goldValue = $('goldValue');
   const goldDisplay = $('goldDisplay');
@@ -1097,7 +1294,7 @@
       if(!r) return;
       const el = document.createElement('div');
       el.className = 'relic-badge';
-      el.textContent = r.icon;
+      el.innerHTML = icon(r.icon);
       el.title = r.name + ' — ' + r.desc;
       relicTray.appendChild(el);
     });
@@ -1112,7 +1309,7 @@
       btn.className = 'consumable-btn';
       btn.disabled = count <= 0 || state.phase !== 'brewing';
       btn.title = c.desc;
-      btn.innerHTML = '<span class="cIcon">' + c.icon + '</span>' + c.name + '<span class="cCount">' + count + '</span>';
+      btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' + c.name + '<span class="cCount">' + count + '</span>';
       btn.addEventListener('click', () => useConsumable(c.id));
       consumableButtons.appendChild(btn);
     });
@@ -1137,7 +1334,7 @@
     const el = spawnEl(numbersLayer, 'float-num ' + (cls||''), {
       left: xPct + '%', top: yPct + '%'
     }, 900);
-    el.textContent = text;
+    el.innerHTML = text;
   }
 
   function spawnClickBubbles(xPct, yPct){
@@ -1242,15 +1439,15 @@
 
     if(state.phase === 'brewing' && state.quotaMet){
       fulfillBtn.classList.add('show');
-      fulfillBtn.textContent = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' 🪙) & END ROUND';
+      fulfillBtn.innerHTML = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + ') &amp; END ROUND';
     } else {
       fulfillBtn.classList.remove('show');
     }
 
     stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + getClickPower().toFixed(1) + '/click';
-    stirCost.textContent = 'Cost: ' + fmt(getStirCost()) + ' ✨';
+    stirCost.innerHTML = 'Cost: ' + fmt(getStirCost()) + ' ' + icon('sparkle','ic-mana');
     bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + getManaPerSecond().toFixed(1) + '/sec';
-    bubbleCost.textContent = 'Cost: ' + fmt(getBubbleCost()) + ' ✨';
+    bubbleCost.innerHTML = 'Cost: ' + fmt(getBubbleCost()) + ' ' + icon('sparkle','ic-mana');
 
     const canBuyStir = state.phase === 'brewing' && state.mana >= getStirCost();
     const canBuyBubble = state.phase === 'brewing' && state.mana >= getBubbleCost();
@@ -1326,7 +1523,7 @@
     if(hasTagTier('fire', 1) && state.clickCountRun % 10 === 0){
       const burst = power * 5;
       addMana(burst);
-      spawnFloatNumber('🔥 OVERHEAT +' + fmt(burst), 'crit', xPct, yPct-20);
+      spawnFloatNumber(icon('fire','ic-fire') + ' OVERHEAT +' + fmt(burst), 'crit', xPct, yPct-20);
       sfxQuotaMet();
     }
 
@@ -1350,7 +1547,7 @@
     if(hasRelic('bifrost') && Math.random() < 0.1 * getSynergyMult('chaos')){
       bumpGold(1);
       sfxGold();
-      spawnFloatNumber('+1 🪙', 'gold', xPct, yPct+10);
+      spawnFloatNumber('+1 ' + icon('coin','ic-gold'), 'gold', xPct, yPct+10);
     }
 
     updateUI();
@@ -1457,7 +1654,7 @@
     sfxSuccess();
 
     shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
-    shopSummary.textContent = 'Surplus of ' + fmt(surplus) + ' Essence converted into ' + fmt(goldEarned) + ' 🪙 Gold.';
+    shopSummary.innerHTML = 'Surplus of ' + fmt(surplus) + ' Essence converted into ' + fmt(goldEarned) + ' ' + icon('coin','ic-gold') + ' Gold.';
 
     state.rerollCount = 0;
     rollShopOffers();
@@ -1519,7 +1716,7 @@
         const price = getRelicCost(r);
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
-          return info ? `<span class="tag-pill tag-${t}">${info.icon} ${info.label}</span>` : '';
+          return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
         }).join('');
         const hintsHtml = owned ? '' : (r.tags||[]).map(t => {
           const hint = getSynergyHint(t, tagCounts[t] || 0);
@@ -1528,19 +1725,19 @@
         const card = document.createElement('div');
         card.className = 'relicCard' + (owned ? ' owned' : '') + (r.corrupted ? ' corrupted' : '');
         card.innerHTML = `
-          <div class="rName">${r.icon} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">⚠ CORRUPTED</span>' : ''}</div>
+          <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
           <button class="rBuy" data-id="${r.id}" ${owned || state.gold < price ? 'disabled' : ''}>
-            ${owned ? 'ACQUIRED' : 'BUY — ' + price + ' 🪙'}
+            ${owned ? 'ACQUIRED' : 'BUY — ' + price + ' ' + icon('coin','ic-gold')}
           </button>
         `;
         shopCards.appendChild(card);
       });
     }
 
-    rerollBtn.textContent = '🔄 REROLL SHOP (' + getRerollCost() + ' 🪙)';
+    rerollBtn.innerHTML = icon('refresh') + ' REROLL SHOP (' + getRerollCost() + ' ' + icon('coin','ic-gold') + ')';
     rerollBtn.disabled = state.gold < getRerollCost() || pool.length <= state.shopOffers.length;
 
     shopCards.querySelectorAll('.rBuy').forEach(btn => {
@@ -1565,7 +1762,7 @@
       const info = TAG_INFO[t];
       const tiers = TAG_TIERS[t];
       const boosted = tiers ? c >= tiers[0].count : c >= 2;
-      return `<button type="button" class="tag-pill tag-${t} synergy-badge${boosted ? ' boosted' : ''}" data-tag="${t}">${info.icon} ${info.label} x${c}</button>`;
+      return `<button type="button" class="tag-pill tag-${t} synergy-badge${boosted ? ' boosted' : ''}" data-tag="${t}">${icon(info.icon, 'ic-'+t)} ${info.label} x${c}</button>`;
     }).join('');
     container.querySelectorAll('.synergy-badge').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1583,21 +1780,21 @@
     const tiers = TAG_TIERS[tag];
     if(!tiers){
       const mult = getSynergyMult(tag);
-      let html = `<div class="tooltip-title">${info.icon} ${info.label} (${c} owned)</div>`;
-      html += `<div class="tooltip-line${c >= 2 ? ' active' : ' inactive'}">${c >= 2 ? '✅ ACTIVE' : '🔒 LOCKED'} — Owning 2+ scales each ${info.label} relic's own effects (currently x${mult.toFixed(2)}).</div>`;
+      let html = `<div class="tooltip-title">${icon(info.icon, 'ic-'+tag)} ${info.label} (${c} owned)</div>`;
+      html += `<div class="tooltip-line${c >= 2 ? ' active' : ' inactive'}">${c >= 2 ? icon('check','ic-check') + ' ACTIVE' : icon('lock','ic-lock') + ' LOCKED'} — Owning 2+ scales each ${info.label} relic's own effects (currently x${mult.toFixed(2)}).</div>`;
       return html;
     }
     const maxCount = tiers[tiers.length - 1].count;
-    let html = `<div class="tooltip-title">${info.icon} ${info.label} (${c}/${maxCount})</div>`;
+    let html = `<div class="tooltip-title">${icon(info.icon, 'ic-'+tag)} ${info.label} (${c}/${maxCount})</div>`;
     tiers.forEach(tier => {
       const active = c >= tier.count;
-      html += `<div class="tooltip-line ${active ? 'active' : 'inactive'}">${active ? '✅ ACTIVE' : '🔒 LOCKED'} — (${tier.count}) ${tier.label}: ${tier.desc}</div>`;
+      html += `<div class="tooltip-line ${active ? 'active' : 'inactive'}">${active ? icon('check','ic-check') + ' ACTIVE' : icon('lock','ic-lock') + ' LOCKED'} — (${tier.count}) ${tier.label}: ${tier.desc}</div>`;
     });
     const next = tiers.find(t => c < t.count);
     if(next){
       html += `<div class="tooltip-next">Next at ${next.count}: ${next.label} (need ${next.count - c} more)</div>`;
     } else {
-      html += `<div class="tooltip-next">✨ All tiers unlocked!</div>`;
+      html += `<div class="tooltip-next">${icon('sparkle','ic-amber')} All tiers unlocked!</div>`;
     }
     return html;
   }
@@ -1639,16 +1836,16 @@
     if(tiers){
       for(const tier of tiers){
         if(currentCount < tier.count && newCount >= tier.count){
-          return `${info.icon} ${info.label} -&gt; Activates (${tier.count}) ${tier.label}!`;
+          return `${icon(info.icon, 'ic-'+tag)} ${info.label} -&gt; Activates (${tier.count}) ${tier.label}!`;
         }
       }
       return null;
     }
     if(newCount >= 2 && currentCount < 2){
-      return `${info.icon} ${info.label} -&gt; Activates Synergy Bonus (x${newCount})!`;
+      return `${icon(info.icon, 'ic-'+tag)} ${info.label} -&gt; Activates Synergy Bonus (x${newCount})!`;
     }
     if(newCount >= 2){
-      return `${info.icon} ${info.label} -&gt; Boosts Synergy Bonus to x${newCount}!`;
+      return `${icon(info.icon, 'ic-'+tag)} ${info.label} -&gt; Boosts Synergy Bonus to x${newCount}!`;
     }
     return null;
   }
@@ -1662,9 +1859,9 @@
       const card = document.createElement('div');
       card.className = 'relicCard';
       card.innerHTML = `
-        <div class="rName">${c.icon} ${c.name} <span style="color:var(--text-dim); font-size:0.46rem;">(Owned: ${owned})</span></div>
+        <div class="rName">${icon(c.icon)} ${c.name} <span style="color:var(--text-dim); font-size:0.46rem;">(Owned: ${owned})</span></div>
         <div class="rDesc">${c.desc}</div>
-        <button class="rBuy" data-cid="${c.id}" ${state.gold < cost ? 'disabled' : ''}>BUY — ${cost} 🪙</button>
+        <button class="rBuy" data-cid="${c.id}" ${state.gold < cost ? 'disabled' : ''}>BUY — ${cost} ${icon('coin','ic-gold')}</button>
       `;
       consumableShop.appendChild(card);
     });
@@ -1708,9 +1905,9 @@
     const completed = Math.max(0, state.round - 1);
     statsList.innerHTML = `
       <div class="statRow"><span>Orders Fulfilled</span><span>${completed}</span></div>
-      <div class="statRow"><span>Gold Earned</span><span>${fmt(state.totalGoldEarned)} 🪙</span></div>
+      <div class="statRow"><span>Gold Earned</span><span>${fmt(state.totalGoldEarned)} ${icon('coin','ic-gold')}</span></div>
       <div class="statRow"><span>Total Taps</span><span>${fmt(state.totalClicksAllTime)}</span></div>
-      <div class="statRow"><span>Peak Mana</span><span>${fmt(state.peakMana)} ✨</span></div>
+      <div class="statRow"><span>Peak Mana</span><span>${fmt(state.peakMana)} ${icon('sparkle','ic-mana')}</span></div>
       <div class="statRow"><span>Relics Collected</span><span>${state.relics.length} / ${RELICS.length}</span></div>
     `;
   }
@@ -1878,7 +2075,7 @@
           state.unstableBrewClock -= 1;
           if(Math.random() < 0.08){
             state.timer = Math.max(0, state.timer - 0.5);
-            spawnFloatNumber('💥 -0.5s', 'danger', 50, 20);
+            spawnFloatNumber(icon('explosion','ic-danger') + ' -0.5s', 'danger', 50, 20);
             sfxRupture();
           }
         }
