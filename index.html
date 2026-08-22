@@ -839,7 +839,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.4</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.5</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -874,7 +874,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.4</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.5</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
@@ -910,7 +910,16 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.4 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Smoothed the Order 4-6 difficulty spike — quotas still climb fast, but no longer hit a sudden brick wall right when players have the least upgrades.</li>
+          <li>Click power upgrades get a little cheaper to purchase repeatedly, so active clicking keeps pace with rising quotas.</li>
+          <li>Increased Gold earned from completed orders so early runs can afford enough upgrades heading into the tougher Order 5-6 brews.</li>
+          <li>Round timers are unchanged — the pacing is still just as fast and snappy.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.4</div>
         <ul class="changelog-list">
           <li>Fixed missing cauldron particle effects for most relics — ambient effects were only wired to 5 specific relics, so any other Fire/Frost/Arcane/Chaos relic (Ashen Sigil, Phoenix Down, Arcane Conduit, Winter's Grasp, Glacial Core, Cursed Ember, Unstable Brew, Familiar's Whisk, Philosopher's Crucible, Alchemist's Starter) showed nothing.</li>
           <li>Ambient effects are now driven by a relic's Synergy Tag, so every relic in the game reliably shows a themed effect around the cauldron.</li>
@@ -1013,12 +1022,20 @@
   ========================================================= */
   const ROUND_BASE_TIME = 40;
   const ROUND_BASE_TARGET = 500;
-  const ROUND_TARGET_GROWTH = 2.2;
+  const ROUND_TARGET_GROWTH = 2.2; // steady-state growth once the early-game ramp (see ORDER_GROWTH_STEPS) settles back down
+
+  // Per-order quota growth multipliers for the early game. Orders 4-6 used to
+  // compound at a flat 2.2x every single order, which created a sudden
+  // "brick wall" right when players have the least click power / upgrades.
+  // This dips the growth rate through that window, then eases back up to the
+  // normal 2.2x steady-state by Order 9+ so long-run late-game pacing is
+  // unchanged.
+  const ORDER_GROWTH_STEPS = { 2:2.0, 3:1.9, 4:1.75, 5:1.7, 6:1.8, 7:1.95, 8:2.1 };
 
   const CLICK_BASE = 6;
   const CLICK_UPGRADE_INC = 3;
   const CLICK_UPGRADE_BASE_COST = 40;
-  const CLICK_UPGRADE_COST_GROWTH = 1.28;
+  const CLICK_UPGRADE_COST_GROWTH = 1.24;
 
   const BUBBLER_RATE_PER_LEVEL = 5;
   const BUBBLER_BASE_COST = 30;
@@ -1026,8 +1043,8 @@
 
   const REROLL_BASE_COST = 5;
 
-  const BASE_COMPLETION_GOLD = 12;
-  const SURPLUS_GOLD_DIVISOR = 150;
+  const BASE_COMPLETION_GOLD = 16;
+  const SURPLUS_GOLD_DIVISOR = 120;
   const RELIC_COST_SCALE_PER_ROUND = 0.5;
   const SYNERGY_BONUS_PER_EXTRA = 0.25;
 
@@ -1345,8 +1362,15 @@
   function getRerollCost(){ return Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale()); }
   function getRelicCost(relic){ return Math.round(relic.cost * getRoundCostScale()); }
   function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale()); }
+  function getOrderGrowthRatio(order){
+    return ORDER_GROWTH_STEPS[order] || ROUND_TARGET_GROWTH;
+  }
   function getOrderTarget(order){
-    let t = Math.floor(ROUND_BASE_TARGET * Math.pow(ROUND_TARGET_GROWTH, order - 1));
+    let t = ROUND_BASE_TARGET;
+    for(let o = 2; o <= order; o++){
+      t *= getOrderGrowthRatio(o);
+    }
+    t = Math.floor(t);
     if(hasRelic('catalyst')) t = Math.floor(t * 1.1);
     return t;
   }
