@@ -35,6 +35,7 @@
     display:inline-block; fill:currentColor; flex-shrink:0;
   }
   .ic-gold{ color:#ffd043; }
+  .ic-midas{ color:#ffc426; }
   .ic-mana{ color:#c9a6ff; }
   .ic-fire{ color:#ff7a3d; }
   .ic-frost{ color:#8fd0f5; }
@@ -453,6 +454,9 @@
   .fx-stardust.fx-stardust-arcane{
     background: radial-gradient(circle, #ffffff 0%, #e2c2ff 55%, transparent 100%);
   }
+  .fx-stardust.fx-stardust-midas{
+    background: radial-gradient(circle, #fff8e0 0%, #ffc426 55%, transparent 100%);
+  }
 
   /* ---------- UPGRADES ---------- */
   #upgradesPanel{ display:flex; gap:8px; margin-bottom:10px; }
@@ -616,6 +620,7 @@
   .tag-frost{ background:#1c4a63; }
   .tag-arcane{ background:#3d1f66; }
   .tag-chaos{ background:#4a0d18; }
+  .tag-midas{ background:#5c4308; }
   .tag-pill.boosted{ box-shadow:0 0 6px rgba(255,208,67,0.7); border-color:var(--amber); color:var(--amber-glow); animation: tierGlow 1s ease-in-out infinite alternate; }
   @keyframes tierGlow{ 0%{ box-shadow:0 0 4px rgba(255,208,67,0.5); } 100%{ box-shadow:0 0 10px rgba(255,208,67,0.9); } }
   #synergySummary{ display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
@@ -956,7 +961,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.8.7</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.9.0</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -999,7 +1004,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.8.7</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.9.0</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1045,7 +1050,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.7 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.9.0 (Latest)</div>
+        <ul class="changelog-list">
+          <li>A new Midas synergy tag joins the brew: two matching relics grant Midas Touch, and four grant Golden Tithe.</li>
+          <li>Four new relics arrive — Hoarder's Scale, Alchemist's Pawn Ticket, Gilded Ledger, and the cursed Cursed Midas Coin.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.7</div>
         <ul class="changelog-list">
           <li>Hovering relics and charms no longer stacks a second, native browser tooltip on top of the in-game inspection card.</li>
           <li>Background sparkles are now glowing four-point stars that twinkle as they drift up the night sky.</li>
@@ -1260,6 +1272,7 @@
     frost:  { icon:'frost', label:'Frost' },
     arcane: { icon:'arcane', label:'Arcane' },
     chaos:  { icon:'chaos', label:'Chaos' },
+    midas:  { icon:'coin', label:'Midas' },
   };
 
   // Fixed synergy set-tier milestones. Chaos has no defined tiers and instead
@@ -1276,6 +1289,10 @@
     arcane: [
       { count:2, label:'+25% Passive Mana/sec', desc:'+25% Passive Mana/sec' },
       { count:4, label:'Transmutation', desc:'+50% Gold earned from surplus Mana' },
+    ],
+    midas: [
+      { count:2, label:'Midas Touch', desc:'12% chance per tap to award +1 bonus Gold' },
+      { count:4, label:'Golden Tithe', desc:'+1% Click Power & Mana/sec per 2 unspent Gold held' },
     ],
   };
 
@@ -1325,6 +1342,18 @@
     { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcane', cost:30, tags:['arcane'],
       desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
       liquidTheme:null },
+    { id:'hoardersScale', name:"Hoarder's Scale", icon:'coin', cost:24, tags:['midas'],
+      desc:"Earn +10% interest on unspent Gold when completing an order (up to +15 Gold).",
+      liquidTheme:null },
+    { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'scroll', cost:20, tags:['midas'],
+      desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, but Shop Rerolls cost +3 Gold.",
+      liquidTheme:null },
+    { id:'gildedLedger', name:"Gilded Ledger", icon:'urn', cost:28, tags:['midas'],
+      desc:"Fulfilling an order grants a +12 Gold bounty, but boiling over loses 50% of your Gold.",
+      liquidTheme:null },
+    { id:'mammonCoin', name:"Cursed Midas Coin", icon:'skull', cost:34, tags:['midas'], corrupted:true,
+      desc:"CORRUPTED: Doubles all Gold earned from orders and drops, but each tap consumes 1 Gold.",
+      liquidTheme:null },
   ];
 
   const CONSUMABLES = [
@@ -1352,6 +1381,7 @@
     frost:  'rgba(143, 208, 245, 0.55)',
     arcane: 'rgba(193, 134, 255, 0.55)',
     chaos:  'rgba(255, 77, 106, 0.55)',
+    midas:  'rgba(255, 196, 38, 0.6)',
   };
 
   /* =========================================================
@@ -1562,6 +1592,7 @@
     if(hasRelic('ashenSigil')) bonusPct += 0.15;
     if(hasRelic('phoenixDown')) bonusPct += 0.2;
     if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
+    if(hasTagTier('midas', 1)) bonusPct += (state.gold / 2) * 0.01; // Midas Tier (4): Golden Tithe
     p *= (1 + bonusPct);
     if(state.stirFrenzyTimer > 0) p *= 3;
     return p;
@@ -1574,13 +1605,26 @@
     if(hasRelic('unstableBrew')) bonusPct += 1.5 * getSynergyMult('chaos');
     if(hasRelic('arcaneConduit')) bonusPct += 0.15;
     if(hasTagTier('arcane', 0)) bonusPct += 0.25; // Arcane Tier (2): +25% Passive Mana/sec
+    if(hasTagTier('midas', 1)) bonusPct += (state.gold / 2) * 0.01; // Midas Tier (4): Golden Tithe
     mps *= (1 + bonusPct);
     return mps;
   }
-  function getStirCost(){ return Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel)); }
-  function getBubbleCost(){ return Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel)); }
+  function getStirCost(){
+    let cost = Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel));
+    if(hasRelic('pawnTicket')) cost = Math.floor(cost * 0.7);
+    return cost;
+  }
+  function getBubbleCost(){
+    let cost = Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel));
+    if(hasRelic('pawnTicket')) cost = Math.floor(cost * 0.7);
+    return cost;
+  }
   function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
-  function getRerollCost(){ return Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale()); }
+  function getRerollCost(){
+    let cost = Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale());
+    if(hasRelic('pawnTicket')) cost += 3;
+    return cost;
+  }
   function getRelicCost(relic){ return Math.round(relic.cost * getRoundCostScale()); }
   function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale()); }
   function getOrderGrowthRatio(order){
@@ -1953,6 +1997,17 @@
       }
     }
 
+    if(tagCounts.midas){
+      if(Math.random() < 0.5){
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        spawnEl(fxLayer, 'px-particle fx-stardust fx-stardust-midas', {
+          left:p.x+'%', top:p.y+'%', width:'10px', height:'10px',
+          '--sx': ((Math.random()-0.5)*70)+'px',
+          '--sy': (-35-Math.random()*35)+'px'
+        }, 1000);
+      }
+    }
+
     // Bubble Clusters scale with passive generation (Enchanted Bubblers),
     // giving every run some ambient brewing activity even with no relics.
     if(state.bubblerLevel > 0 && Math.random() < 0.45){
@@ -2048,6 +2103,13 @@
     goldDisplay.classList.add('pulse');
   }
 
+  function awardDropGold(amount, xPct, yPct){
+    if(hasRelic('mammonCoin')) amount *= 2;
+    bumpGold(amount);
+    sfxGold();
+    spawnFloatNumber('+' + amount + ' ' + icon('coin','ic-gold'), 'gold', xPct, yPct);
+  }
+
   function getStageRect(){ return cauldron.getBoundingClientRect(); }
 
   function handleCauldronTap(e){
@@ -2111,10 +2173,16 @@
       sfxScorch();
     }
 
+    if(hasRelic('mammonCoin') && state.gold > 0){
+      state.gold -= 1;
+    }
+
+    if(hasTagTier('midas', 0) && Math.random() < 0.12){
+      awardDropGold(1, xPct, yPct+10);
+    }
+
     if(hasRelic('bifrost') && Math.random() < 0.1 * getSynergyMult('chaos')){
-      bumpGold(1);
-      sfxGold();
-      spawnFloatNumber('+1 ' + icon('coin','ic-gold'), 'gold', xPct, yPct+10);
+      awardDropGold(1, xPct, yPct+18);
     }
 
     updateUI();
@@ -2216,7 +2284,10 @@
     closePauseMenu();
     state.phase = 'roundEnd';
     const surplus = Math.max(0, state.mana - state.target);
-    const goldEarned = getSurplusGold(surplus);
+    let goldEarned = getSurplusGold(surplus);
+    if(hasRelic('mammonCoin')) goldEarned *= 2;
+    if(hasRelic('gildedLedger')) goldEarned += 12;
+    if(hasRelic('hoardersScale')) goldEarned += Math.min(15, Math.floor(state.gold * 0.10));
     bumpGold(goldEarned);
     sfxSuccess();
 
@@ -2235,6 +2306,7 @@
   function failRound(){
     closePauseMenu();
     state.phase = 'gameover';
+    if(hasRelic('gildedLedger')) state.gold = Math.floor(state.gold * 0.5);
     sfxFail();
     renderGameOver();
     gameoverOverlay.classList.remove('hidden');
