@@ -127,7 +127,7 @@
   .icon-btn{
     padding:6px 10px; font-size:0.55rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
   }
-  #relicTray{ display:flex; gap:5px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
+  #relicTray, .relic-badge-row{ display:flex; gap:5px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
   .relic-badge{
     width:24px; height:24px;
     display:flex; align-items:center; justify-content:center;
@@ -489,11 +489,32 @@
   .smallBtn:active:not(:disabled){ transform:translate(2px,3px); box-shadow:0 0 0 #000; }
   .smallBtn:disabled{ opacity:0.4; cursor:not-allowed; }
 
-  #shopCards{ display:flex; flex-direction:column; gap:12px; margin:16px 0; }
+  /* ---------- SHOP: PERSISTENT GOLD BAR ---------- */
+  .shop-gold-bar{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background: rgba(0,0,0,0.4); border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    padding:7px 12px; margin:-4px 0 12px; width:max-content; max-width:100%;
+    margin-left:auto; margin-right:auto;
+  }
+  .shop-gold-label{ font-size:0.46rem; color:var(--text-dim); letter-spacing:1px; }
+  .shop-gold-amount{ font-size:0.68rem; color:var(--amber-glow); display:inline-flex; align-items:center; gap:5px; }
+
+  /* ---------- SHOP: TWO-TIER LAYOUT ---------- */
+  .shop-tier-label{
+    display:flex; align-items:center; gap:6px;
+    font-size:0.56rem; color:var(--amber-glow); letter-spacing:1px;
+    text-align:left; margin:16px 0 8px;
+    border-bottom:1px dashed rgba(255,255,255,0.15); padding-bottom:6px;
+  }
+
+  #shopCards{ display:flex; flex-direction:column; gap:12px; margin:0 0 16px; }
+  .shop-vault .relicCard{ box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.15); }
   .relicCard{
     text-align:left; padding:12px; background: rgba(255,255,255,0.04);
     border: 2px solid #000;
     display:flex; flex-direction:column; gap:6px;
+    cursor:pointer;
   }
   .relicCard .rName{ font-size:0.64rem; color:var(--amber-glow); line-height:1.5; }
   .relicCard .rDesc{ font-size:0.54rem; color:var(--text-dim); line-height:1.65; }
@@ -513,6 +534,25 @@
     background: rgba(120,10,25,0.08);
   }
   .corrupted-badge{ color:#ff4d6a; font-size:0.42rem; letter-spacing:0.5px; }
+
+  /* ---------- SHOP: ALCHEMIST'S SUPPLY SHELF (compact charm row) ---------- */
+  .shop-shelf{
+    display:flex; gap:8px; padding:10px 8px 16px; margin-bottom:16px;
+    background: rgba(0,0,0,0.22);
+    border:2px solid #000; border-bottom:6px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .shelfItem{
+    flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px;
+    text-align:center; padding:8px 4px; background: rgba(255,255,255,0.04);
+    border:2px solid #000; cursor:pointer;
+  }
+  .shelfItem .sIcon{ font-size:18px; line-height:1; }
+  .shelfItem .sName{ font-size:0.44rem; color:var(--amber-glow); line-height:1.4; }
+  .shelfItem .sOwned{ font-size:0.4rem; color:var(--text-dim); }
+  .shelfItem .rBuy{
+    align-self:stretch; margin-top:2px; padding:6px 4px; font-size:0.44rem;
+  }
   .rTags{ display:flex; gap:4px; flex-wrap:wrap; }
   .tag-pill{
     display:inline-flex; align-items:center; gap:3px;
@@ -535,7 +575,7 @@
   }
 
   #synergyTooltip{
-    position:fixed; z-index:30; max-width:250px;
+    position:fixed; z-index:30; max-width:280px;
     background: var(--purple-panel); border:3px solid #000;
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 4px 0 #000, 0 0 16px rgba(0,0,0,0.7);
     padding:10px 12px; font-size:0.48rem; line-height:1.65; color:var(--text-light);
@@ -543,6 +583,7 @@
   }
   #synergyTooltip.hidden{ display:none; }
   .tooltip-title{ color:var(--amber-glow); font-size:0.55rem; margin-bottom:6px; }
+  .tooltip-desc{ color:var(--text-light); margin-bottom:6px; line-height:1.6; }
   .tooltip-line{ margin-bottom:4px; }
   .tooltip-line.active{ color:var(--success); }
   .tooltip-line.inactive{ color:var(--text-dim); }
@@ -558,6 +599,18 @@
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
     margin-top: -6px;
     margin-bottom: 12px;
+  }
+  .pause-inspect{
+    text-align:left; background: rgba(0,0,0,0.3); border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    padding:10px 12px; margin-top:10px;
+  }
+  .pause-inspect-label{ font-size:0.46rem; color:var(--text-dim); letter-spacing:1px; margin-bottom:6px; }
+  .pause-inspect-empty{ font-size:0.5rem; color:var(--text-dim); font-style:italic; }
+  .charm-chip{
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 8px; font-size:0.44rem; color:var(--text-light);
+    background: var(--purple-mid); border:2px solid #000; cursor:pointer;
   }
   .modal-actions{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
   .modal-btn-row{ display:flex; gap:8px; }
@@ -597,6 +650,12 @@
 
   ::-webkit-scrollbar{ width:8px; }
   ::-webkit-scrollbar-thumb{ background: var(--purple-mid); border:2px solid #000; }
+
+  /* ---------- PAUSE STATE: FREEZE ALL AMBIENT/PARTICLE ANIMATIONS ---------- */
+  body.game-paused #app *,
+  body.game-paused #ambientSparkles *{
+    animation-play-state: paused !important;
+  }
 
   @media (max-height: 620px){
     #cauldronStage{ min-height:180px; }
@@ -669,6 +728,10 @@
 <symbol id="icon-pause" viewBox="0 0 24 24">
   <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
   <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-play" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M6 4l14 8-14 8z"/>
 </symbol>
 
 <symbol id="icon-scroll" viewBox="0 0 24 24">
@@ -785,7 +848,7 @@
   <div id="topbar" class="pixel-panel">
     <div id="roundLabel">ORDER 1</div>
     <div class="top-actions">
-      <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)"><svg class="icon"><use href="#icon-gear"></use></svg> <svg class="icon"><use href="#icon-pause"></use></svg></button>
+      <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)"><svg class="icon" id="pauseBtnIcon"><use href="#icon-pause"></use></svg></button>
       <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
     </div>
     <div id="relicTray"></div>
@@ -839,7 +902,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.7</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -848,12 +911,20 @@
 <!-- SHOP OVERLAY -->
 <div class="overlay hidden" id="shopOverlay">
   <div class="panelCard pixel-panel">
+    <div class="shop-gold-bar" id="shopGoldBar">
+      <span class="shop-gold-label">YOUR GOLD</span>
+      <span class="shop-gold-amount"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="shopGoldValue">0</span></span>
+    </div>
     <h2 id="shopTitle">ORDER FULFILLED!</h2>
     <p id="shopSummary">Surplus converted to Gold.</p>
     <div id="synergySummary"></div>
-    <div id="shopCards"></div>
-    <div style="font-size:0.58rem; color:var(--amber-glow); margin:14px 0 4px; text-align:left;"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> INGREDIENTS FOR SALE</div>
-    <div id="consumableShop" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+    <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> RELIC PEDESTAL</div>
+    <div id="shopCards" class="shop-vault"></div>
+
+    <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> ALCHEMIST'S SUPPLY SHELF</div>
+    <div id="consumableShop" class="shop-shelf"></div>
+
     <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon ic-gold"><use href="#icon-coin"></use></svg>)</button>
     <br>
     <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
@@ -874,10 +945,20 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.5</div>
-    <p>Brewing cycle frozen. What would you like to do?</p>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.7</div>
+    <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
+
+    <div class="pause-inspect" id="pauseInspectSection">
+      <div class="pause-inspect-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> ACTIVE SYNERGIES</div>
+      <div id="pauseSynergyRow" class="tag-row"></div>
+      <div class="pause-inspect-label" style="margin-top:10px;"><svg class="icon ic-amber"><use href="#icon-urn"></use></svg> YOUR RELICS</div>
+      <div id="pauseRelicTray" class="relic-badge-row"></div>
+      <div class="pause-inspect-label" style="margin-top:10px;"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> INGREDIENT CHARMS</div>
+      <div id="pauseCharmsRow" class="relic-badge-row"></div>
+    </div>
+
     <div class="modal-actions">
-      <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
+      <button class="pixel-btn bigBtn" id="resumeBtn">RESUME BREWING</button>
       <div class="modal-btn-row">
         <button class="smallBtn" id="settingsBtn"><svg class="icon"><use href="#icon-gear"></use></svg> SETTINGS</button>
         <button class="smallBtn" id="changelogBtn"><svg class="icon ic-amber"><use href="#icon-scroll"></use></svg> VERSION HISTORY</button>
@@ -910,7 +991,18 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.5 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.7 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Rebalanced late-game Gold payouts — earning huge Gold windfalls by Order 8+ and buying out the entire shop in one visit is now much harder. Early orders are unaffected.</li>
+          <li>Redesigned the Apothecary Shop into two tiers: a "Relic Pedestal" for your 3 randomized Relic choices, and a compact "Alchemist's Supply Shelf" for Ingredient Charms.</li>
+          <li>Added a persistent Gold counter at the top of the shop so your balance is always visible while browsing.</li>
+          <li>Relics and Ingredient Charms can now be tapped or hovered — both in the shop and on your HUD — to inspect their full description, tags, and exact synergy tier bonuses without buying or using them.</li>
+          <li>The Pause menu now shows a live readout of your active Synergies, Relics, and Ingredient Charms so you can study your build at your own pace, and its Pause/Play button icon now reflects the current state.</li>
+          <li>Renamed "Resume Game" to "Resume Brewing" and made sure every ambient particle and animation truly freezes solid while paused.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.5</div>
         <ul class="changelog-list">
           <li>Smoothed the Order 4-6 difficulty spike — quotas still climb fast, but no longer hit a sudden brick wall right when players have the least upgrades.</li>
           <li>Click power upgrades get a little cheaper to purchase repeatedly, so active clicking keeps pace with rising quotas.</li>
@@ -1202,6 +1294,7 @@
   const shopOverlay = $('shopOverlay');
   const shopTitle = $('shopTitle');
   const shopSummary = $('shopSummary');
+  const shopGoldValue = $('shopGoldValue');
   const shopCards = $('shopCards');
   const rerollBtn = $('rerollBtn');
   const continueBtn = $('continueBtn');
@@ -1210,8 +1303,12 @@
   const restartBtn = $('restartBtn');
   const ambientSparkles = $('ambientSparkles');
   const pauseBtn = $('pauseBtn');
+  const pauseBtnIcon = $('pauseBtnIcon');
   const pauseOverlay = $('pauseOverlay');
   const resumeBtn = $('resumeBtn');
+  const pauseSynergyRow = $('pauseSynergyRow');
+  const pauseRelicTray = $('pauseRelicTray');
+  const pauseCharmsRow = $('pauseCharmsRow');
   const settingsBtn = $('settingsBtn');
   const changelogBtn = $('changelogBtn');
   const settingsSubpanel = $('settingsSubpanel');
@@ -1387,8 +1484,18 @@
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
     return t;
   }
+  function getSurplusGoldDivisor(){
+    // Quotas grow exponentially with round, but a flat surplus-to-gold ratio
+    // means gold income explodes right alongside them (e.g. ~840 gold by
+    // Round 8), letting players buy out the entire shop in one visit. Scaling
+    // the divisor by the square root of quota growth keeps gold income
+    // rising much more slowly than the quota itself, so late relics/charms
+    // still require real budgeting. Rounds 1-4 are untouched (ratio ~= 1).
+    const ratio = Math.max(1, (state.target || ROUND_BASE_TARGET) / ROUND_BASE_TARGET);
+    return SURPLUS_GOLD_DIVISOR * Math.sqrt(ratio);
+  }
   function getSurplusGold(surplus){
-    return BASE_COMPLETION_GOLD + Math.max(0, Math.floor((surplus / SURPLUS_GOLD_DIVISOR) * getGoldRate()));
+    return BASE_COMPLETION_GOLD + Math.max(0, Math.floor((surplus / getSurplusGoldDivisor()) * getGoldRate()));
   }
   function getSurplusGoldPreview(){
     const surplus = Math.max(0, state.mana - state.target);
@@ -1441,8 +1548,61 @@
       el.className = 'relic-badge';
       el.innerHTML = icon(r.icon);
       el.title = r.name + ' — ' + r.desc;
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTooltip(el, getRelicTooltipHTML(id), 'relic-' + id);
+      });
+      el.addEventListener('mouseenter', () => showTooltip(el, getRelicTooltipHTML(id), 'relic-' + id));
       relicTray.appendChild(el);
     });
+  }
+
+  function renderPauseInspect(){
+    if(!state) return;
+    renderSynergyBadges(pauseSynergyRow);
+    if(pauseSynergyRow && pauseSynergyRow.style.display === 'none'){
+      pauseSynergyRow.style.display = 'block';
+      pauseSynergyRow.innerHTML = '<span class="pause-inspect-empty">No active synergy tags yet.</span>';
+    }
+
+    pauseRelicTray.innerHTML = '';
+    if(state.relics.length === 0){
+      pauseRelicTray.innerHTML = '<span class="pause-inspect-empty">No relics collected yet.</span>';
+    } else {
+      state.relics.forEach(id => {
+        const r = RELICS.find(x => x.id === id);
+        if(!r) return;
+        const el = document.createElement('div');
+        el.className = 'relic-badge';
+        el.style.cursor = 'pointer';
+        el.innerHTML = icon(r.icon);
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id);
+        });
+        el.addEventListener('mouseenter', () => showTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id));
+        pauseRelicTray.appendChild(el);
+      });
+    }
+
+    pauseCharmsRow.innerHTML = '';
+    const ownedCharms = CONSUMABLES.filter(c => (state.consumables[c.id] || 0) > 0);
+    if(ownedCharms.length === 0){
+      pauseCharmsRow.innerHTML = '<span class="pause-inspect-empty">No Ingredient Charms in your pouch.</span>';
+    } else {
+      ownedCharms.forEach(c => {
+        const chip = document.createElement('div');
+        chip.className = 'charm-chip';
+        chip.innerHTML = icon(c.icon) + ' ' + c.name + ' x' + state.consumables[c.id];
+        chip.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTooltip(chip, getCharmTooltipHTML(c.id), 'pause-charm-' + c.id);
+        });
+        chip.addEventListener('mouseenter', () => showTooltip(chip, getCharmTooltipHTML(c.id), 'pause-charm-' + c.id));
+        pauseCharmsRow.appendChild(chip);
+      });
+    }
   }
 
   function getConsumableBuffTimer(id){
@@ -1915,6 +2075,7 @@
     shopCards.innerHTML = '';
     const pool = RELICS.filter(r => !hasRelic(r.id));
 
+    if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
     renderSynergyBadges(synergySummary);
 
     if(state.shopOffers.length === 0){
@@ -1938,6 +2099,8 @@
         }).join('');
         const card = document.createElement('div');
         card.className = 'relicCard' + (owned ? ' owned' : '') + (r.corrupted ? ' corrupted' : '');
+        card.setAttribute('data-id', r.id);
+        card.title = 'Tap for details';
         card.innerHTML = `
           <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
@@ -1955,7 +2118,19 @@
     rerollBtn.disabled = state.gold < getRerollCost() || pool.length <= state.shopOffers.length;
 
     shopCards.querySelectorAll('.rBuy').forEach(btn => {
-      btn.addEventListener('click', () => buyRelic(btn.getAttribute('data-id')));
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        buyRelic(btn.getAttribute('data-id'));
+      });
+    });
+    shopCards.querySelectorAll('.relicCard').forEach(cardEl => {
+      const id = cardEl.getAttribute('data-id');
+      cardEl.addEventListener('click', (e) => {
+        if(e.target.closest('.rBuy')) return;
+        e.stopPropagation();
+        toggleTooltip(cardEl, getRelicTooltipHTML(id), 'shopcard-' + id);
+      });
+      cardEl.addEventListener('mouseenter', () => showTooltip(cardEl, getRelicTooltipHTML(id), 'shopcard-' + id));
     });
 
     renderConsumableShop();
@@ -2013,34 +2188,92 @@
     return html;
   }
 
-  function showSynergyTooltip(btn, tag){
-    synergyTooltip.innerHTML = getSynergyTooltipHTML(tag);
-    synergyTooltip.dataset.tag = tag;
+  /* Generic inspection tooltip — shared by synergy badges, shop relics,
+     owned relic badges, and ingredient charms so every inspectable thing
+     in the game behaves the same way (hover on desktop, tap-to-toggle on
+     touch, never triggers a purchase/use by itself). */
+  function showTooltip(anchorEl, html, key){
+    synergyTooltip.innerHTML = html;
+    synergyTooltip.dataset.key = key;
     synergyTooltip.classList.remove('hidden');
-    const rect = btn.getBoundingClientRect();
+    const rect = anchorEl.getBoundingClientRect();
     synergyTooltip.style.top = (rect.bottom + 6) + 'px';
     synergyTooltip.style.left = rect.left + 'px';
     requestAnimationFrame(() => {
       const tw = synergyTooltip.offsetWidth;
+      const th = synergyTooltip.offsetHeight;
       const vw = window.innerWidth;
+      const vh = window.innerHeight;
       let left = rect.left;
       if(left + tw > vw - 8) left = vw - tw - 8;
       if(left < 8) left = 8;
+      let top = rect.bottom + 6;
+      if(top + th > vh - 8) top = Math.max(8, rect.top - th - 6);
       synergyTooltip.style.left = left + 'px';
+      synergyTooltip.style.top = top + 'px';
     });
   }
 
-  function hideSynergyTooltip(){
+  function hideTooltip(){
     synergyTooltip.classList.add('hidden');
-    synergyTooltip.dataset.tag = '';
+    synergyTooltip.dataset.key = '';
   }
 
-  function toggleSynergyTooltip(btn, tag){
-    if(synergyTooltip.dataset.tag === tag && !synergyTooltip.classList.contains('hidden')){
-      hideSynergyTooltip();
+  function toggleTooltip(anchorEl, html, key){
+    if(synergyTooltip.dataset.key === key && !synergyTooltip.classList.contains('hidden')){
+      hideTooltip();
     } else {
-      showSynergyTooltip(btn, tag);
+      showTooltip(anchorEl, html, key);
     }
+  }
+
+  function showSynergyTooltip(btn, tag){ showTooltip(btn, getSynergyTooltipHTML(tag), 'tag-' + tag); }
+  function hideSynergyTooltip(){ hideTooltip(); }
+  function toggleSynergyTooltip(btn, tag){ toggleTooltip(btn, getSynergyTooltipHTML(tag), 'tag-' + tag); }
+
+  function getRelicTooltipHTML(relicId){
+    const r = RELICS.find(x => x.id === relicId);
+    if(!r) return '';
+    const tagCounts = getTagCounts();
+    const tagsHtml = (r.tags||[]).map(t => {
+      const info = TAG_INFO[t];
+      return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+    }).join('');
+    let tierHtml = '';
+    (r.tags||[]).forEach(t => {
+      const info = TAG_INFO[t];
+      const tiers = TAG_TIERS[t];
+      const c = tagCounts[t] || 0;
+      if(tiers){
+        const active = tiers.slice().reverse().find(ti => c >= ti.count);
+        const next = tiers.find(ti => c < ti.count);
+        if(active) tierHtml += `<div class="tooltip-line active">${icon('check','ic-check')} ${info.label} Tier (${active.count}) ACTIVE — ${active.desc}</div>`;
+        if(next) tierHtml += `<div class="tooltip-line inactive">${icon('lock','ic-lock')} Next ${info.label} Tier at ${next.count}: ${next.label} (${c}/${next.count})</div>`;
+      } else {
+        const mult = getSynergyMult(t);
+        tierHtml += c >= 2
+          ? `<div class="tooltip-line active">${icon('check','ic-check')} ${info.label} Synergy ACTIVE — each ${info.label} relic scaled x${mult.toFixed(2)} (${c} owned)</div>`
+          : `<div class="tooltip-line inactive">${icon('lock','ic-lock')} ${info.label} Synergy locked — own 2+ ${info.label} relics to start scaling (${c}/2)</div>`;
+      }
+    });
+    return `
+      <div class="tooltip-title">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
+      <div class="rTags" style="margin-bottom:6px;">${tagsHtml}</div>
+      <div class="tooltip-desc">${r.desc}</div>
+      ${tierHtml}
+    `;
+  }
+
+  function getCharmTooltipHTML(charmId){
+    const c = CONSUMABLES.find(x => x.id === charmId);
+    if(!c) return '';
+    const owned = (state && state.consumables && state.consumables[c.id]) || 0;
+    const cost = getConsumableCost(c);
+    return `
+      <div class="tooltip-title">${icon(c.icon)} ${c.name}</div>
+      <div class="tooltip-desc">${c.desc}</div>
+      <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')}</div>
+    `;
   }
 
   function getSynergyHint(tag, currentCount){
@@ -2066,21 +2299,37 @@
 
   function renderConsumableShop(){
     if(!consumableShop) return;
+    if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
     consumableShop.innerHTML = '';
     CONSUMABLES.forEach(c => {
       const cost = getConsumableCost(c);
       const owned = (state.consumables && state.consumables[c.id]) || 0;
-      const card = document.createElement('div');
-      card.className = 'relicCard';
-      card.innerHTML = `
-        <div class="rName">${icon(c.icon)} ${c.name} <span style="color:var(--text-dim); font-size:0.46rem;">(Owned: ${owned})</span></div>
-        <div class="rDesc">${c.desc}</div>
+      const item = document.createElement('div');
+      item.className = 'shelfItem';
+      item.setAttribute('data-cid', c.id);
+      item.title = 'Tap for details';
+      item.innerHTML = `
+        <div class="sIcon">${icon(c.icon)}</div>
+        <div class="sName">${c.name}</div>
+        <div class="sOwned">Owned: ${owned}</div>
         <button class="rBuy" data-cid="${c.id}" ${state.gold < cost ? 'disabled' : ''}>BUY — ${cost} ${icon('coin','ic-gold')}</button>
       `;
-      consumableShop.appendChild(card);
+      consumableShop.appendChild(item);
     });
     consumableShop.querySelectorAll('.rBuy').forEach(btn => {
-      btn.addEventListener('click', () => buyConsumable(btn.getAttribute('data-cid')));
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        buyConsumable(btn.getAttribute('data-cid'));
+      });
+    });
+    consumableShop.querySelectorAll('.shelfItem').forEach(itemEl => {
+      const id = itemEl.getAttribute('data-cid');
+      itemEl.addEventListener('click', (e) => {
+        if(e.target.closest('.rBuy')) return;
+        e.stopPropagation();
+        toggleTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id);
+      });
+      itemEl.addEventListener('mouseenter', () => showTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id));
     });
   }
 
@@ -2129,9 +2378,16 @@
   /* =========================================================
      PAUSE / SETTINGS / CHANGELOG
   ========================================================= */
+  function setPauseButtonIcon(){
+    if(pauseBtnIcon) pauseBtnIcon.innerHTML = '<use href="#icon-' + (isPaused ? 'play' : 'pause') + '"></use>';
+  }
+
   function openPauseMenu(){
     if(!state || state.phase !== 'brewing') return;
     isPaused = true;
+    document.body.classList.add('game-paused');
+    setPauseButtonIcon();
+    renderPauseInspect();
     settingsSubpanel.classList.add('hidden');
     changelogSubpanel.classList.add('hidden');
     settingsBtn.classList.remove('active');
@@ -2141,6 +2397,8 @@
 
   function closePauseMenu(){
     isPaused = false;
+    document.body.classList.remove('game-paused');
+    setPauseButtonIcon();
     settingsSubpanel.classList.add('hidden');
     changelogSubpanel.classList.add('hidden');
     settingsBtn.classList.remove('active');
@@ -2365,8 +2623,8 @@
 
   document.addEventListener('click', function(e){
     if(synergyTooltip && !synergyTooltip.classList.contains('hidden')){
-      if(!synergyTooltip.contains(e.target) && !e.target.classList.contains('synergy-badge')){
-        hideSynergyTooltip();
+      if(!synergyTooltip.contains(e.target)){
+        hideTooltip();
       }
     }
   });
