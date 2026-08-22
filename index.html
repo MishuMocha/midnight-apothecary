@@ -70,17 +70,27 @@
 
   #ambientSparkles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; contain: layout paint style; }
   .ambient-spark{
-    position:absolute; bottom:-10px; background: var(--amber-glow);
-    opacity:0.8; pointer-events:none; border-radius:0;
+    position:absolute; bottom:-10px;
+    opacity:0.85; pointer-events:none;
     will-change: transform, opacity;
-    animation: driftUp linear forwards, twinkle 1.4s steps(2) infinite;
+    animation: driftUp linear forwards;
+  }
+  .ambient-spark::after{
+    content:""; display:block; width:100%; height:100%;
+    background: radial-gradient(circle at 50% 50%, #fff8e0 0%, var(--amber-glow) 45%, var(--amber) 85%);
+    clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+    animation: sparkGlint 1.2s ease-in-out infinite alternate;
   }
   @keyframes driftUp{
     0%{ transform: translate3d(0,0,0); opacity:0; }
     10%{ opacity:0.9; }
     100%{ transform: translate3d(var(--dx,20px), -110vh, 0); opacity:0; }
   }
-  @keyframes twinkle{ 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+  @keyframes sparkGlint{
+    0%{ transform: scale(0.55) rotate(0deg); opacity:0.35; }
+    50%{ transform: scale(1.2) rotate(45deg); opacity:1; filter: drop-shadow(0 0 3px rgba(255,210,122,0.8)); }
+    100%{ transform: scale(0.65) rotate(90deg); opacity:0.45; }
+  }
 
   #app{
     position:relative; z-index:2;
@@ -946,7 +956,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.8.6</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.8.7</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -989,7 +999,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.8.6</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.8.7</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1035,7 +1045,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.6 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.7 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Hovering relics and charms no longer stacks a second, native browser tooltip on top of the in-game inspection card.</li>
+          <li>Background sparkles are now glowing four-point stars that twinkle as they drift up the night sky.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.6</div>
         <ul class="changelog-list">
           <li>Tap bubbles and relic sparks now rise out of the brew itself instead of popping in well above the cauldron's rim.</li>
         </ul>
@@ -1673,7 +1690,6 @@
       const el = document.createElement('div');
       el.className = 'relic-badge';
       el.innerHTML = icon(r.icon);
-      el.title = r.name + ' — ' + r.desc;
       el.style.cursor = 'pointer';
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1751,7 +1767,6 @@
         btn.type = 'button';
         btn.className = 'consumable-btn';
         btn.dataset.cid = c.id;
-        btn.title = c.desc;
         btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' +
           '<span class="cLabel">' + c.name + '</span>' +
           '<span class="cCount">0</span>' +
@@ -1950,13 +1965,13 @@
   function spawnAmbientSparkles(){
     const el = document.createElement('div');
     el.className = 'ambient-spark';
-    const size = 2 + Math.floor(Math.random()*3);
+    const size = 4 + Math.floor(Math.random()*4);
     el.style.width = size+'px';
     el.style.height = size+'px';
     el.style.left = (Math.random()*100)+'%';
     el.style.setProperty('--dx', ((Math.random()-0.5)*80)+'px');
     const dur = 6 + Math.random()*6;
-    el.style.animationDuration = dur+'s, 1.4s';
+    el.style.animationDuration = dur+'s';
     ambientSparkles.appendChild(el);
     setTimeout(() => el.remove(), dur*1000+200);
   }
@@ -2497,7 +2512,6 @@
       const item = document.createElement('div');
       item.className = 'shelfItem';
       item.setAttribute('data-cid', c.id);
-      item.title = 'Tap for details';
       item.innerHTML = `
         <div class="sIcon">${icon(c.icon)}</div>
         <div class="sName">${c.name}</div>
