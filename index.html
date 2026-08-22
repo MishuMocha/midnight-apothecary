@@ -51,17 +51,17 @@
       linear-gradient(180deg, #0d0716 0%, #170f28 50%, #09050f 100%);
   }
 
-  #ambientSparkles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+  #ambientSparkles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; contain: layout paint style; }
   .ambient-spark{
     position:absolute; bottom:-10px; background: var(--amber-glow);
     opacity:0.8; pointer-events:none; border-radius:0;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+    will-change: transform, opacity;
     animation: driftUp linear forwards, twinkle 1.4s steps(2) infinite;
   }
   @keyframes driftUp{
-    0%{ transform: translate(0,0); opacity:0; }
+    0%{ transform: translate3d(0,0,0); opacity:0; }
     10%{ opacity:0.9; }
-    100%{ transform: translate(var(--dx,20px), -110vh); opacity:0; }
+    100%{ transform: translate3d(var(--dx,20px), -110vh, 0); opacity:0; }
   }
   @keyframes twinkle{ 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 
@@ -254,17 +254,18 @@
   }
   .liq-block.b2{ background: var(--liq-2); }
   @keyframes liquidBob{
-    0%,100%{ transform: translateY(0); }
-    50%{ transform: translateY(-3px); }
+    0%,100%{ transform: translate3d(0,0,0); }
+    50%{ transform: translate3d(0,-3px,0); }
   }
   .liq-bubble{
     position:absolute; bottom:-4px; width:6px; height:6px;
     background: var(--liq-1); border-radius:50%;
+    will-change: transform, opacity;
     animation: liquidBubbleRise steps(4) forwards;
   }
   @keyframes liquidBubbleRise{
-    0%{ transform:translateY(0); opacity:0.9; }
-    100%{ transform:translateY(-46px); opacity:0; }
+    0%{ transform: translate3d(0,0,0); opacity:0.9; }
+    100%{ transform: translate3d(0,-46px,0); opacity:0; }
   }
 
   #catFamiliar{
@@ -274,44 +275,47 @@
   #catFamiliar.show{ display:block; }
   @keyframes catBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
 
-  #fxLayer, #numbersLayer{ position:absolute; inset:-20% -10%; pointer-events:none; z-index:5; overflow:visible; }
+  #fxLayer, #numbersLayer{
+    position:absolute; inset:-20% -10%; pointer-events:none; z-index:5; overflow:visible;
+    contain: layout paint style;
+  }
 
   .float-num{
     position:absolute; font-size:0.7rem; color:var(--amber-glow);
     text-shadow: 2px 2px 0 #000;
+    will-change: transform, opacity;
     animation: floatUp 0.85s ease-out forwards;
     white-space:nowrap;
   }
-  .float-num.crit{ color:#8fe9ff; font-size:0.85rem; text-shadow:2px 2px 0 #000, 0 0 6px rgba(143,233,255,0.9); }
+  .float-num.crit{ color:#8fe9ff; font-size:0.85rem; }
   .float-num.gold{ color:#ffe27a; }
-  .float-num.danger{ color:#ff4d6a; text-shadow:2px 2px 0 #000, 0 0 6px rgba(255,77,106,0.9); }
+  .float-num.danger{ color:#ff4d6a; }
   @keyframes floatUp{
-    0%{ transform:translateY(0); opacity:1; }
-    100%{ transform:translateY(-64px); opacity:0; }
+    0%{ transform: translate3d(0,0,0); opacity:1; }
+    100%{ transform: translate3d(0, -64px, 0); opacity:0; }
   }
 
-  .px-particle{ position:absolute; pointer-events:none; }
+  .px-particle{ position:absolute; pointer-events:none; will-change: transform, opacity; }
   .click-bubble{
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffffff 0%, var(--liq-1) 45%, var(--liq-2) 100%);
-    box-shadow: 0 0 8px rgba(var(--liquid-glow), 0.7), inset 1px 1px 2px rgba(255,255,255,0.8), inset -1px -1px 2px rgba(0,0,0,0.3);
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, var(--liq-1) 50%, var(--liq-2) 90%, rgba(var(--liquid-glow), 0.8) 100%);
     animation: softBubbleFloat var(--dur, 0.85s) ease-out forwards;
   }
   @keyframes softBubbleFloat{
-    0%{ transform: translate(0, 0) scale(0.6); opacity: 0; }
-    20%{ transform: translate(calc(var(--drift, 0px) * 0.2), -15px) scale(1.05); opacity: 0.95; }
-    60%{ transform: translate(calc(var(--drift, 0px) * 0.7), -55px) scale(1); opacity: 0.85; }
-    100%{ transform: translate(var(--drift, 0px), -85px) scale(1.15); opacity: 0; }
+    0%{ transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+    20%{ transform: translate3d(calc(var(--drift, 0px) * 0.2), -15px, 0) scale(1.05); opacity: 0.95; }
+    60%{ transform: translate3d(calc(var(--drift, 0px) * 0.7), -55px, 0) scale(1); opacity: 0.85; }
+    100%{ transform: translate3d(var(--drift, 0px), -85px, 0) scale(1.15); opacity: 0; }
   }
 
   .fx-flame{ background: #ff8a3d; animation: flameRise 1s steps(5) forwards; }
-  @keyframes flameRise{ 0%{ transform:translateY(0); opacity:0.95; } 100%{ transform:translateY(-90px) translateX(var(--sway,0px)); opacity:0; } }
+  @keyframes flameRise{ 0%{ transform: translate3d(0, 0, 0); opacity:0.95; } 100%{ transform: translate3d(var(--sway,0px), -90px, 0); opacity:0; } }
 
   .fx-sand{ background:#f4d27a; animation: sandFall linear forwards; }
-  @keyframes sandFall{ 0%{ transform:translateY(-30px); opacity:0.9; } 100%{ transform:translateY(150px); opacity:0; } }
+  @keyframes sandFall{ 0%{ transform: translate3d(0, -30px, 0); opacity:0.9; } 100%{ transform: translate3d(0, 150px, 0); opacity:0; } }
 
   .fx-violetspark{ background: #c186ff; animation: sparkFly 0.6s steps(4) forwards; }
-  @keyframes sparkFly{ 0%{ transform:translate(0,0); opacity:1; } 100%{ transform:translate(var(--sx,0px), var(--sy,-60px)); opacity:0; } }
+  @keyframes sparkFly{ 0%{ transform: translate3d(0, 0, 0); opacity:1; } 100%{ transform: translate3d(var(--sx,0px), var(--sy,-60px), 0); opacity:0; } }
 
   .fx-shimmer{ background: #bfe8ff; animation: sparkFly 0.9s steps(4) forwards; }
   .fx-rainbow{ background: #ffb3e6; animation: flameRise 0.9s steps(4) forwards; }
@@ -551,7 +555,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1>🌙 THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.4</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.5</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -586,7 +590,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1>⏸ GAME PAUSED</h1>
-    <div class="pause-ver-tag">✨ Current Build: Alpha v0.4</div>
+    <div class="pause-ver-tag">✨ Current Build: Alpha v0.5</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
@@ -619,7 +623,17 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.4 (Latest)</div>
+        <div class="changelog-ver">✨ Alpha v0.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Rendering performance optimizations specifically tuned for Firefox / Gecko layout engines.</li>
+          <li>Applied strict CSS containment (contain: layout paint style) and pointer-events isolation on particle containers.</li>
+          <li>Upgraded particle animations to hardware-accelerated 3D transforms (translate3d) with will-change hints.</li>
+          <li>Removed expensive paint filters (box-shadows and drop-shadows) from dynamically spawned particles.</li>
+          <li>Throttled tap particle spawning to a single lightweight burst bubble per click.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.4</div>
         <ul class="changelog-list">
           <li>Overhauled Synergy Tags with fixed Set Tier milestones: 🔥 Fire (2: +30% Click Power, 4: Overheat Surge), ❄ Frost (2: +3s Deadline, 4: Chill State), 🔮 Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).</li>
           <li>Added 5 new relics (Ashen Sigil, Phoenix Down, Glacial Core, Winter's Grasp, Arcane Conduit) so every tiered tag can reach its 4-piece milestone.</li>
@@ -1114,21 +1128,17 @@
   }
 
   function spawnClickBubbles(xPct, yPct){
-    const count = 5 + Math.floor(Math.random()*4);
-    for(let i=0;i<count;i++){
-      const size = 8 + Math.floor(Math.random()*12);
-      const drift = (Math.random()-0.5) * 70;
-      const dur = (0.7 + Math.random()*0.45).toFixed(2);
-      spawnEl(fxLayer, 'px-particle click-bubble', {
-        left: (xPct + (Math.random()-0.5)*14) + '%',
-        top: (yPct + (Math.random()-0.5)*10) + '%',
-        width: size+'px',
-        height: size+'px',
-        '--drift': drift.toFixed(1)+'px',
-        '--dur': dur+'s',
-        animationDelay: (Math.random()*0.08).toFixed(2)+'s'
-      }, Math.ceil(dur * 1000) + 150);
-    }
+    const size = 16 + Math.floor(Math.random()*8);
+    const drift = (Math.random()-0.5) * 40;
+    const dur = (0.65 + Math.random()*0.25).toFixed(2);
+    spawnEl(fxLayer, 'px-particle click-bubble', {
+      left: xPct + '%',
+      top: yPct + '%',
+      width: size+'px',
+      height: size+'px',
+      '--drift': drift.toFixed(1)+'px',
+      '--dur': dur+'s'
+    }, Math.ceil(dur * 1000) + 100);
   }
 
   function spawnLiquidBubble(){
