@@ -104,9 +104,10 @@
     box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000;
     clip-path: polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 6px),0 calc(100% - 6px));
     color:#2a1a08; font-family:inherit; cursor:pointer;
-    transition: none;
+    transition: filter 0.1s ease;
   }
-  .pixel-btn:active:not(:disabled){ transform: translate(3px,4px); box-shadow: 0 0 0 #000; }
+  .pixel-btn:hover:not(:disabled){ filter:brightness(1.15); }
+  .pixel-btn:active:not(:disabled){ transform: translate(3px,4px); box-shadow: 0 0 0 #000; filter:brightness(1); }
   .pixel-btn:disabled{ background:#5a5064; color:#8a7fa0; cursor:not-allowed; }
 
   /* ---------- TOP BAR ---------- */
@@ -325,17 +326,86 @@
     100%{ transform: translate3d(var(--drift, 0px), -85px, 0) scale(1.15); opacity: 0; }
   }
 
-  .fx-flame{ background: #ff8a3d; animation: flameRise 1s steps(5) forwards; }
-  @keyframes flameRise{ 0%{ transform: translate3d(0, 0, 0); opacity:0.95; } 100%{ transform: translate3d(var(--sway,0px), -90px, 0); opacity:0; } }
+  /* --- Relic ambient particles: bubbles, swirls, and smoke wisps --- */
+  .fx-flame{
+    border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+    background: radial-gradient(circle at 45% 30%, #ffe0a3 0%, #ff8a3d 55%, #d1400f 100%);
+    animation: flameRise 1s ease-out forwards;
+  }
+  @keyframes flameRise{
+    0%{ transform: translate3d(0, 0, 0) scale(0.7); opacity:0.95; }
+    100%{ transform: translate3d(var(--sway,0px), -90px, 0) scale(0.4); opacity:0; }
+  }
 
-  .fx-sand{ background:#f4d27a; animation: sandFall linear forwards; }
-  @keyframes sandFall{ 0%{ transform: translate3d(0, -30px, 0); opacity:0.9; } 100%{ transform: translate3d(0, 150px, 0); opacity:0; } }
+  .fx-smoke{
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(210,200,220,0.55) 0%, rgba(210,200,220,0.18) 60%, transparent 100%);
+    animation: smokeDrift 1.6s ease-out forwards;
+  }
+  @keyframes smokeDrift{
+    0%{ transform: translate3d(0,0,0) scale(0.5); opacity:0.5; }
+    100%{ transform: translate3d(var(--sway,10px), -70px, 0) scale(2.2); opacity:0; }
+  }
 
-  .fx-violetspark{ background: #c186ff; animation: sparkFly 0.6s steps(4) forwards; }
-  @keyframes sparkFly{ 0%{ transform: translate3d(0, 0, 0); opacity:1; } 100%{ transform: translate3d(var(--sx,0px), var(--sy,-60px), 0); opacity:0; } }
+  .fx-sand{
+    border-radius: 50%;
+    border: 2px solid #bfe0ff;
+    border-top-color: transparent;
+    background: none;
+    animation: frostSwirlFall 1.8s ease-in forwards;
+  }
+  @keyframes frostSwirlFall{
+    0%{ transform: translate3d(0, -30px, 0) rotate(0deg) scale(0.7); opacity:0.9; }
+    100%{ transform: translate3d(var(--sway,0px), 150px, 0) rotate(280deg) scale(1); opacity:0; }
+  }
 
-  .fx-shimmer{ background: #bfe8ff; animation: sparkFly 0.9s steps(4) forwards; }
-  .fx-rainbow{ background: #ffb3e6; animation: flameRise 0.9s steps(4) forwards; }
+  .fx-violetspark{
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #fff8d8 0%, #ffcf5c 45%, #b9720a 100%);
+    animation: sparkFly 0.7s ease-out forwards;
+  }
+  @keyframes sparkFly{
+    0%{ transform: translate3d(0, 0, 0) scale(0.5); opacity:1; }
+    100%{ transform: translate3d(var(--sx,0px), var(--sy,-60px), 0) scale(1.1); opacity:0; }
+  }
+
+  .fx-shimmer{
+    background: #bfe8ff;
+    clip-path: polygon(50% 0%, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0% 50%, 37% 37%);
+    animation: shimmerTwinkle 1s ease-in-out forwards;
+  }
+  @keyframes shimmerTwinkle{
+    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.3); opacity:0; }
+    30%{ opacity:1; transform: translate3d(calc(var(--sx,0px) * 0.3), calc(var(--sy,-40px) * 0.3), 0) rotate(60deg) scale(1); }
+    100%{ transform: translate3d(var(--sx,0px), var(--sy,-40px), 0) rotate(160deg) scale(0.4); opacity:0; }
+  }
+
+  .fx-rainbow{
+    border-radius:50%;
+    background: conic-gradient(from 0deg, #ff6b6b, #ffd166, #7dffb0, #6bc6ff, #c186ff, #ff6b6b);
+    animation: rainbowSwirl 1s ease-out forwards;
+  }
+  @keyframes rainbowSwirl{
+    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.6); opacity:0.95; }
+    100%{ transform: translate3d(var(--sway,0px), -90px, 0) rotate(300deg) scale(1.1); opacity:0; }
+  }
+
+  .fx-arcane-orb{
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #f1defe 0%, #c186ff 50%, #6a2fbf 100%);
+    animation: arcaneOrbDrift 1.2s ease-in-out forwards;
+  }
+  @keyframes arcaneOrbDrift{
+    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.5); opacity:0; }
+    20%{ opacity:0.9; }
+    100%{ transform: translate3d(var(--sx,0px), var(--sy,-70px), 0) rotate(180deg) scale(1.1); opacity:0; }
+  }
+
+  .fx-arcane-twinkle{
+    background: #e2c2ff;
+    clip-path: polygon(50% 0%, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0% 50%, 37% 37%);
+    animation: shimmerTwinkle 1s ease-in-out forwards;
+  }
 
   /* ---------- UPGRADES ---------- */
   #upgradesPanel{ display:flex; gap:8px; margin-bottom:10px; }
@@ -345,7 +415,9 @@
     border:3px solid #000;
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 4px 0 #000;
     color:var(--text-light); cursor:pointer; font-family:inherit;
+    transition: filter 0.1s ease;
   }
+  .upgradeBtn:hover:not(:disabled){ filter:brightness(1.25); }
   .upgradeBtn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
   .upgradeBtn:disabled{ opacity:0.4; cursor:not-allowed; }
   .upgradeTitle{ font-size:0.60rem; color:var(--amber-glow); line-height:1.4; text-align:center; }
@@ -412,7 +484,8 @@
   .bigBtn{
     margin-top:16px; padding:14px 20px; font-size:0.65rem; width:100%;
   }
-  .smallBtn{ margin-top:10px; padding:10px 14px; font-size:0.55rem; background:var(--purple-mid); color:var(--text-light); border:3px solid #000; box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 3px 0 #000; cursor:pointer; font-family:inherit; }
+  .smallBtn{ margin-top:10px; padding:10px 14px; font-size:0.55rem; background:var(--purple-mid); color:var(--text-light); border:3px solid #000; box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 3px 0 #000; cursor:pointer; font-family:inherit; transition: filter 0.1s ease; }
+  .smallBtn:hover:not(:disabled){ filter:brightness(1.25); }
   .smallBtn:active:not(:disabled){ transform:translate(2px,3px); box-shadow:0 0 0 #000; }
   .smallBtn:disabled{ opacity:0.4; cursor:not-allowed; }
 
@@ -428,8 +501,11 @@
     align-self:flex-end; margin-top:4px; padding:9px 14px;
     background: var(--amber); border:2px solid #000; color:#2a1a08;
     cursor:pointer; font-family:inherit; font-size:0.54rem;
+    box-shadow: 0 3px 0 #000; transition: filter 0.1s ease;
   }
-  .relicCard .rBuy:disabled{ background:#5a5064; color:#a89dbf; cursor:not-allowed; }
+  .relicCard .rBuy:hover:not(:disabled){ filter:brightness(1.25); }
+  .relicCard .rBuy:active:not(:disabled){ transform:translate(2px,3px); box-shadow:0 0 0 #000; }
+  .relicCard .rBuy:disabled{ background:#5a5064; color:#a89dbf; cursor:not-allowed; box-shadow:none; }
   .relicCard.owned{ opacity:0.5; }
   .relicCard.corrupted{
     border-color:#8a0e1e;
@@ -505,8 +581,10 @@
   .subpanel-close{
     padding: 4px 8px; font-size: 0.48rem; background: var(--purple-mid);
     border: 2px solid #000; color: var(--text-dim); cursor: pointer; font-family: inherit;
+    box-shadow: 0 2px 0 #000; transition: filter 0.1s ease;
   }
-  .subpanel-close:hover{ color: #fff; }
+  .subpanel-close:hover{ color: #fff; filter:brightness(1.25); }
+  .subpanel-close:active{ transform:translate(1px,2px); box-shadow:0 0 0 #000; }
   .setting-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; font-size:0.55rem; }
   .changelog-entry{ margin-bottom: 12px; }
   .changelog-entry:last-child{ margin-bottom: 0; }
@@ -761,7 +839,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.2</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6.4</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -796,7 +874,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.2</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.6.4</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
@@ -832,7 +910,23 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.2 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.4 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Fixed missing cauldron particle effects for most relics — ambient effects were only wired to 5 specific relics, so any other Fire/Frost/Arcane/Chaos relic (Ashen Sigil, Phoenix Down, Arcane Conduit, Winter's Grasp, Glacial Core, Cursed Ember, Unstable Brew, Familiar's Whisk, Philosopher's Crucible, Alchemist's Starter) showed nothing.</li>
+          <li>Ambient effects are now driven by a relic's Synergy Tag, so every relic in the game reliably shows a themed effect around the cauldron.</li>
+          <li>Added a new glowing violet orb + twinkle effect for Arcane relics.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.3</div>
+        <ul class="changelog-list">
+          <li>Shop upgrade buttons, relic "Buy" buttons, and every pause menu button now share the same satisfying hover glow and click-press feedback as the Ingredient Charms.</li>
+          <li>Relic ambient particle effects reworked — flames, frost, sparks, shimmer, and rainbow effects now render as proper bubbles, curling swirls, and drifting smoke wisps instead of flat colored squares.</li>
+          <li>Added a smoky wisp effect that lingers above the cauldron while brewing with the Dragonfire Pepper relic.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.6.2</div>
         <ul class="changelog-list">
           <li>Fixed unresponsive Ingredient Charm buttons (Stir Frenzy, Time Freeze, Golden Droplet) — they were being fully rebuilt every animation frame, which destroyed the button under the player's tap before the click could register.</li>
           <li>Charm buttons are now built once and updated in place, keeping their event listeners intact.</li>
@@ -1417,40 +1511,81 @@
 
   function spawnAmbientFx(){
     if(state.phase !== 'brewing') return;
-    if(hasRelic('dragonfire') && Math.random() < 0.55){
-      spawnEl(fxLayer, 'px-particle fx-flame', {
-        left:(35+Math.random()*30)+'%', top:'45%',
-        width:'10px', height:'10px',
-        '--sway': ((Math.random()-0.5)*40)+'px'
-      }, 1050);
+    // Ambient cauldron effects are driven by SYNERGY TAG, not by specific relic
+    // id — this guarantees every relic (Ashen Sigil, Phoenix Down, Arcane
+    // Conduit, Winter's Grasp, etc.) shows a themed effect, not just the
+    // handful of relics that were originally special-cased.
+    const tagCounts = getTagCounts();
+
+    if(tagCounts.fire){
+      if(Math.random() < 0.55){
+        spawnEl(fxLayer, 'px-particle fx-flame', {
+          left:(35+Math.random()*30)+'%', top:'45%',
+          width:'10px', height:'10px',
+          '--sway': ((Math.random()-0.5)*40)+'px'
+        }, 1050);
+      }
+      if(Math.random() < 0.35){
+        const size = 10 + Math.floor(Math.random()*8);
+        spawnEl(fxLayer, 'px-particle fx-smoke', {
+          left:(30+Math.random()*40)+'%', top:'38%',
+          width:size+'px', height:size+'px',
+          '--sway': ((Math.random()-0.5)*30)+'px'
+        }, 1650);
+      }
     }
-    if(hasRelic('hourglass') && Math.random() < 0.5){
-      spawnEl(fxLayer, 'px-particle fx-sand', {
-        left:(20+Math.random()*60)+'%', top:'-5%',
-        width:'4px', height:'4px',
-        animationDuration:(1.4+Math.random()*0.6)+'s'
-      }, 2100);
+
+    if(tagCounts.frost){
+      if(Math.random() < 0.5){
+        spawnEl(fxLayer, 'px-particle fx-sand', {
+          left:(20+Math.random()*60)+'%', top:'-5%',
+          width:'9px', height:'9px',
+          '--sway': ((Math.random()-0.5)*20)+'px',
+          animationDuration:(1.4+Math.random()*0.6)+'s'
+        }, 2100);
+      }
+      if(Math.random() < 0.4){
+        spawnEl(fxLayer, 'px-particle fx-shimmer', {
+          left:(30+Math.random()*40)+'%', top:'40%', width:'10px', height:'10px',
+          '--sx': ((Math.random()-0.5)*80)+'px',
+          '--sy': (-40-Math.random()*40)+'px'
+        }, 950);
+      }
     }
-    if(hasRelic('catalyst') && Math.random() < 0.5){
-      spawnEl(fxLayer, 'px-particle fx-violetspark', {
-        left:'50%', top:'45%', width:'8px', height:'8px',
-        '--sx': ((Math.random()-0.5)*140)+'px',
-        '--sy': ((Math.random()-0.5)*140)+'px'
-      }, 650);
+
+    if(tagCounts.arcane){
+      if(Math.random() < 0.5){
+        spawnEl(fxLayer, 'px-particle fx-arcane-orb', {
+          left:(30+Math.random()*40)+'%', top:'45%', width:'9px', height:'9px',
+          '--sx': ((Math.random()-0.5)*60)+'px',
+          '--sy': (-50-Math.random()*40)+'px'
+        }, 1250);
+      }
+      if(Math.random() < 0.35){
+        spawnEl(fxLayer, 'px-particle fx-arcane-twinkle', {
+          left:(25+Math.random()*50)+'%', top:'38%', width:'10px', height:'10px',
+          '--sx': ((Math.random()-0.5)*70)+'px',
+          '--sy': (-35-Math.random()*35)+'px'
+        }, 1000);
+      }
     }
-    if(hasRelic('moonstone') && Math.random() < 0.4){
-      spawnEl(fxLayer, 'px-particle fx-shimmer', {
-        left:(30+Math.random()*40)+'%', top:'40%', width:'8px', height:'8px',
-        '--sx': ((Math.random()-0.5)*80)+'px',
-        '--sy': (-40-Math.random()*40)+'px'
-      }, 950);
+
+    if(tagCounts.chaos){
+      if(Math.random() < 0.5){
+        spawnEl(fxLayer, 'px-particle fx-violetspark', {
+          left:'50%', top:'45%', width:'8px', height:'8px',
+          '--sx': ((Math.random()-0.5)*140)+'px',
+          '--sy': ((Math.random()-0.5)*140)+'px'
+        }, 650);
+      }
+      if(Math.random() < 0.4){
+        spawnEl(fxLayer, 'px-particle fx-rainbow', {
+          left:(30+Math.random()*40)+'%', top:'45%', width:'10px', height:'10px',
+          '--sway': ((Math.random()-0.5)*50)+'px'
+        }, 950);
+      }
     }
-    if(hasRelic('bifrost') && Math.random() < 0.4){
-      spawnEl(fxLayer, 'px-particle fx-rainbow', {
-        left:(30+Math.random()*40)+'%', top:'45%', width:'10px', height:'10px',
-        '--sway': ((Math.random()-0.5)*50)+'px'
-      }, 950);
-    }
+
     if(Math.random() < 0.6) spawnLiquidBubble();
   }
 
