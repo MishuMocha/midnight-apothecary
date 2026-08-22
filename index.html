@@ -86,9 +86,9 @@
     position:relative; z-index:2;
     width:100%; height:100%;
     max-width:560px; margin:0 auto;
-    display:flex; flex-direction:column;
+    display:flex; flex-direction:column; justify-content:space-between;
     padding: env(safe-area-inset-top,10px) 10px env(safe-area-inset-bottom,10px);
-    overflow-y:auto;
+    overflow:hidden;
   }
 
   /* ---------- PIXEL PANEL / BUTTON BASE ---------- */
@@ -227,22 +227,27 @@
 
   /* ---------- CAULDRON STAGE ---------- */
   #cauldronStage{
-    position:relative; flex:1; min-height:250px;
+    position:relative; flex:1; min-height:0;
     display:flex; align-items:center; justify-content:center;
     margin:10px 0;
+    overflow:visible;
   }
   #glowAura{
-    position:absolute; width:clamp(200px,55vw,300px); height:clamp(200px,55vw,300px);
-    border-radius:50%;
-    background: radial-gradient(circle, rgba(var(--liquid-glow),0.55) 0%, rgba(var(--liquid-glow),0.15) 45%, transparent 70%);
-    animation: auraPulse 1.2s steps(6) infinite;
+    position:absolute; inset:-15px; border-radius:50%; z-index:0;
     pointer-events:none;
+    background: radial-gradient(circle at 50% 50%, var(--aura-c1, rgba(168,110,255,0.65)) 0%, var(--aura-c2, rgba(168,110,255,0.35)) 50%, transparent 80%);
+    box-shadow: 0 0 25px 6px var(--aura-c1, rgba(168,110,255,0.45));
+    filter: blur(8px);
+    opacity:0.75;
+    transition: background 0.6s ease, box-shadow 0.6s ease;
+    animation: auraPulse 1.2s steps(6) infinite;
   }
-  @keyframes auraPulse{ 0%,100%{ transform:scale(1); opacity:0.8; } 50%{ transform:scale(1.08); opacity:1; } }
+  @keyframes auraPulse{ 0%,100%{ transform:scale(1); opacity:0.75; } 50%{ transform:scale(1.04); opacity:0.9; } }
 
   #cauldron{
     position:relative; width:clamp(190px,50vw,270px); aspect-ratio:1/1; cursor:pointer;
     -webkit-tap-highlight-color: transparent;
+    overflow:visible;
   }
   #cauldron.squish{ animation: squish 0.2s steps(3); }
   @keyframes squish{
@@ -251,17 +256,37 @@
     100%{ transform:scale(1,1); }
   }
 
+  /* Grounding contact shadow beneath the cauldron's clawed feet, for depth */
+  #cauldron::after{
+    content:""; position:absolute; left:50%; bottom:-2%;
+    width:56%; height:9%; transform:translateX(-50%);
+    background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 55%, transparent 80%);
+    filter: blur(1.5px);
+    z-index:0; pointer-events:none;
+  }
+
   #cauldronImg{
     position:absolute; inset:0; width:100%; height:100%; z-index:1;
     image-rendering:pixelated; pointer-events:none; user-select:none; -webkit-user-drag:none;
-    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 9px 7px rgba(0,0,0,0.55)) contrast(1.06) saturate(1.08);
   }
-  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 8px 6px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
+  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 9px 7px rgba(0,0,0,0.55)) contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
+
+  /* Rivet-stud glints layered over the cauldron art, echoing the polished-
+     iron look of the reference art without touching the pixel-art asset. */
+  .cauldron-stud{
+    position:absolute; width:5%; aspect-ratio:1/1; z-index:3; pointer-events:none;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9) 0%, rgba(200,200,210,0.35) 45%, transparent 75%);
+  }
+  .cauldron-stud.stud-l{ left:9%; top:47%; }
+  .cauldron-stud.stud-r{ right:9%; top:47%; }
 
   #liquidPixel{
     position:absolute; left:19%; right:19%; top:10%; height:19%;
     border-radius:50%; overflow:hidden; z-index:2;
     background-color: var(--liq-3);
+    contain: layout paint; pointer-events:none;
   }
   #liquidPixel.theme-bifrost{ animation: rainbowSpin 3s linear infinite; }
   @keyframes rainbowSpin{ 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
@@ -278,24 +303,18 @@
   .liq-bubble{
     position:absolute; bottom:-4px; width:6px; height:6px;
     background: var(--liq-1); border-radius:50%;
-    will-change: transform, opacity;
+    pointer-events:none; will-change: transform, opacity;
     animation: liquidBubbleRise steps(4) forwards;
   }
   @keyframes liquidBubbleRise{
-    0%{ transform: translate3d(0,0,0); opacity:0.9; }
-    100%{ transform: translate3d(0,-46px,0); opacity:0; }
+    0%{ transform: translate3d(0,0,0) scale(0.5); opacity:0.5; }
+    18%{ transform: translate3d(0,-6px,0) scale(1.2); opacity:1; }
+    100%{ transform: translate3d(0,-46px,0) scale(1); opacity:0; }
   }
-
-  #catFamiliar{
-    position:absolute; right:-4%; bottom:4%; font-size:clamp(24px,6vw,34px);
-    display:none; animation: catBob 1.2s steps(4) infinite; z-index:4;
-  }
-  #catFamiliar.show{ display:block; }
-  @keyframes catBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
 
   #fxLayer, #numbersLayer{
-    position:absolute; inset:-20% -10%; pointer-events:none; z-index:5; overflow:visible;
-    contain: layout paint style;
+    position:absolute; inset:-60% -20% -10% -20%; pointer-events:none; z-index:5; overflow:visible;
+    contain: layout style;
   }
 
   .float-num{
@@ -326,7 +345,14 @@
     100%{ transform: translate3d(var(--drift, 0px), -85px, 0) scale(1.15); opacity: 0; }
   }
 
-  /* --- Relic ambient particles: bubbles, swirls, and smoke wisps --- */
+  /* --- Relic ambient particle families ---
+     Four distinct shape families, reused across the tags that thematically
+     fit them, so every relic reads as a clearly different kind of effect:
+       - Arcane Swirls    (.fx-arcane-swirl)      spiral vectors that spin while rising
+       - Smoke/Scent Wisps(.fx-smoke)             curling semi-transparent trails
+       - Bubble Clusters   (.liq-bubble, clustered) organic varied-size bubbles
+       - Stardust / Glint (.fx-stardust)          twinkling 4-point pixel stars
+  */
   .fx-flame{
     border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
     background: radial-gradient(circle at 45% 30%, #ffe0a3 0%, #ff8a3d 55%, #d1400f 100%);
@@ -338,13 +364,16 @@
   }
 
   .fx-smoke{
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(210,200,220,0.55) 0%, rgba(210,200,220,0.18) 60%, transparent 100%);
-    animation: smokeDrift 1.6s ease-out forwards;
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(214,204,224,0.5) 0%, rgba(214,204,224,0.2) 55%, transparent 100%);
+    animation: smokeDrift 1.8s ease-out forwards;
   }
   @keyframes smokeDrift{
-    0%{ transform: translate3d(0,0,0) scale(0.5); opacity:0.5; }
-    100%{ transform: translate3d(var(--sway,10px), -70px, 0) scale(2.2); opacity:0; }
+    0%{ transform: translate3d(0,0,0) scale(0.45); opacity:0.55; }
+    25%{ transform: translate3d(calc(var(--sway,10px) * -0.65), -20px, 0) scale(0.95); opacity:0.48; }
+    50%{ transform: translate3d(calc(var(--sway,10px) * 0.55), -40px, 0) scale(1.4); opacity:0.34; }
+    75%{ transform: translate3d(calc(var(--sway,10px) * -0.25), -58px, 0) scale(1.85); opacity:0.18; }
+    100%{ transform: translate3d(var(--sway,10px), -78px, 0) scale(2.3); opacity:0; }
   }
 
   .fx-sand{
@@ -369,15 +398,20 @@
     100%{ transform: translate3d(var(--sx,0px), var(--sy,-60px), 0) scale(1.1); opacity:0; }
   }
 
-  .fx-shimmer{
-    background: #bfe8ff;
+  /* Stardust / Glint — sharp 4-point pixel stars with a gentle twinkle
+     (a soft radial core instead of a flat fill gives it some glint without
+     resorting to a per-frame box-shadow, keeping spawn cost cheap). */
+  .fx-stardust{
+    background: radial-gradient(circle, #ffffff 0%, #bfe8ff 55%, transparent 100%);
     clip-path: polygon(50% 0%, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0% 50%, 37% 37%);
-    animation: shimmerTwinkle 1s ease-in-out forwards;
+    animation: shimmerTwinkle 1.1s ease-in-out forwards;
   }
   @keyframes shimmerTwinkle{
-    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.3); opacity:0; }
-    30%{ opacity:1; transform: translate3d(calc(var(--sx,0px) * 0.3), calc(var(--sy,-40px) * 0.3), 0) rotate(60deg) scale(1); }
-    100%{ transform: translate3d(var(--sx,0px), var(--sy,-40px), 0) rotate(160deg) scale(0.4); opacity:0; }
+    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.25); opacity:0; }
+    22%{ opacity:1; transform: translate3d(calc(var(--sx,0px) * 0.22), calc(var(--sy,-40px) * 0.22), 0) rotate(50deg) scale(1.05); }
+    42%{ opacity:0.55; transform: translate3d(calc(var(--sx,0px) * 0.42), calc(var(--sy,-40px) * 0.42), 0) rotate(95deg) scale(0.7); }
+    62%{ opacity:1; transform: translate3d(calc(var(--sx,0px) * 0.64), calc(var(--sy,-40px) * 0.64), 0) rotate(130deg) scale(1); }
+    100%{ transform: translate3d(var(--sx,0px), var(--sy,-40px), 0) rotate(180deg) scale(0.35); opacity:0; }
   }
 
   .fx-rainbow{
@@ -390,21 +424,24 @@
     100%{ transform: translate3d(var(--sway,0px), -90px, 0) rotate(300deg) scale(1.1); opacity:0; }
   }
 
-  .fx-arcane-orb{
-    border-radius:50%;
-    background: radial-gradient(circle at 35% 30%, #f1defe 0%, #c186ff 50%, #6a2fbf 100%);
-    animation: arcaneOrbDrift 1.2s ease-in-out forwards;
+  /* Arcane Swirls — crisp spiral vectors, sharpened color bands read as a
+     coiled line rather than a soft blob, spinning fast while drifting up */
+  .fx-arcane-swirl{
+    border-radius: 8% 60% 60% 60% / 8% 55% 55% 55%;
+    background: conic-gradient(from 200deg,
+      transparent 0deg, #f1defe 8deg, transparent 22deg,
+      transparent 120deg, #c186ff 132deg, transparent 148deg,
+      transparent 250deg, #6a2fbf 262deg, transparent 285deg);
+    animation: arcaneSwirlRise 1.4s ease-out forwards;
   }
-  @keyframes arcaneOrbDrift{
-    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.5); opacity:0; }
-    20%{ opacity:0.9; }
-    100%{ transform: translate3d(var(--sx,0px), var(--sy,-70px), 0) rotate(180deg) scale(1.1); opacity:0; }
+  @keyframes arcaneSwirlRise{
+    0%{ transform: translate3d(0,0,0) rotate(0deg) scale(0.4); opacity:0; }
+    16%{ opacity:0.95; }
+    100%{ transform: translate3d(var(--sx,0px), var(--sy,-88px), 0) rotate(680deg) scale(0.85); opacity:0; }
   }
 
-  .fx-arcane-twinkle{
-    background: #e2c2ff;
-    clip-path: polygon(50% 0%, 63% 37%, 100% 50%, 63% 63%, 50% 100%, 37% 63%, 0% 50%, 37% 37%);
-    animation: shimmerTwinkle 1s ease-in-out forwards;
+  .fx-stardust.fx-stardust-arcane{
+    background: radial-gradient(circle, #ffffff 0%, #e2c2ff 55%, transparent 100%);
   }
 
   /* ---------- UPGRADES ---------- */
@@ -514,10 +551,16 @@
     text-align:left; padding:12px; background: rgba(255,255,255,0.04);
     border: 2px solid #000;
     display:flex; flex-direction:column; gap:6px;
-    cursor:pointer;
   }
   .relicCard .rName{ font-size:0.64rem; color:var(--amber-glow); line-height:1.5; }
   .relicCard .rDesc{ font-size:0.54rem; color:var(--text-dim); line-height:1.65; }
+  .rTierStatus{
+    display:flex; flex-direction:column; gap:2px;
+    border-top:1px dashed rgba(255,255,255,0.12); padding-top:6px; margin-top:2px;
+  }
+  .rTierLine{ font-size:0.48rem; line-height:1.6; }
+  .rTierLine.active{ color:var(--success); }
+  .rTierLine.inactive{ color:var(--text-dim); }
   .relicCard .rBuy{
     align-self:flex-end; margin-top:4px; padding:9px 14px;
     background: var(--amber); border:2px solid #000; color:#2a1a08;
@@ -658,7 +701,7 @@
   }
 
   @media (max-height: 620px){
-    #cauldronStage{ min-height:180px; }
+    #cauldronStage{ min-height:0; }
     #upgradesPanel{ margin-bottom:4px; }
   }
 </style>
@@ -868,11 +911,12 @@
   </div>
 
   <div id="cauldronStage">
-    <div id="glowAura"></div>
     <div id="cauldron">
+      <div id="glowAura"></div>
       <div id="liquidPixel"></div>
       <img id="cauldronImg" src="cauldron.png" alt="cauldron" draggable="false">
-      <div id="catFamiliar"><svg class="icon"><use href="#icon-cat"></use></svg></div>
+      <div class="cauldron-stud stud-l"></div>
+      <div class="cauldron-stud stud-r"></div>
       <div id="fxLayer"></div>
       <div id="numbersLayer"></div>
     </div>
@@ -902,7 +946,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.7</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.8.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -945,7 +989,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.7</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.8.6</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -991,7 +1035,61 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.7 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Tap bubbles and relic sparks now rise out of the brew itself instead of popping in well above the cauldron's rim.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.5</div>
+        <ul class="changelog-list">
+          <li>Bubbles, sparks, and floating numbers now rise cleanly above the cauldron instead of getting cut off at the pot's edge.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.4</div>
+        <ul class="changelog-list">
+          <li>Tightened the glow so it hugs the cauldron instead of washing out the whole brewing stage.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.3</div>
+        <ul class="changelog-list">
+          <li>Removed the Familiar's Whisk companion cat from the brewing stage — the relic still grants its bonus, just without the extra sprite beside the pot.</li>
+          <li>Softened the glow behind the cauldron so it fades cleanly into the background instead of clipping against the edges of the stage.</li>
+          <li>Locked the HUD so Stirring Power, Enchanted Bubblers, and Ingredient Charms stay flush at the bottom of the screen without pushing the brew off-screen or adding a scrollbar.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.2</div>
+        <ul class="changelog-list">
+          <li>Brewing effects (swirls, smoke, sparkles) now rise directly out of the bubbling liquid instead of the middle of the pot, and tap bubbles always pop up from the brew's surface.</li>
+          <li>Removed a stray floating highlight that was glitching above the cauldron's rim.</li>
+          <li>The glow behind the cauldron is now a soft ambient wash instead of a visible circular spotlight.</li>
+          <li>Redrew the Familiar's Whisk companion as a crisp pixel-art black cat with pointed ears, a curling tail, a gold collar charm, and glowing amber eyes — and fixed its tail occasionally vanishing mid-sway.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8.1</div>
+        <ul class="changelog-list">
+          <li>Smoothed out the glow behind the cauldron — it now dissolves softly into the background instead of showing a hard circular edge.</li>
+          <li>Gave the Familiar's Whisk cat a full redesign: pointed ears with inner highlights, glowing golden almond eyes, a curling swaying tail, and a tiny glinting collar charm.</li>
+          <li>Sharpened the look of Arcane Swirls, Smoke Wisps, Bubble Clusters, and Stardust so each brewing effect twinkles and drifts more distinctly.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.8</div>
+        <ul class="changelog-list">
+          <li>Overhauled the cauldron's backdrop glow into a richer, layered aura with real depth — and it now dynamically blends its color toward whichever Synergy Tags your owned Relics lean into.</li>
+          <li>Added crisp rim-shine and rivet-stud highlights to the cauldron, plus a grounding shadow beneath its feet for a more polished, high-definition pixel-art look.</li>
+          <li>Reworked relic ambient effects into four clearly distinct families — spinning Arcane Swirls, curling Smoke Wisps, clustered Bubble bursts (tied to your Enchanted Bubblers), and twinkling Stardust glints.</li>
+          <li>The Familiar's Whisk companion cat is now a fully independent black cat with its own idle animation (breathing, blinking amber eyes, swaying tail) that no longer flinches or squishes when you tap the cauldron.</li>
+          <li>Relic Pedestal cards in the shop are now fully self-contained — each card shows its own Synergy Tier progress directly in the card, so there's no popup to tap through anymore.</li>
+          <li>Ingredient Charm tooltips on the Alchemist's Supply Shelf now open above the item so they never cover the Buy or Reroll buttons.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.7</div>
         <ul class="changelog-list">
           <li>Rebalanced late-game Gold payouts — earning huge Gold windfalls by Order 8+ and buying out the entire shop in one visit is now much harder. Early orders are unaffected.</li>
           <li>Redesigned the Apothecary Shop into two tiers: a "Relic Pedestal" for your 3 randomized Relic choices, and a compact "Alchemist's Supply Shelf" for Ingredient Charms.</li>
@@ -1229,6 +1327,16 @@
     crucible:   { c1:'#fff3b0', c2:'#e8b93d', c3:'#a9760a', glow:'232, 185, 61' },
   };
 
+  // Per-tag glow colors used to dynamically re-tint the cauldron's backdrop
+  // aura based on whichever Synergy Tags the player's current Relics lean
+  // into — the aura visually blends toward the player's build.
+  const TAG_AURA_GLOW = {
+    fire:   'rgba(255, 122, 61, 0.55)',
+    frost:  'rgba(143, 208, 245, 0.55)',
+    arcane: 'rgba(193, 134, 255, 0.55)',
+    chaos:  'rgba(255, 77, 106, 0.55)',
+  };
+
   /* =========================================================
      STATE
   ========================================================= */
@@ -1280,7 +1388,6 @@
   const fulfillBtn = $('fulfillBtn');
   const cauldron = $('cauldron');
   const liquidPixel = $('liquidPixel');
-  const catFamiliar = $('catFamiliar');
   const fxLayer = $('fxLayer');
   const numbersLayer = $('numbersLayer');
   const buyStirBtn = $('buyStirBtn');
@@ -1513,11 +1620,30 @@
     document.documentElement.style.setProperty('--liquid-glow', theme.glow);
     liquidPixel.className = state.liquidTheme === 'bifrost' ? 'theme-bifrost' : '';
     buildLiquidBlocks();
+    updateAuraColors(theme);
 
     RELICS.forEach(r => {
       cauldron.classList.toggle('fx-' + r.id, hasRelic(r.id));
     });
-    catFamiliar.classList.toggle('show', hasRelic('whisk'));
+  }
+
+  function updateAuraColors(theme){
+    // Blend the backdrop aura's palette toward whichever Synergy Tags the
+    // player's owned Relics lean into (dominant tag first), falling back to
+    // the current potion's own glow color to fill any remaining slots so a
+    // single-tag or relic-less run still reads as one cohesive glow.
+    theme = theme || LIQUID_THEMES[state.liquidTheme] || LIQUID_THEMES.default;
+    const baseColor = 'rgba(' + theme.glow + ',0.5)';
+    const counts = getTagCounts();
+    const activeTags = Object.keys(TAG_AURA_GLOW)
+      .filter(t => counts[t] > 0)
+      .sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
+    const colors = activeTags.map(t => TAG_AURA_GLOW[t]);
+    while(colors.length < 3) colors.push(baseColor);
+    const root = document.documentElement.style;
+    root.setProperty('--aura-c1', colors[0]);
+    root.setProperty('--aura-c2', colors[1]);
+    root.setProperty('--aura-c3', colors[2]);
   }
 
   function buildLiquidBlocks(){
@@ -1663,9 +1789,22 @@
     return el;
   }
 
+  // #fxLayer / #numbersLayer use inset: -60% -20% -10% -20% of #cauldron, so
+  // a "14% from the pot top" spawn has to be remapped into that taller box
+  // or every bubble appears to pop in mid-air above the rim.
+  function cauldronToLayerPct(xPct, yPct){
+    return {
+      x: ((20 + xPct) / 140) * 100,
+      y: ((60 + yPct) / 170) * 100
+    };
+  }
+  function brewMouthX(){ return 28 + Math.random() * 44; }
+  function brewMouthY(){ return 16 + Math.random() * 6; }
+
   function spawnFloatNumber(text, cls, xPct, yPct){
+    const pos = cauldronToLayerPct(xPct, yPct);
     const el = spawnEl(numbersLayer, 'float-num ' + (cls||''), {
-      left: xPct + '%', top: yPct + '%'
+      left: pos.x + '%', top: pos.y + '%'
     }, 900);
     el.innerHTML = text;
   }
@@ -1693,6 +1832,24 @@
     }, 1300);
   }
 
+  // Bubble Clusters — a handful of organic, varied-size bubbles spawned
+  // together instead of one at a time. Tied to the Enchanted Bubblers
+  // upgrade so a brew's ambient "boiling" activity visually scales with its
+  // passive Mana/sec, independent of which Relics (if any) are owned.
+  function spawnBubbleCluster(){
+    const clusterX = 12 + Math.random()*70;
+    const count = 3 + Math.floor(Math.random()*3);
+    for(let i = 0; i < count; i++){
+      const size = 3 + Math.floor(Math.random()*6);
+      spawnEl(liquidPixel, 'liq-bubble', {
+        left: clamp(clusterX + (Math.random()-0.5)*22, 4, 92) + '%',
+        width: size+'px', height: size+'px',
+        animationDuration: (0.6 + Math.random()*0.6)+'s',
+        animationDelay: (Math.random()*0.18)+'s'
+      }, 1400);
+    }
+  }
+
   function spawnAmbientFx(){
     if(state.phase !== 'brewing') return;
     // Ambient cauldron effects are driven by SYNERGY TAG, not by specific relic
@@ -1701,18 +1858,23 @@
     // handful of relics that were originally special-cased.
     const tagCounts = getTagCounts();
 
+    // Relic ambient particles spawn from the bubbling liquid opening, then
+    // get remapped into the oversized fxLayer so they still rise out of
+    // the brew instead of appearing in mid-air above the rim.
     if(tagCounts.fire){
       if(Math.random() < 0.55){
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
         spawnEl(fxLayer, 'px-particle fx-flame', {
-          left:(35+Math.random()*30)+'%', top:'45%',
+          left:p.x+'%', top:p.y+'%',
           width:'10px', height:'10px',
           '--sway': ((Math.random()-0.5)*40)+'px'
         }, 1050);
       }
       if(Math.random() < 0.35){
         const size = 10 + Math.floor(Math.random()*8);
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
         spawnEl(fxLayer, 'px-particle fx-smoke', {
-          left:(30+Math.random()*40)+'%', top:'38%',
+          left:p.x+'%', top:p.y+'%',
           width:size+'px', height:size+'px',
           '--sway': ((Math.random()-0.5)*30)+'px'
         }, 1650);
@@ -1721,16 +1883,18 @@
 
     if(tagCounts.frost){
       if(Math.random() < 0.5){
+        const p = cauldronToLayerPct(20+Math.random()*60, -8);
         spawnEl(fxLayer, 'px-particle fx-sand', {
-          left:(20+Math.random()*60)+'%', top:'-5%',
+          left:p.x+'%', top:p.y+'%',
           width:'9px', height:'9px',
           '--sway': ((Math.random()-0.5)*20)+'px',
           animationDuration:(1.4+Math.random()*0.6)+'s'
         }, 2100);
       }
       if(Math.random() < 0.4){
-        spawnEl(fxLayer, 'px-particle fx-shimmer', {
-          left:(30+Math.random()*40)+'%', top:'40%', width:'10px', height:'10px',
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        spawnEl(fxLayer, 'px-particle fx-stardust', {
+          left:p.x+'%', top:p.y+'%', width:'10px', height:'10px',
           '--sx': ((Math.random()-0.5)*80)+'px',
           '--sy': (-40-Math.random()*40)+'px'
         }, 950);
@@ -1739,15 +1903,17 @@
 
     if(tagCounts.arcane){
       if(Math.random() < 0.5){
-        spawnEl(fxLayer, 'px-particle fx-arcane-orb', {
-          left:(30+Math.random()*40)+'%', top:'45%', width:'9px', height:'9px',
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        spawnEl(fxLayer, 'px-particle fx-arcane-swirl', {
+          left:p.x+'%', top:p.y+'%', width:'11px', height:'11px',
           '--sx': ((Math.random()-0.5)*60)+'px',
-          '--sy': (-50-Math.random()*40)+'px'
-        }, 1250);
+          '--sy': (-55-Math.random()*40)+'px'
+        }, 1350);
       }
       if(Math.random() < 0.35){
-        spawnEl(fxLayer, 'px-particle fx-arcane-twinkle', {
-          left:(25+Math.random()*50)+'%', top:'38%', width:'10px', height:'10px',
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        spawnEl(fxLayer, 'px-particle fx-stardust fx-stardust-arcane', {
+          left:p.x+'%', top:p.y+'%', width:'10px', height:'10px',
           '--sx': ((Math.random()-0.5)*70)+'px',
           '--sy': (-35-Math.random()*35)+'px'
         }, 1000);
@@ -1756,21 +1922,29 @@
 
     if(tagCounts.chaos){
       if(Math.random() < 0.5){
+        const p = cauldronToLayerPct(50, brewMouthY());
         spawnEl(fxLayer, 'px-particle fx-violetspark', {
-          left:'50%', top:'45%', width:'8px', height:'8px',
+          left:p.x+'%', top:p.y+'%', width:'8px', height:'8px',
           '--sx': ((Math.random()-0.5)*140)+'px',
           '--sy': ((Math.random()-0.5)*140)+'px'
         }, 650);
       }
       if(Math.random() < 0.4){
+        const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
         spawnEl(fxLayer, 'px-particle fx-rainbow', {
-          left:(30+Math.random()*40)+'%', top:'45%', width:'10px', height:'10px',
+          left:p.x+'%', top:p.y+'%', width:'10px', height:'10px',
           '--sway': ((Math.random()-0.5)*50)+'px'
         }, 950);
       }
     }
 
-    if(Math.random() < 0.6) spawnLiquidBubble();
+    // Bubble Clusters scale with passive generation (Enchanted Bubblers),
+    // giving every run some ambient brewing activity even with no relics.
+    if(state.bubblerLevel > 0 && Math.random() < 0.45){
+      spawnBubbleCluster();
+    } else if(Math.random() < 0.35){
+      spawnLiquidBubble();
+    }
   }
 
   function spawnAmbientSparkles(){
@@ -1891,7 +2065,11 @@
     addMana(power);
     spawnFloatNumber('+' + fmt(power), crit ? 'crit' : '', xPct, yPct);
     if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
-    spawnClickBubbles(xPct, yPct);
+    // Tap burst bubbles always pop up out of the liquid opening near the
+    // top of the pot, not wherever on the iron body you happened to tap —
+    // only their horizontal position follows your tap.
+    const brew = cauldronToLayerPct(clamp(xPct, 28, 72), brewMouthY());
+    spawnClickBubbles(brew.x, brew.y);
     sfxClick(crit);
 
     if(hasTagTier('fire', 1) && state.clickCountRun % 10 === 0){
@@ -2097,15 +2275,16 @@
           const hint = getSynergyHint(t, tagCounts[t] || 0);
           return hint ? `<div class="synergy-hint">${hint}</div>` : '';
         }).join('');
+        const tierStatusHtml = getRelicTierStatusHTML(r, 'rTierLine');
         const card = document.createElement('div');
         card.className = 'relicCard' + (owned ? ' owned' : '') + (r.corrupted ? ' corrupted' : '');
         card.setAttribute('data-id', r.id);
-        card.title = 'Tap for details';
         card.innerHTML = `
           <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
+          ${tierStatusHtml ? '<div class="rTierStatus">' + tierStatusHtml + '</div>' : ''}
           <button class="rBuy" data-id="${r.id}" ${owned || state.gold < price ? 'disabled' : ''}>
             ${owned ? 'ACQUIRED' : 'BUY — ' + price + ' ' + icon('coin','ic-gold')}
           </button>
@@ -2122,15 +2301,6 @@
         e.stopPropagation();
         buyRelic(btn.getAttribute('data-id'));
       });
-    });
-    shopCards.querySelectorAll('.relicCard').forEach(cardEl => {
-      const id = cardEl.getAttribute('data-id');
-      cardEl.addEventListener('click', (e) => {
-        if(e.target.closest('.rBuy')) return;
-        e.stopPropagation();
-        toggleTooltip(cardEl, getRelicTooltipHTML(id), 'shopcard-' + id);
-      });
-      cardEl.addEventListener('mouseenter', () => showTooltip(cardEl, getRelicTooltipHTML(id), 'shopcard-' + id));
     });
 
     renderConsumableShop();
@@ -2192,13 +2362,13 @@
      owned relic badges, and ingredient charms so every inspectable thing
      in the game behaves the same way (hover on desktop, tap-to-toggle on
      touch, never triggers a purchase/use by itself). */
-  function showTooltip(anchorEl, html, key){
+  function showTooltip(anchorEl, html, key, preferAbove){
     synergyTooltip.innerHTML = html;
     synergyTooltip.dataset.key = key;
     synergyTooltip.classList.remove('hidden');
     const rect = anchorEl.getBoundingClientRect();
-    synergyTooltip.style.top = (rect.bottom + 6) + 'px';
     synergyTooltip.style.left = rect.left + 'px';
+    synergyTooltip.style.top = (preferAbove ? rect.top - 6 : rect.bottom + 6) + 'px';
     requestAnimationFrame(() => {
       const tw = synergyTooltip.offsetWidth;
       const th = synergyTooltip.offsetHeight;
@@ -2207,8 +2377,19 @@
       let left = rect.left;
       if(left + tw > vw - 8) left = vw - tw - 8;
       if(left < 8) left = 8;
-      let top = rect.bottom + 6;
-      if(top + th > vh - 8) top = Math.max(8, rect.top - th - 6);
+      let top;
+      if(preferAbove){
+        // Charm shelf items sit right above the Buy/Reroll buttons, so
+        // default to opening upward and only fall back to below if there
+        // truly isn't room — this keeps the tooltip from ever covering
+        // the very buttons the player is trying to read about.
+        top = rect.top - th - 6;
+        if(top < 8) top = rect.bottom + 6;
+        if(top + th > vh - 8) top = Math.max(8, vh - th - 8);
+      } else {
+        top = rect.bottom + 6;
+        if(top + th > vh - 8) top = Math.max(8, rect.top - th - 6);
+      }
       synergyTooltip.style.left = left + 'px';
       synergyTooltip.style.top = top + 'px';
     });
@@ -2219,11 +2400,11 @@
     synergyTooltip.dataset.key = '';
   }
 
-  function toggleTooltip(anchorEl, html, key){
+  function toggleTooltip(anchorEl, html, key, preferAbove){
     if(synergyTooltip.dataset.key === key && !synergyTooltip.classList.contains('hidden')){
       hideTooltip();
     } else {
-      showTooltip(anchorEl, html, key);
+      showTooltip(anchorEl, html, key, preferAbove);
     }
   }
 
@@ -2231,15 +2412,14 @@
   function hideSynergyTooltip(){ hideTooltip(); }
   function toggleSynergyTooltip(btn, tag){ toggleTooltip(btn, getSynergyTooltipHTML(tag), 'tag-' + tag); }
 
-  function getRelicTooltipHTML(relicId){
-    const r = RELICS.find(x => x.id === relicId);
-    if(!r) return '';
+  /* Shared synergy-progression status lines for a relic's tag(s) — shows
+     current standing toward each tag's tier milestones (or its simple 2+
+     synergy bonus). Used both in the owned-relic tooltip and embedded
+     directly into Relic Pedestal shop cards. */
+  function getRelicTierStatusHTML(r, lineClass){
+    const cls = lineClass || 'tooltip-line';
     const tagCounts = getTagCounts();
-    const tagsHtml = (r.tags||[]).map(t => {
-      const info = TAG_INFO[t];
-      return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
-    }).join('');
-    let tierHtml = '';
+    let html = '';
     (r.tags||[]).forEach(t => {
       const info = TAG_INFO[t];
       const tiers = TAG_TIERS[t];
@@ -2247,20 +2427,30 @@
       if(tiers){
         const active = tiers.slice().reverse().find(ti => c >= ti.count);
         const next = tiers.find(ti => c < ti.count);
-        if(active) tierHtml += `<div class="tooltip-line active">${icon('check','ic-check')} ${info.label} Tier (${active.count}) ACTIVE — ${active.desc}</div>`;
-        if(next) tierHtml += `<div class="tooltip-line inactive">${icon('lock','ic-lock')} Next ${info.label} Tier at ${next.count}: ${next.label} (${c}/${next.count})</div>`;
+        if(active) html += `<div class="${cls} active">${icon('check','ic-check')} ${info.label} Tier (${active.count}) ACTIVE — ${active.desc}</div>`;
+        if(next) html += `<div class="${cls} inactive">${icon('lock','ic-lock')} Next ${info.label} Tier at ${next.count}: ${next.label} (${c}/${next.count})</div>`;
       } else {
         const mult = getSynergyMult(t);
-        tierHtml += c >= 2
-          ? `<div class="tooltip-line active">${icon('check','ic-check')} ${info.label} Synergy ACTIVE — each ${info.label} relic scaled x${mult.toFixed(2)} (${c} owned)</div>`
-          : `<div class="tooltip-line inactive">${icon('lock','ic-lock')} ${info.label} Synergy locked — own 2+ ${info.label} relics to start scaling (${c}/2)</div>`;
+        html += c >= 2
+          ? `<div class="${cls} active">${icon('check','ic-check')} ${info.label} Synergy ACTIVE — each ${info.label} relic scaled x${mult.toFixed(2)} (${c} owned)</div>`
+          : `<div class="${cls} inactive">${icon('lock','ic-lock')} ${info.label} Synergy locked — own 2+ ${info.label} relics to start scaling (${c}/2)</div>`;
       }
     });
+    return html;
+  }
+
+  function getRelicTooltipHTML(relicId){
+    const r = RELICS.find(x => x.id === relicId);
+    if(!r) return '';
+    const tagsHtml = (r.tags||[]).map(t => {
+      const info = TAG_INFO[t];
+      return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+    }).join('');
     return `
       <div class="tooltip-title">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
       <div class="rTags" style="margin-bottom:6px;">${tagsHtml}</div>
       <div class="tooltip-desc">${r.desc}</div>
-      ${tierHtml}
+      ${getRelicTierStatusHTML(r)}
     `;
   }
 
@@ -2327,9 +2517,9 @@
       itemEl.addEventListener('click', (e) => {
         if(e.target.closest('.rBuy')) return;
         e.stopPropagation();
-        toggleTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id);
+        toggleTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true);
       });
-      itemEl.addEventListener('mouseenter', () => showTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id));
+      itemEl.addEventListener('mouseenter', () => showTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true));
     });
   }
 
