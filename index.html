@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>The Midnight Apothecary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#050308;
+    --purple-deep:#140b22;
+    --purple-mid:#2a1642;
+    --purple-panel:#1c0f30;
+    --amber:#f4b860;
+    --amber-glow:#ffd27a;
+    --text-light:#f3e9ff;
+    --text-dim:#a893c9;
+    --danger:#ff5d6c;
+    --success:#7dffb0;
+    --liquid-glow: 168, 110, 255;
+    --liq-1:#c9a6ff;
+    --liq-2:#8a5cf0;
+    --liq-3:#4b2a8f;
+    --px-light: rgba(255,255,255,0.16);
+    --px-dark: rgba(0,0,0,0.6);
+  }
+
+  *{ box-sizing:border-box; touch-action:manipulation; image-rendering:pixelated; }
+
+  html, body{
+    margin:0; padding:0; height:100%; width:100%;
+    overflow:hidden;
+    -webkit-user-select:none; -moz-user-select:none; user-select:none;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior:none;
+    background: var(--bg-void);
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    color: var(--text-light);
+    image-rendering:auto;
+  }
+
+  #bgSky{
+    position:fixed; inset:0; z-index:0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 4px),
+      radial-gradient(ellipse at 22% 18%, rgba(130,70,210,0.30), transparent 55%),
+      radial-gradient(ellipse at 82% 85%, rgba(244,184,96,0.09), transparent 50%),
+      linear-gradient(180deg, #0d0716 0%, #170f28 50%, #09050f 100%);
+  }
+
+  #ambientSparkles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+  .ambient-spark{
+    position:absolute; bottom:-10px; background: var(--amber-glow);
+    opacity:0.8; pointer-events:none; border-radius:0;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+    animation: driftUp linear forwards, twinkle 1.4s steps(2) infinite;
+  }
+  @keyframes driftUp{
+    0%{ transform: translate(0,0); opacity:0; }
+    10%{ opacity:0.9; }
+    100%{ transform: translate(var(--dx,20px), -110vh); opacity:0; }
+  }
+  @keyframes twinkle{ 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  #app{
+    position:relative; z-index:2;
+    width:100%; height:100%;
+    max-width:560px; margin:0 auto;
+    display:flex; flex-direction:column;
+    padding: env(safe-area-inset-top,10px) 10px env(safe-area-inset-bottom,10px);
+    overflow-y:auto;
+  }
+
+  /* ---------- PIXEL PANEL / BUTTON BASE ---------- */
+  .pixel-panel{
+    background: var(--purple-panel);
+    border: 3px solid #000;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 4px 0 #000;
+    clip-path: polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+  }
+  .pixel-btn{
+    background: var(--amber);
+    border: 3px solid #000;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000;
+    clip-path: polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 6px),0 calc(100% - 6px));
+    color:#2a1a08; font-family:inherit; cursor:pointer;
+    transition: none;
+  }
+  .pixel-btn:active:not(:disabled){ transform: translate(3px,4px); box-shadow: 0 0 0 #000; }
+  .pixel-btn:disabled{ background:#5a5064; color:#8a7fa0; cursor:not-allowed; }
+
+  /* ---------- TOP BAR ---------- */
+  #topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:8px; padding:10px 12px; margin-top:6px;
+    flex-wrap: wrap;
+  }
+  #roundLabel{ font-size:0.65rem; color:var(--amber-glow); line-height:1.4; }
+  .top-actions{ display:flex; align-items:center; gap:8px; }
+  #goldDisplay{
+    display:flex; align-items:center; gap:6px; color:var(--amber);
+    font-size:0.68rem;
+  }
+  #goldDisplay.pulse{ animation: goldPulse 0.4s steps(3); }
+  @keyframes goldPulse{ 0%{transform:scale(1.5); color:#fff;} 100%{transform:scale(1);} }
+  .icon-btn{
+    padding:6px 10px; font-size:0.55rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
+  }
+  #relicTray{ display:flex; gap:5px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
+  .relic-badge{
+    width:24px; height:24px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--purple-mid);
+    border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    font-size:12px;
+    cursor:default;
+  }
+
+  /* ---------- ORDER / PROGRESS PANEL ---------- */
+  #orderPanel{ margin-top:10px; padding:12px; }
+  .barRow{ margin-bottom:10px; }
+  .barRow:last-child{ margin-bottom:0; }
+  .barLabelRow{ display:flex; justify-content:space-between; font-size:0.56rem; color:var(--text-dim); margin-bottom:5px; line-height:1.4; }
+  .barTrack{ position:relative; height:18px; background:#07030d; border:2px solid #000; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), inset 0 2px 4px rgba(0,0,0,0.85); overflow:hidden; }
+  .barFill{
+    height:100%; width:0%; position:relative; overflow:hidden;
+    transition: width 0.12s ease-out;
+  }
+  .barFill::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+  }
+  #manaFill{
+    background: linear-gradient(180deg, #d3b4ff 0%, #9e6cf2 45%, #6a34cc 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 10px rgba(158,108,242,0.65);
+  }
+  #manaFill::after{
+    background:
+      radial-gradient(circle at 18% 35%, rgba(255,255,255,0.7) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 58% 65%, rgba(255,255,255,0.6) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 84% 30%, rgba(255,255,255,0.55) 0 1px, transparent 1.5px),
+      linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+    background-size: 40px 100%, 55px 100%, 35px 100%, 140px 100%;
+    animation: manaWave 2.2s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes manaWave{
+    0%{ background-position: 0 0, 0 0, 0 0, -140px 0; }
+    100%{ background-position: 40px 0, -55px 0, 35px 0, 140px 0; }
+  }
+  #manaFill.quota-met{
+    background: linear-gradient(180deg, #fff7c2 0%, #ffd043 45%, #d48b0c 100%);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 14px rgba(255,208,67,0.85);
+    animation: quotaPulse 0.7s ease-in-out infinite alternate;
+  }
+  @keyframes quotaPulse{
+    0%{ filter: brightness(1) drop-shadow(0 0 4px #ffd043); }
+    100%{ filter: brightness(1.25) drop-shadow(0 0 10px #ffe27a); }
+  }
+  #timerFill{
+    background: linear-gradient(180deg, #7c0b1b 0%, #4a030d 52%, #1e0004 100%);
+    box-shadow: inset 0 1px 0 rgba(255,80,100,0.35), inset 0 -1px 0 rgba(0,0,0,0.85), 0 0 10px rgba(124,11,27,0.6);
+  }
+  #timerFill::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 65px 12px at 20% 50%, rgba(220, 30, 60, 0.5) 0%, transparent 80%),
+      radial-gradient(ellipse 40px 10px at 70% 40%, rgba(180, 15, 45, 0.45) 0%, transparent 75%),
+      linear-gradient(90deg, transparent 0%, rgba(190, 20, 50, 0.35) 45%, rgba(240, 50, 80, 0.5) 55%, transparent 100%);
+    background-size: 210px 100%, 150px 100%, 280px 100%;
+    animation: timerSurgeA 3.4s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  #timerFill::after{
+    background:
+      radial-gradient(ellipse 35px 8px at 50% 60%, rgba(255, 40, 75, 0.4) 0%, transparent 70%),
+      linear-gradient(90deg, transparent 0%, rgba(160, 10, 35, 0.25) 30%, rgba(225, 35, 65, 0.45) 50%, transparent 85%),
+      linear-gradient(180deg, rgba(255, 100, 120, 0.22) 0%, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+    background-size: 130px 100%, 220px 100%, 100% 100%;
+    animation: timerSurgeB 2.3s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes timerSurgeA{
+    0%{ background-position: -60px 0, 120px 0, -280px 0; opacity: 0.7; }
+    50%{ opacity: 1; }
+    100%{ background-position: 150px 0, -30px 0, 280px 0; opacity: 0.85; }
+  }
+  @keyframes timerSurgeB{
+    0%{ background-position: 0 0, -220px 0, 0 0; }
+    50%{ background-position: 65px 0, -50px 0, 0 0; }
+    100%{ background-position: 130px 0, 220px 0, 0 0; }
+  }
+  #timerFill.low{
+    background: linear-gradient(180deg, #b80d24 0%, #690011 50%, #290006 100%);
+    box-shadow: inset 0 1px 0 rgba(255,160,175,0.6), 0 0 18px rgba(184, 13, 36, 0.95);
+    animation: timerDangerGlow 0.35s ease-in-out infinite alternate;
+  }
+  @keyframes timerDangerGlow{
+    0%{ filter: brightness(1) drop-shadow(0 0 4px #b80d24); }
+    100%{ filter: brightness(1.35) drop-shadow(0 0 12px #ff2045); }
+  }
+
+  #fulfillBtn{ width:100%; margin-top:10px; padding:12px 8px; font-size:0.65rem; display:none; }
+  #fulfillBtn.show{ display:block; animation: fulfillGlow 0.8s steps(4) infinite; }
+  @keyframes fulfillGlow{ 0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(244,184,96,0.6);} 50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 6px rgba(244,184,96,0.15);} }
+
+  /* ---------- CAULDRON STAGE ---------- */
+  #cauldronStage{
+    position:relative; flex:1; min-height:250px;
+    display:flex; align-items:center; justify-content:center;
+    margin:10px 0;
+  }
+  #glowAura{
+    position:absolute; width:clamp(200px,55vw,300px); height:clamp(200px,55vw,300px);
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(var(--liquid-glow),0.55) 0%, rgba(var(--liquid-glow),0.15) 45%, transparent 70%);
+    animation: auraPulse 1.2s steps(6) infinite;
+    pointer-events:none;
+  }
+  @keyframes auraPulse{ 0%,100%{ transform:scale(1); opacity:0.8; } 50%{ transform:scale(1.08); opacity:1; } }
+
+  #cauldron{
+    position:relative; width:clamp(190px,50vw,270px); aspect-ratio:1/1; cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #cauldron.squish{ animation: squish 0.2s steps(3); }
+  @keyframes squish{
+    0%{ transform:scale(1,1); }
+    40%{ transform:scale(1.06,0.92) translateY(4px); }
+    100%{ transform:scale(1,1); }
+  }
+
+  #cauldronImg{
+    position:absolute; inset:0; width:100%; height:100%; z-index:1;
+    image-rendering:pixelated; pointer-events:none; user-select:none; -webkit-user-drag:none;
+    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.5));
+  }
+  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 8px 6px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
+
+  #liquidPixel{
+    position:absolute; left:19%; right:19%; top:10%; height:19%;
+    border-radius:50%; overflow:hidden; z-index:2;
+    background-color: var(--liq-3);
+  }
+  #liquidPixel.theme-bifrost{ animation: rainbowSpin 3s linear infinite; }
+  @keyframes rainbowSpin{ 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+  .liq-block{
+    position:absolute; background: var(--liq-1); border-radius:50%;
+    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.3), inset 1px 1px 0 rgba(255,255,255,0.25);
+    animation-name: liquidBob; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+  }
+  .liq-block.b2{ background: var(--liq-2); }
+  @keyframes liquidBob{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-3px); }
+  }
+  .liq-bubble{
+    position:absolute; bottom:-4px; width:6px; height:6px;
+    background: var(--liq-1); border-radius:50%;
+    animation: liquidBubbleRise steps(4) forwards;
+  }
+  @keyframes liquidBubbleRise{
+    0%{ transform:translateY(0); opacity:0.9; }
+    100%{ transform:translateY(-46px); opacity:0; }
+  }
+
+  #catFamiliar{
+    position:absolute; right:-4%; bottom:4%; font-size:clamp(24px,6vw,34px);
+    display:none; animation: catBob 1.2s steps(4) infinite; z-index:4;
+  }
+  #catFamiliar.show{ display:block; }
+  @keyframes catBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+
+  #fxLayer, #numbersLayer{ position:absolute; inset:-20% -10%; pointer-events:none; z-index:5; overflow:visible; }
+
+  .float-num{
+    position:absolute; font-size:0.7rem; color:var(--amber-glow);
+    text-shadow: 2px 2px 0 #000;
+    animation: floatUp 0.85s ease-out forwards;
+    white-space:nowrap;
+  }
+  .float-num.crit{ color:#8fe9ff; font-size:0.85rem; text-shadow:2px 2px 0 #000, 0 0 6px rgba(143,233,255,0.9); }
+  .float-num.gold{ color:#ffe27a; }
+  .float-num.danger{ color:#ff4d6a; text-shadow:2px 2px 0 #000, 0 0 6px rgba(255,77,106,0.9); }
+  @keyframes floatUp{
+    0%{ transform:translateY(0); opacity:1; }
+    100%{ transform:translateY(-64px); opacity:0; }
+  }
+
+  .px-particle{ position:absolute; pointer-events:none; }
+  .click-bubble{
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, var(--liq-1) 45%, var(--liq-2) 100%);
+    box-shadow: 0 0 8px rgba(var(--liquid-glow), 0.7), inset 1px 1px 2px rgba(255,255,255,0.8), inset -1px -1px 2px rgba(0,0,0,0.3);
+    animation: softBubbleFloat var(--dur, 0.85s) ease-out forwards;
+  }
+  @keyframes softBubbleFloat{
+    0%{ transform: translate(0, 0) scale(0.6); opacity: 0; }
+    20%{ transform: translate(calc(var(--drift, 0px) * 0.2), -15px) scale(1.05); opacity: 0.95; }
+    60%{ transform: translate(calc(var(--drift, 0px) * 0.7), -55px) scale(1); opacity: 0.85; }
+    100%{ transform: translate(var(--drift, 0px), -85px) scale(1.15); opacity: 0; }
+  }
+
+  .fx-flame{ background: #ff8a3d; animation: flameRise 1s steps(5) forwards; }
+  @keyframes flameRise{ 0%{ transform:translateY(0); opacity:0.95; } 100%{ transform:translateY(-90px) translateX(var(--sway,0px)); opacity:0; } }
+
+  .fx-sand{ background:#f4d27a; animation: sandFall linear forwards; }
+  @keyframes sandFall{ 0%{ transform:translateY(-30px); opacity:0.9; } 100%{ transform:translateY(150px); opacity:0; } }
+
+  .fx-violetspark{ background: #c186ff; animation: sparkFly 0.6s steps(4) forwards; }
+  @keyframes sparkFly{ 0%{ transform:translate(0,0); opacity:1; } 100%{ transform:translate(var(--sx,0px), var(--sy,-60px)); opacity:0; } }
+
+  .fx-shimmer{ background: #bfe8ff; animation: sparkFly 0.9s steps(4) forwards; }
+  .fx-rainbow{ background: #ffb3e6; animation: flameRise 0.9s steps(4) forwards; }
+
+  /* ---------- UPGRADES ---------- */
+  #upgradesPanel{ display:flex; gap:8px; margin-bottom:10px; }
+  .upgradeBtn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:5px;
+    padding:10px 4px; background: var(--purple-panel);
+    border:3px solid #000;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 4px 0 #000;
+    color:var(--text-light); cursor:pointer; font-family:inherit;
+  }
+  .upgradeBtn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
+  .upgradeBtn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .upgradeTitle{ font-size:0.60rem; color:var(--amber-glow); line-height:1.4; text-align:center; }
+  .upgradeSub{ font-size:0.52rem; color:var(--text-dim); line-height:1.4; text-align:center; }
+  .upgradeCost{ font-size:0.56rem; color:var(--success); }
+
+  /* ---------- CONSUMABLES ---------- */
+  #consumablesPanel{ padding:10px 12px; margin-bottom:10px; }
+  .consumable-label{ font-size:0.5rem; color:var(--text-dim); letter-spacing:1px; margin-bottom:8px; }
+  .consumable-row{ display:flex; gap:8px; }
+  .consumable-btn{
+    position:relative; flex:1; padding:10px 4px; background: var(--purple-mid);
+    border:3px solid #000;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 3px 0 #000;
+    color:var(--text-light); cursor:pointer; font-family:inherit; font-size:0.48rem; line-height:1.5;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .consumable-btn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
+  .consumable-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .consumable-btn .cIcon{ font-size:18px; line-height:1; }
+  .consumable-btn .cCount{
+    position:absolute; top:-8px; right:-8px; background: var(--amber); color:#2a1a08;
+    border:2px solid #000; border-radius:50%; width:18px; height:18px; font-size:0.42rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- OVERLAYS / MODALS ---------- */
+  .hidden{ display:none !important; }
+  .overlay{
+    position:fixed; inset:0; z-index:20;
+    background: rgba(4,2,10,0.88);
+    display:flex; align-items:center; justify-content:center;
+    padding:16px;
+  }
+  .overlay.hidden{ display:none !important; }
+
+  .panelCard{
+    width:100%; max-width:440px; max-height:90vh; overflow-y:auto;
+    background: var(--purple-panel);
+    padding:26px 20px;
+    text-align:center;
+  }
+  .panelCard h1{ font-size:0.88rem; margin:0 0 14px; color:var(--amber-glow); line-height:1.6; text-shadow:2px 2px 0 #000; }
+  .panelCard h2{ font-size:0.75rem; margin:0 0 12px; color:var(--amber-glow); line-height:1.6; }
+  .panelCard p{ color:var(--text-dim); font-size:0.56rem; line-height:1.75; }
+  .bigBtn{
+    margin-top:16px; padding:14px 20px; font-size:0.65rem; width:100%;
+  }
+  .smallBtn{ margin-top:10px; padding:10px 14px; font-size:0.55rem; background:var(--purple-mid); color:var(--text-light); border:3px solid #000; box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 3px 0 #000; cursor:pointer; font-family:inherit; }
+  .smallBtn:active:not(:disabled){ transform:translate(2px,3px); box-shadow:0 0 0 #000; }
+  .smallBtn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+  #shopCards{ display:flex; flex-direction:column; gap:12px; margin:16px 0; }
+  .relicCard{
+    text-align:left; padding:12px; background: rgba(255,255,255,0.04);
+    border: 2px solid #000;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .relicCard .rName{ font-size:0.64rem; color:var(--amber-glow); line-height:1.5; }
+  .relicCard .rDesc{ font-size:0.54rem; color:var(--text-dim); line-height:1.65; }
+  .relicCard .rBuy{
+    align-self:flex-end; margin-top:4px; padding:9px 14px;
+    background: var(--amber); border:2px solid #000; color:#2a1a08;
+    cursor:pointer; font-family:inherit; font-size:0.54rem;
+  }
+  .relicCard .rBuy:disabled{ background:#5a5064; color:#a89dbf; cursor:not-allowed; }
+  .relicCard.owned{ opacity:0.5; }
+  .relicCard.corrupted{
+    border-color:#8a0e1e;
+    box-shadow: 0 0 10px rgba(255,42,75,0.5), inset 0 0 0 1px rgba(255,77,106,0.2);
+    background: rgba(120,10,25,0.08);
+  }
+  .corrupted-badge{ color:#ff4d6a; font-size:0.42rem; letter-spacing:0.5px; }
+  .rTags{ display:flex; gap:4px; flex-wrap:wrap; }
+  .tag-pill{
+    display:inline-flex; align-items:center; gap:3px;
+    padding:2px 6px; font-size:0.42rem; letter-spacing:0.3px;
+    border:1px solid #000; color:#fff; white-space:nowrap;
+  }
+  .tag-fire{ background:#7a2a10; }
+  .tag-frost{ background:#1c4a63; }
+  .tag-arcane{ background:#3d1f66; }
+  .tag-chaos{ background:#4a0d18; }
+  .tag-pill.boosted{ box-shadow:0 0 6px rgba(255,208,67,0.7); border-color:var(--amber); color:var(--amber-glow); animation: tierGlow 1s ease-in-out infinite alternate; }
+  @keyframes tierGlow{ 0%{ box-shadow:0 0 4px rgba(255,208,67,0.5); } 100%{ box-shadow:0 0 10px rgba(255,208,67,0.9); } }
+  #synergySummary{ display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:5px; width:100%; margin-top:6px; min-height:0; }
+  button.tag-pill{ appearance:none; -webkit-appearance:none; font-family:inherit; }
+  .synergy-badge{ cursor:pointer; }
+  .synergy-hint{
+    font-size:0.44rem; color:var(--amber-glow); background:rgba(0,0,0,0.35);
+    border:1px dashed rgba(244,184,96,0.5); padding:4px 6px; line-height:1.5;
+  }
+
+  #synergyTooltip{
+    position:fixed; z-index:30; max-width:250px;
+    background: var(--purple-panel); border:3px solid #000;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 4px 0 #000, 0 0 16px rgba(0,0,0,0.7);
+    padding:10px 12px; font-size:0.48rem; line-height:1.65; color:var(--text-light);
+    text-align:left;
+  }
+  #synergyTooltip.hidden{ display:none; }
+  .tooltip-title{ color:var(--amber-glow); font-size:0.55rem; margin-bottom:6px; }
+  .tooltip-line{ margin-bottom:4px; }
+  .tooltip-line.active{ color:var(--success); }
+  .tooltip-line.inactive{ color:var(--text-dim); }
+  .tooltip-next{ margin-top:6px; color:var(--amber); border-top:1px dashed rgba(255,255,255,0.15); padding-top:6px; }
+
+  .pause-ver-tag{
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 0.54rem;
+    color: var(--amber-glow);
+    background: rgba(0,0,0,0.45);
+    border: 2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    margin-top: -6px;
+    margin-bottom: 12px;
+  }
+  .modal-actions{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .modal-btn-row{ display:flex; gap:8px; }
+  .modal-btn-row .smallBtn{ flex:1; margin-top:0; }
+  .smallBtn.active{
+    background: var(--amber) !important;
+    color: #2a1a08 !important;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 rgba(0,0,0,0.5), 0 0 8px rgba(244,184,96,0.6) !important;
+  }
+  .modal-subpanel{
+    text-align:left; background: rgba(0,0,0,0.45); border: 2px solid #000;
+    padding: 14px; margin-top: 14px; font-size: 0.55rem; line-height: 1.7;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .subpanel-header{
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom: 2px dashed rgba(255,255,255,0.15);
+    padding-bottom: 8px; margin-bottom: 10px;
+    font-size: 0.60rem; color: var(--amber-glow);
+  }
+  .subpanel-close{
+    padding: 4px 8px; font-size: 0.48rem; background: var(--purple-mid);
+    border: 2px solid #000; color: var(--text-dim); cursor: pointer; font-family: inherit;
+  }
+  .subpanel-close:hover{ color: #fff; }
+  .setting-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; font-size:0.55rem; }
+  .changelog-entry{ margin-bottom: 12px; }
+  .changelog-entry:last-child{ margin-bottom: 0; }
+  .changelog-ver{ color: var(--amber-glow); font-size: 0.62rem; margin-bottom: 4px; }
+  .changelog-list{ margin: 0; padding-left: 16px; color: var(--text-dim); font-size:0.52rem; line-height: 1.6; }
+  .changelog-list li{ margin-bottom: 4px; }
+  .statRow{ display:flex; justify-content:space-between; font-size:0.56rem; border-bottom:2px dashed rgba(255,255,255,0.1); padding-bottom:8px; line-height:1.6; }
+  .statRow span:first-child{ color:var(--text-dim); }
+  .statRow span:last-child{ color:var(--amber-glow); }
+
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-thumb{ background: var(--purple-mid); border:2px solid #000; }
+
+  @media (max-height: 620px){
+    #cauldronStage{ min-height:180px; }
+    #upgradesPanel{ margin-bottom:4px; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="bgSky"></div>
+<div id="ambientSparkles"></div>
+
+<div id="app">
+
+  <div id="topbar" class="pixel-panel">
+    <div id="roundLabel">ORDER 1</div>
+    <div class="top-actions">
+      <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)">⚙ ⏸</button>
+      <div id="goldDisplay">🪙 <span id="goldValue">0</span></div>
+    </div>
+    <div id="relicTray"></div>
+    <div id="mainSynergyRow" class="tag-row"></div>
+  </div>
+
+  <div id="orderPanel" class="pixel-panel">
+    <div class="barRow">
+      <div class="barLabelRow"><span>MANA ESSENCE</span><span id="manaLabelText">0 / 400</span></div>
+      <div class="barTrack"><div class="barFill" id="manaFill"></div></div>
+    </div>
+    <div class="barRow">
+      <div class="barLabelRow"><span>ORDER DEADLINE</span><span id="timerLabelText">40.0s</span></div>
+      <div class="barTrack"><div class="barFill" id="timerFill"></div></div>
+    </div>
+    <button class="pixel-btn" id="fulfillBtn">CASH OUT &amp; END ROUND</button>
+  </div>
+
+  <div id="cauldronStage">
+    <div id="glowAura"></div>
+    <div id="cauldron">
+      <div id="liquidPixel"></div>
+      <img id="cauldronImg" src="cauldron.png" alt="cauldron" draggable="false">
+      <div id="catFamiliar">🐈‍⬛</div>
+      <div id="fxLayer"></div>
+      <div id="numbersLayer"></div>
+    </div>
+  </div>
+
+  <div id="upgradesPanel">
+    <button class="upgradeBtn" id="buyStirBtn">
+      <div class="upgradeTitle">🥄 STIRRING<br>POWER</div>
+      <div class="upgradeSub" id="stirSub">Lv 0 · +0.0/click</div>
+      <div class="upgradeCost" id="stirCost">Cost: 20 ✨</div>
+    </button>
+    <button class="upgradeBtn" id="buyBubbleBtn">
+      <div class="upgradeTitle">🫧 ENCHANTED<br>BUBBLERS</div>
+      <div class="upgradeSub" id="bubbleSub">Lv 0 · +0.0/sec</div>
+      <div class="upgradeCost" id="bubbleCost">Cost: 30 ✨</div>
+    </button>
+  </div>
+
+  <div id="consumablesPanel" class="pixel-panel">
+    <div class="consumable-label">🧪 INGREDIENT CHARMS</div>
+    <div id="consumableButtons" class="consumable-row"></div>
+  </div>
+
+</div>
+
+<!-- START OVERLAY -->
+<div class="overlay" id="startOverlay">
+  <div class="panelCard pixel-panel">
+    <h1>🌙 THE MIDNIGHT<br>APOTHECARY</h1>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.4</div>
+    <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
+    <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
+  </div>
+</div>
+
+<!-- SHOP OVERLAY -->
+<div class="overlay hidden" id="shopOverlay">
+  <div class="panelCard pixel-panel">
+    <h2 id="shopTitle">ORDER FULFILLED!</h2>
+    <p id="shopSummary">Surplus converted to Gold.</p>
+    <div id="synergySummary"></div>
+    <div id="shopCards"></div>
+    <div style="font-size:0.58rem; color:var(--amber-glow); margin:14px 0 4px; text-align:left;">🧪 INGREDIENTS FOR SALE</div>
+    <div id="consumableShop" style="display:flex; flex-direction:column; gap:12px;"></div>
+    <button class="smallBtn" id="rerollBtn">🔄 REROLL SHOP (5 🪙)</button>
+    <br>
+    <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
+  </div>
+</div>
+
+<!-- GAME OVER OVERLAY -->
+<div class="overlay hidden" id="gameoverOverlay">
+  <div class="panelCard pixel-panel">
+    <h1>🫙 THE CAULDRON<br>BOILED OVER!</h1>
+    <p>The order was not fulfilled in time. Instability consumed the brew.</p>
+    <div id="statsList"></div>
+    <button class="pixel-btn bigBtn" id="restartBtn">START NEW BREW</button>
+  </div>
+</div>
+
+<!-- PAUSE OVERLAY -->
+<div class="overlay hidden" id="pauseOverlay">
+  <div class="panelCard pixel-panel">
+    <h1>⏸ GAME PAUSED</h1>
+    <div class="pause-ver-tag">✨ Current Build: Alpha v0.4</div>
+    <p>Brewing cycle frozen. What would you like to do?</p>
+    <div class="modal-actions">
+      <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
+      <div class="modal-btn-row">
+        <button class="smallBtn" id="settingsBtn">⚙ SETTINGS</button>
+        <button class="smallBtn" id="changelogBtn">📜 VERSION HISTORY</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS SUBPANEL -->
+    <div class="modal-subpanel hidden" id="settingsSubpanel">
+      <div class="subpanel-header">
+        <span>⚙ AUDIO SETTINGS</span>
+        <button class="subpanel-close" id="closeSettingsBtn">✕ CLOSE</button>
+      </div>
+      <div class="setting-row">
+        <span>SOUND EFFECTS</span>
+        <button class="pixel-btn icon-btn" id="sfxToggleBtn">SFX: ON</button>
+      </div>
+      <div class="setting-row">
+        <span>AUDIO SYNTH</span>
+        <span id="sfxStatusText" style="color:var(--success);">ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- CHANGELOG SUBPANEL -->
+    <div class="modal-subpanel hidden" id="changelogSubpanel">
+      <div class="subpanel-header">
+        <span>📜 VERSION HISTORY</span>
+        <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.4 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Overhauled Synergy Tags with fixed Set Tier milestones: 🔥 Fire (2: +30% Click Power, 4: Overheat Surge), ❄ Frost (2: +3s Deadline, 4: Chill State), 🔮 Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).</li>
+          <li>Added 5 new relics (Ashen Sigil, Phoenix Down, Glacial Core, Winter's Grasp, Arcane Conduit) so every tiered tag can reach its 4-piece milestone.</li>
+          <li>Synergy badges on the top bar and shop are now interactive — tap or hover to see a retro tooltip with active tiers and the next threshold.</li>
+          <li>Boosted synergy badges now glow with a pulsing amber border once a tier is unlocked.</li>
+          <li>Shop relic cards now show a hint when purchasing will activate or upgrade a Synergy Tier.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.3</div>
+        <ul class="changelog-list">
+          <li>Added consumable Ingredient Charms (Stir Frenzy, Time Freeze, Golden Droplet) — one-time boosts usable mid-shift.</li>
+          <li>Introduced Corrupted Relics (Cursed Ember, Unstable Brew) — massive power with dangerous drawbacks.</li>
+          <li>Added Synergy Tags (🔥 Fire, ❄️ Frost, 🔮 Arcane, ☠️ Chaos) — collecting multiple relics of the same tag multiplies their passives.</li>
+          <li>Expanded the Apothecary Shop with a dedicated Ingredients section and a live Synergy tracker.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.2</div>
+        <ul class="changelog-list">
+          <li>Increased font sizes across relic cards, upgrades, and descriptions for desktop readability.</li>
+          <li>Overhauled Order Deadline bar with pure crimson gradients and smooth liquid wave shimmer.</li>
+          <li>Refined pause menu with dedicated version history drawer and build badge.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.1</div>
+        <ul class="changelog-list">
+          <li>Rebalanced gold economy and quota exponential scaling.</li>
+          <li>Upgraded cauldron visuals to transparent pixel art.</li>
+          <li>Liquid-style animated UI meters for Mana and Deadline.</li>
+          <li>Bubble-based tap particle effects.</li>
+          <li>Added pause menu, settings, and changelog system.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="synergyTooltip" class="hidden"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     CONSTANTS
+  ========================================================= */
+  const ROUND_BASE_TIME = 40;
+  const ROUND_BASE_TARGET = 500;
+  const ROUND_TARGET_GROWTH = 2.2;
+
+  const CLICK_BASE = 6;
+  const CLICK_UPGRADE_INC = 3;
+  const CLICK_UPGRADE_BASE_COST = 40;
+  const CLICK_UPGRADE_COST_GROWTH = 1.28;
+
+  const BUBBLER_RATE_PER_LEVEL = 5;
+  const BUBBLER_BASE_COST = 30;
+  const BUBBLER_COST_GROWTH = 1.22;
+
+  const REROLL_BASE_COST = 5;
+
+  const BASE_COMPLETION_GOLD = 12;
+  const SURPLUS_GOLD_DIVISOR = 150;
+  const RELIC_COST_SCALE_PER_ROUND = 0.5;
+  const SYNERGY_BONUS_PER_EXTRA = 0.25;
+
+  const TAG_INFO = {
+    fire:   { icon:'🔥', label:'Fire' },
+    frost:  { icon:'❄️', label:'Frost' },
+    arcane: { icon:'🔮', label:'Arcane' },
+    chaos:  { icon:'☠️', label:'Chaos' },
+  };
+
+  // Fixed synergy set-tier milestones. Chaos has no defined tiers and instead
+  // uses a simple scaling bonus (see getSynergyMult).
+  const TAG_TIERS = {
+    fire: [
+      { count:2, label:'+30% Click Power', desc:'+30% Click Power' },
+      { count:4, label:'Overheat Surge', desc:'Every 10th tap generates a 5x critical Mana burst' },
+    ],
+    frost: [
+      { count:2, label:'+3s Deadline', desc:'+3s added to all order deadlines' },
+      { count:4, label:'Chill State', desc:'Deadline timer elapses 20% slower' },
+    ],
+    arcane: [
+      { count:2, label:'+25% Passive Mana/sec', desc:'+25% Passive Mana/sec' },
+      { count:4, label:'Transmutation', desc:'+50% Gold earned from surplus Mana' },
+    ],
+  };
+
+  const RELICS = [
+    { id:'dragonfire', name:"Dragonfire Pepper", icon:'🌶️', cost:22, tags:['fire'],
+      desc:"Clicks generate +40% Mana, but every 10 clicks burns away 0.2s from the order deadline.",
+      liquidTheme:'dragonfire' },
+    { id:'whisk', name:"Familiar's Whisk", icon:'🐈‍⬛', cost:28, tags:['arcane'],
+      desc:"A spectral cat stirs the pot every second, generating 6% of your click power as bonus Mana/sec.",
+      liquidTheme:null },
+    { id:'moonstone', name:"Moonstone Dust", icon:'🌙', cost:26, tags:['frost'],
+      desc:"Every 5th click triggers a Critical Surge, yielding 3x Mana for that tap.",
+      liquidTheme:'moonstone' },
+    { id:'hourglass', name:"Stasis Hourglass", icon:'⏳', cost:18, tags:['frost'],
+      desc:"Adds +8 seconds to the deadline of every order from now on.",
+      liquidTheme:null },
+    { id:'bifrost', name:"Bifrost Blossom", icon:'🌈', cost:24, tags:['chaos'],
+      desc:"Every tap has a 10% chance to also yield 1 Gold Coin directly.",
+      liquidTheme:'bifrost' },
+    { id:'crucible', name:"Philosopher's Crucible", icon:'⚱️', cost:32, tags:['arcane'],
+      desc:"Increases the Gold conversion rate for surplus Mana by 50%.",
+      liquidTheme:'crucible' },
+    { id:'starter', name:"Alchemist's Starter", icon:'📜', cost:28, tags:['arcane'],
+      desc:"Instantly satisfies 10% of the required quota at the start of every order.",
+      liquidTheme:null },
+    { id:'catalyst', name:"Volatile Catalyst", icon:'⚡', cost:26, tags:['chaos'],
+      desc:"Mana generated per second is boosted +40%, but quotas increase by an extra 10%.",
+      liquidTheme:null },
+    { id:'cursedEmber', name:"Cursed Ember", icon:'💀', cost:30, tags:['fire'], corrupted:true,
+      desc:"CORRUPTED: Clicks generate +90% Mana, but every tap has a 6% chance to scorch away 1 second from the deadline.",
+      liquidTheme:'dragonfire' },
+    { id:'unstableBrew', name:"Unstable Brew", icon:'☣️', cost:34, tags:['chaos'], corrupted:true,
+      desc:"CORRUPTED: Mana generated per second is boosted +150%, but bubbles may violently rupture — 8% chance every second to burn away 0.5s from the deadline.",
+      liquidTheme:null },
+    { id:'ashenSigil', name:"Ashen Sigil", icon:'🔥', cost:22, tags:['fire'],
+      desc:"Residual embers linger in the pot, adding +15% Mana to every tap.",
+      liquidTheme:null },
+    { id:'phoenixDown', name:"Phoenix Down", icon:'🪶', cost:26, tags:['fire'],
+      desc:"Phoenix ash infuses the brew, adding +20% Mana to every tap.",
+      liquidTheme:null },
+    { id:'glacialCore', name:"Glacial Core", icon:'🧊', cost:20, tags:['frost'],
+      desc:"A shard of eternal ice adds +5 seconds to the deadline of every order.",
+      liquidTheme:null },
+    { id:'wintersGrasp', name:"Winter's Grasp", icon:'🥶', cost:24, tags:['frost'],
+      desc:"Every Critical Surge also freezes the deadline for 0.5 seconds.",
+      liquidTheme:null },
+    { id:'arcaneConduit', name:"Arcane Conduit", icon:'🔯', cost:30, tags:['arcane'],
+      desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
+      liquidTheme:null },
+  ];
+
+  const CONSUMABLES = [
+    { id:'stirFrenzy', name:'Stir Frenzy', icon:'🌀', cost:15,
+      desc:'Instantly triples your click power for 4 seconds.' },
+    { id:'timeFreeze', name:'Time Freeze', icon:'🧊', cost:18,
+      desc:'Freezes the order deadline for 3 seconds.' },
+    { id:'goldenDrop', name:'Golden Droplet', icon:'💧', cost:16,
+      desc:'Instantly brews 15% of the current quota as bonus Mana.' },
+  ];
+
+  const LIQUID_THEMES = {
+    default:    { c1:'#c9a6ff', c2:'#8a5cf0', c3:'#4b2a8f', glow:'168, 110, 255' },
+    dragonfire: { c1:'#ffb27a', c2:'#e8542f', c3:'#7a1a10', glow:'232, 90, 47' },
+    moonstone:  { c1:'#eaf7ff', c2:'#8fd0f5', c3:'#3d6fa8', glow:'143, 208, 245' },
+    bifrost:    { c1:'#ffe37a', c2:'#7ad4ff', c3:'#ffb3e6', glow:'255, 160, 220' },
+    crucible:   { c1:'#fff3b0', c2:'#e8b93d', c3:'#a9760a', glow:'232, 185, 61' },
+  };
+
+  /* =========================================================
+     STATE
+  ========================================================= */
+  let state = null;
+
+  function freshState(){
+    const consumables = {};
+    CONSUMABLES.forEach(c => { consumables[c.id] = 0; });
+    return {
+      phase: 'start', // start | brewing | shop | gameover
+      round: 1,
+      target: ROUND_BASE_TARGET,
+      mana: 0,
+      gold: 0,
+      timer: ROUND_BASE_TIME,
+      quotaMet: false,
+      clickLevel: 0,
+      bubblerLevel: 0,
+      clickCountRun: 0,
+      dragonfireCounter: 0,
+      totalClicksAllTime: 0,
+      lifetimeMana: 0,
+      totalGoldEarned: 0,
+      peakMana: 0,
+      relics: [],
+      liquidTheme: 'default',
+      rerollCount: 0,
+      shopOffers: [],
+      consumables: consumables,
+      stirFrenzyTimer: 0,
+      timeFreezeTimer: 0,
+      unstableBrewClock: 0,
+    };
+  }
+
+  /* =========================================================
+     DOM REFS
+  ========================================================= */
+  const $ = (id) => document.getElementById(id);
+  const roundLabel = $('roundLabel');
+  const goldValue = $('goldValue');
+  const goldDisplay = $('goldDisplay');
+  const relicTray = $('relicTray');
+  const manaFill = $('manaFill');
+  const timerFill = $('timerFill');
+  const manaLabelText = $('manaLabelText');
+  const timerLabelText = $('timerLabelText');
+  const fulfillBtn = $('fulfillBtn');
+  const cauldron = $('cauldron');
+  const liquidPixel = $('liquidPixel');
+  const catFamiliar = $('catFamiliar');
+  const fxLayer = $('fxLayer');
+  const numbersLayer = $('numbersLayer');
+  const buyStirBtn = $('buyStirBtn');
+  const buyBubbleBtn = $('buyBubbleBtn');
+  const stirSub = $('stirSub');
+  const stirCost = $('stirCost');
+  const bubbleSub = $('bubbleSub');
+  const bubbleCost = $('bubbleCost');
+  const startOverlay = $('startOverlay');
+  const startBtn = $('startBtn');
+  const shopOverlay = $('shopOverlay');
+  const shopTitle = $('shopTitle');
+  const shopSummary = $('shopSummary');
+  const shopCards = $('shopCards');
+  const rerollBtn = $('rerollBtn');
+  const continueBtn = $('continueBtn');
+  const gameoverOverlay = $('gameoverOverlay');
+  const statsList = $('statsList');
+  const restartBtn = $('restartBtn');
+  const ambientSparkles = $('ambientSparkles');
+  const pauseBtn = $('pauseBtn');
+  const pauseOverlay = $('pauseOverlay');
+  const resumeBtn = $('resumeBtn');
+  const settingsBtn = $('settingsBtn');
+  const changelogBtn = $('changelogBtn');
+  const settingsSubpanel = $('settingsSubpanel');
+  const changelogSubpanel = $('changelogSubpanel');
+  const closeSettingsBtn = $('closeSettingsBtn');
+  const closeChangelogBtn = $('closeChangelogBtn');
+  const sfxToggleBtn = $('sfxToggleBtn');
+  const sfxStatusText = $('sfxStatusText');
+  const consumableButtons = $('consumableButtons');
+  const consumableShop = $('consumableShop');
+  const synergySummary = $('synergySummary');
+  const mainSynergyRow = $('mainSynergyRow');
+  const synergyTooltip = $('synergyTooltip');
+
+  let sfxMuted = false;
+  let isPaused = false;
+
+  /* =========================================================
+     AUDIO (Web Audio API synth, no external files)
+  ========================================================= */
+  let actx = null;
+  function ensureAudio(){
+    if(!actx){
+      try{ actx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch(e){ actx = null; }
+    } else if(actx.state === 'suspended'){
+      actx.resume();
+    }
+  }
+
+  function playTone(freq, dur, type, vol, delay, glideTo){
+    if(!actx || sfxMuted) return;
+    const t0 = actx.currentTime + (delay||0);
+    const osc = actx.createOscillator();
+    const gain = actx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    if(glideTo){ osc.frequency.exponentialRampToValueAtTime(glideTo, t0 + dur); }
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(vol||0.18, t0 + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain); gain.connect(actx.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.02);
+  }
+
+  function sfxClick(crit){
+    if(crit){
+      playTone(660, 0.09, 'triangle', 0.2, 0);
+      playTone(990, 0.14, 'triangle', 0.18, 0.06);
+      playTone(1320,0.18,'sine',0.16,0.12);
+    } else {
+      const f = 520 + Math.random()*120;
+      playTone(f, 0.08, 'sine', 0.14, 0, f*0.6);
+    }
+  }
+  function sfxGold(){ playTone(1200, 0.1, 'square', 0.08, 0); }
+  function sfxBuy(){
+    playTone(523.25, 0.1, 'triangle', 0.16, 0);
+    playTone(659.25, 0.1, 'triangle', 0.16, 0.08);
+    playTone(783.99, 0.16, 'triangle', 0.18, 0.16);
+  }
+  function sfxQuotaMet(){
+    playTone(784, 0.1, 'square', 0.16, 0);
+    playTone(1046.5, 0.16, 'square', 0.16, 0.09);
+  }
+  function sfxSuccess(){
+    playTone(392, 0.14, 'sine', 0.2, 0);
+    playTone(523.25,0.14,'sine',0.2,0.1);
+    playTone(659.25,0.14,'sine',0.2,0.2);
+    playTone(783.99,0.28,'sine',0.22,0.3);
+  }
+  function sfxFail(){
+    playTone(300, 0.3, 'sawtooth', 0.15, 0, 120);
+    playTone(180, 0.4, 'sawtooth', 0.12, 0.15, 80);
+  }
+  function sfxScorch(){ playTone(220, 0.18, 'sawtooth', 0.12, 0, 90); }
+  function sfxRupture(){
+    playTone(150, 0.22, 'sawtooth', 0.14, 0, 70);
+    playTone(90, 0.2, 'square', 0.1, 0.05);
+  }
+
+  /* =========================================================
+     HELPERS
+  ========================================================= */
+  function fmt(n){
+    n = Math.floor(n);
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  function hasRelic(id){ return state.relics.includes(id); }
+
+  function getTagCounts(){
+    const counts = {};
+    state.relics.forEach(id => {
+      const r = RELICS.find(x => x.id === id);
+      if(r && r.tags) r.tags.forEach(t => { counts[t] = (counts[t]||0) + 1; });
+    });
+    return counts;
+  }
+  function getSynergyMult(tag){
+    // Only used for tags without fixed tier milestones (currently: chaos).
+    const counts = getTagCounts();
+    const c = counts[tag] || 0;
+    return c >= 2 ? 1 + (c - 1) * SYNERGY_BONUS_PER_EXTRA : 1;
+  }
+  function getTagTierLevel(tag){
+    const tiers = TAG_TIERS[tag];
+    if(!tiers) return 0;
+    const c = getTagCounts()[tag] || 0;
+    let level = 0;
+    tiers.forEach((t, i) => { if(c >= t.count) level = i + 1; });
+    return level;
+  }
+  function hasTagTier(tag, tierIndex){
+    const tiers = TAG_TIERS[tag];
+    if(!tiers || !tiers[tierIndex]) return false;
+    const c = getTagCounts()[tag] || 0;
+    return c >= tiers[tierIndex].count;
+  }
+
+  function getClickPower(){
+    let p = CLICK_BASE + state.clickLevel * CLICK_UPGRADE_INC;
+    let bonusPct = 0;
+    if(hasRelic('dragonfire')) bonusPct += 0.4;
+    if(hasRelic('cursedEmber')) bonusPct += 0.9;
+    if(hasRelic('ashenSigil')) bonusPct += 0.15;
+    if(hasRelic('phoenixDown')) bonusPct += 0.2;
+    if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
+    p *= (1 + bonusPct);
+    if(state.stirFrenzyTimer > 0) p *= 3;
+    return p;
+  }
+  function getManaPerSecond(){
+    let mps = state.bubblerLevel * BUBBLER_RATE_PER_LEVEL;
+    if(hasRelic('whisk')) mps += getClickPower() * 0.06;
+    let bonusPct = 0;
+    if(hasRelic('catalyst')) bonusPct += 0.4 * getSynergyMult('chaos');
+    if(hasRelic('unstableBrew')) bonusPct += 1.5 * getSynergyMult('chaos');
+    if(hasRelic('arcaneConduit')) bonusPct += 0.15;
+    if(hasTagTier('arcane', 0)) bonusPct += 0.25; // Arcane Tier (2): +25% Passive Mana/sec
+    mps *= (1 + bonusPct);
+    return mps;
+  }
+  function getStirCost(){ return Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel)); }
+  function getBubbleCost(){ return Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel)); }
+  function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
+  function getRerollCost(){ return Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale()); }
+  function getRelicCost(relic){ return Math.round(relic.cost * getRoundCostScale()); }
+  function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale()); }
+  function getOrderTarget(order){
+    let t = Math.floor(ROUND_BASE_TARGET * Math.pow(ROUND_TARGET_GROWTH, order - 1));
+    if(hasRelic('catalyst')) t = Math.floor(t * 1.1);
+    return t;
+  }
+  function getGoldRate(){
+    let rate = 1;
+    if(hasRelic('crucible')) rate += 0.5;
+    if(hasTagTier('arcane', 1)) rate += 0.5; // Arcane Tier (4): Transmutation
+    return rate;
+  }
+  function getRoundTime(){
+    let t = ROUND_BASE_TIME;
+    if(hasRelic('hourglass')) t += 8;
+    if(hasRelic('glacialCore')) t += 5;
+    if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
+    return t;
+  }
+  function getSurplusGold(surplus){
+    return BASE_COMPLETION_GOLD + Math.max(0, Math.floor((surplus / SURPLUS_GOLD_DIVISOR) * getGoldRate()));
+  }
+  function getSurplusGoldPreview(){
+    const surplus = Math.max(0, state.mana - state.target);
+    return getSurplusGold(surplus);
+  }
+
+  /* =========================================================
+     VISUALS: cauldron liquid theme + relic fx
+  ========================================================= */
+  function updateCauldronVisuals(){
+    const theme = LIQUID_THEMES[state.liquidTheme] || LIQUID_THEMES.default;
+    document.documentElement.style.setProperty('--liq-1', theme.c1);
+    document.documentElement.style.setProperty('--liq-2', theme.c2);
+    document.documentElement.style.setProperty('--liq-3', theme.c3);
+    document.documentElement.style.setProperty('--liquid-glow', theme.glow);
+    liquidPixel.className = state.liquidTheme === 'bifrost' ? 'theme-bifrost' : '';
+    buildLiquidBlocks();
+
+    RELICS.forEach(r => {
+      cauldron.classList.toggle('fx-' + r.id, hasRelic(r.id));
+    });
+    catFamiliar.classList.toggle('show', hasRelic('whisk'));
+  }
+
+  function buildLiquidBlocks(){
+    liquidPixel.querySelectorAll('.liq-block').forEach(el => el.remove());
+    const sizes = [4, 4, 6, 6, 8];
+    const count = 10;
+    for(let i = 0; i < count; i++){
+      const el = document.createElement('div');
+      const size = sizes[Math.floor(Math.random() * sizes.length)];
+      const isB2 = Math.random() < 0.4;
+      el.className = 'liq-block' + (isB2 ? ' b2' : '');
+      el.style.left = (6 + Math.random() * 82) + '%';
+      el.style.top = (8 + Math.random() * 74) + '%';
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.animationDuration = (1.1 + Math.random() * 1.1).toFixed(2) + 's';
+      el.style.animationDelay = (-Math.random() * 2).toFixed(2) + 's';
+      liquidPixel.appendChild(el);
+    }
+  }
+
+  function renderRelicTray(){
+    relicTray.innerHTML = '';
+    state.relics.forEach(id => {
+      const r = RELICS.find(x => x.id === id);
+      if(!r) return;
+      const el = document.createElement('div');
+      el.className = 'relic-badge';
+      el.textContent = r.icon;
+      el.title = r.name + ' — ' + r.desc;
+      relicTray.appendChild(el);
+    });
+  }
+
+  function renderConsumables(){
+    if(!consumableButtons) return;
+    consumableButtons.innerHTML = '';
+    CONSUMABLES.forEach(c => {
+      const count = (state.consumables && state.consumables[c.id]) || 0;
+      const btn = document.createElement('button');
+      btn.className = 'consumable-btn';
+      btn.disabled = count <= 0 || state.phase !== 'brewing';
+      btn.title = c.desc;
+      btn.innerHTML = '<span class="cIcon">' + c.icon + '</span>' + c.name + '<span class="cCount">' + count + '</span>';
+      btn.addEventListener('click', () => useConsumable(c.id));
+      consumableButtons.appendChild(btn);
+    });
+  }
+
+  /* =========================================================
+     PARTICLES (blocky, pixel-styled)
+  ========================================================= */
+  function spawnEl(container, cls, styleObj, life){
+    const el = document.createElement('div');
+    el.className = cls;
+    for(const key in styleObj){
+      if(key.startsWith('--')) el.style.setProperty(key, styleObj[key]);
+      else el.style[key] = styleObj[key];
+    }
+    container.appendChild(el);
+    setTimeout(() => el.remove(), life);
+    return el;
+  }
+
+  function spawnFloatNumber(text, cls, xPct, yPct){
+    const el = spawnEl(numbersLayer, 'float-num ' + (cls||''), {
+      left: xPct + '%', top: yPct + '%'
+    }, 900);
+    el.textContent = text;
+  }
+
+  function spawnClickBubbles(xPct, yPct){
+    const count = 5 + Math.floor(Math.random()*4);
+    for(let i=0;i<count;i++){
+      const size = 8 + Math.floor(Math.random()*12);
+      const drift = (Math.random()-0.5) * 70;
+      const dur = (0.7 + Math.random()*0.45).toFixed(2);
+      spawnEl(fxLayer, 'px-particle click-bubble', {
+        left: (xPct + (Math.random()-0.5)*14) + '%',
+        top: (yPct + (Math.random()-0.5)*10) + '%',
+        width: size+'px',
+        height: size+'px',
+        '--drift': drift.toFixed(1)+'px',
+        '--dur': dur+'s',
+        animationDelay: (Math.random()*0.08).toFixed(2)+'s'
+      }, Math.ceil(dur * 1000) + 150);
+    }
+  }
+
+  function spawnLiquidBubble(){
+    const size = 4 + Math.floor(Math.random()*3)*2;
+    spawnEl(liquidPixel, 'liq-bubble', {
+      left: (Math.random()*80+5) + '%',
+      width: size+'px', height: size+'px',
+      animationDuration: (0.7 + Math.random()*0.5)+'s'
+    }, 1300);
+  }
+
+  function spawnAmbientFx(){
+    if(state.phase !== 'brewing') return;
+    if(hasRelic('dragonfire') && Math.random() < 0.55){
+      spawnEl(fxLayer, 'px-particle fx-flame', {
+        left:(35+Math.random()*30)+'%', top:'45%',
+        width:'10px', height:'10px',
+        '--sway': ((Math.random()-0.5)*40)+'px'
+      }, 1050);
+    }
+    if(hasRelic('hourglass') && Math.random() < 0.5){
+      spawnEl(fxLayer, 'px-particle fx-sand', {
+        left:(20+Math.random()*60)+'%', top:'-5%',
+        width:'4px', height:'4px',
+        animationDuration:(1.4+Math.random()*0.6)+'s'
+      }, 2100);
+    }
+    if(hasRelic('catalyst') && Math.random() < 0.5){
+      spawnEl(fxLayer, 'px-particle fx-violetspark', {
+        left:'50%', top:'45%', width:'8px', height:'8px',
+        '--sx': ((Math.random()-0.5)*140)+'px',
+        '--sy': ((Math.random()-0.5)*140)+'px'
+      }, 650);
+    }
+    if(hasRelic('moonstone') && Math.random() < 0.4){
+      spawnEl(fxLayer, 'px-particle fx-shimmer', {
+        left:(30+Math.random()*40)+'%', top:'40%', width:'8px', height:'8px',
+        '--sx': ((Math.random()-0.5)*80)+'px',
+        '--sy': (-40-Math.random()*40)+'px'
+      }, 950);
+    }
+    if(hasRelic('bifrost') && Math.random() < 0.4){
+      spawnEl(fxLayer, 'px-particle fx-rainbow', {
+        left:(30+Math.random()*40)+'%', top:'45%', width:'10px', height:'10px',
+        '--sway': ((Math.random()-0.5)*50)+'px'
+      }, 950);
+    }
+    if(Math.random() < 0.6) spawnLiquidBubble();
+  }
+
+  function spawnAmbientSparkles(){
+    const el = document.createElement('div');
+    el.className = 'ambient-spark';
+    const size = 2 + Math.floor(Math.random()*3);
+    el.style.width = size+'px';
+    el.style.height = size+'px';
+    el.style.left = (Math.random()*100)+'%';
+    el.style.setProperty('--dx', ((Math.random()-0.5)*80)+'px');
+    const dur = 6 + Math.random()*6;
+    el.style.animationDuration = dur+'s, 1.4s';
+    ambientSparkles.appendChild(el);
+    setTimeout(() => el.remove(), dur*1000+200);
+  }
+
+  /* =========================================================
+     UI UPDATE
+  ========================================================= */
+  function updateUI(){
+    roundLabel.textContent = 'ORDER ' + state.round;
+    goldValue.textContent = fmt(state.gold);
+
+    const manaPct = clamp((state.mana/state.target)*100, 0, 100);
+    manaFill.style.width = manaPct + '%';
+    if(state.mana >= state.target){
+      manaFill.classList.add('quota-met');
+    } else {
+      manaFill.classList.remove('quota-met');
+      manaFill.style.backgroundImage = '';
+      manaFill.style.animation = '';
+      manaFill.style.filter = '';
+    }
+    manaLabelText.textContent = fmt(state.mana) + ' / ' + fmt(state.target);
+
+    const timerPct = clamp((state.timer/getRoundTime())*100, 0, 100);
+    timerFill.style.width = timerPct + '%';
+    timerFill.classList.toggle('low', state.timer < getRoundTime()*0.25);
+    timerLabelText.textContent = Math.max(0,state.timer).toFixed(1) + 's';
+
+    if(state.phase === 'brewing' && state.quotaMet){
+      fulfillBtn.classList.add('show');
+      fulfillBtn.textContent = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' 🪙) & END ROUND';
+    } else {
+      fulfillBtn.classList.remove('show');
+    }
+
+    stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + getClickPower().toFixed(1) + '/click';
+    stirCost.textContent = 'Cost: ' + fmt(getStirCost()) + ' ✨';
+    bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + getManaPerSecond().toFixed(1) + '/sec';
+    bubbleCost.textContent = 'Cost: ' + fmt(getBubbleCost()) + ' ✨';
+
+    const canBuyStir = state.phase === 'brewing' && state.mana >= getStirCost();
+    const canBuyBubble = state.phase === 'brewing' && state.mana >= getBubbleCost();
+    buyStirBtn.disabled = !canBuyStir;
+    buyBubbleBtn.disabled = !canBuyBubble;
+
+    renderRelicTray();
+    renderConsumables();
+    renderSynergyBadges(mainSynergyRow);
+  }
+
+  /* =========================================================
+     CORE GAMEPLAY
+  ========================================================= */
+  function addMana(amount, silent){
+    state.mana += amount;
+    state.lifetimeMana += amount;
+    if(state.mana > state.peakMana) state.peakMana = state.mana;
+    if(state.mana >= state.target){
+      if(!state.quotaMet){
+        state.quotaMet = true;
+        sfxQuotaMet();
+      }
+    } else {
+      state.quotaMet = false;
+    }
+    if(!silent) updateUI();
+  }
+
+  function bumpGold(amount){
+    state.gold += amount;
+    state.totalGoldEarned += Math.max(0,amount);
+    goldDisplay.classList.remove('pulse');
+    void goldDisplay.offsetWidth;
+    goldDisplay.classList.add('pulse');
+  }
+
+  function getStageRect(){ return cauldron.getBoundingClientRect(); }
+
+  function handleCauldronTap(e){
+    if(state.phase !== 'brewing' || isPaused) return;
+    ensureAudio();
+    e.preventDefault();
+
+    const rect = getStageRect();
+    const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+    const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
+    let xPct = 50, yPct = 30;
+    if(typeof clientX === 'number' && rect.width){
+      xPct = clamp(((clientX - rect.left) / rect.width) * 100, 5, 95);
+      yPct = clamp(((clientY - rect.top) / rect.height) * 100, 5, 60);
+    }
+
+    state.clickCountRun++;
+    state.totalClicksAllTime++;
+
+    let power = getClickPower();
+    let crit = false;
+    if(hasRelic('moonstone') && state.clickCountRun % 5 === 0){
+      power *= 3;
+      crit = true;
+      if(hasRelic('wintersGrasp')){
+        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, 0.5);
+      }
+    }
+
+    addMana(power);
+    spawnFloatNumber('+' + fmt(power), crit ? 'crit' : '', xPct, yPct);
+    if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
+    spawnClickBubbles(xPct, yPct);
+    sfxClick(crit);
+
+    if(hasTagTier('fire', 1) && state.clickCountRun % 10 === 0){
+      const burst = power * 5;
+      addMana(burst);
+      spawnFloatNumber('🔥 OVERHEAT +' + fmt(burst), 'crit', xPct, yPct-20);
+      sfxQuotaMet();
+    }
+
+    cauldron.classList.remove('squish');
+    void cauldron.offsetWidth;
+    cauldron.classList.add('squish');
+
+    if(hasRelic('dragonfire')){
+      state.dragonfireCounter++;
+      if(state.dragonfireCounter % 10 === 0){
+        state.timer = Math.max(0, state.timer - 0.2);
+      }
+    }
+
+    if(hasRelic('cursedEmber') && Math.random() < 0.06){
+      state.timer = Math.max(0, state.timer - 1);
+      spawnFloatNumber('-1.0s', 'danger', xPct, yPct-14);
+      sfxScorch();
+    }
+
+    if(hasRelic('bifrost') && Math.random() < 0.1 * getSynergyMult('chaos')){
+      bumpGold(1);
+      sfxGold();
+      spawnFloatNumber('+1 🪙', 'gold', xPct, yPct+10);
+    }
+
+    updateUI();
+  }
+
+  function buyStir(){
+    if(state.phase !== 'brewing' || isPaused) return;
+    const cost = getStirCost();
+    if(state.mana < cost) return;
+    state.mana -= cost;
+    if(state.mana < state.target) state.quotaMet = false;
+    state.clickLevel++;
+    sfxBuy();
+    updateUI();
+  }
+
+  function buyBubble(){
+    if(state.phase !== 'brewing' || isPaused) return;
+    const cost = getBubbleCost();
+    if(state.mana < cost) return;
+    state.mana -= cost;
+    if(state.mana < state.target) state.quotaMet = false;
+    state.bubblerLevel++;
+    sfxBuy();
+    updateUI();
+  }
+
+  function useConsumable(id){
+    if(!state || state.phase !== 'brewing' || isPaused) return;
+    if(!state.consumables || !state.consumables[id]) return;
+    state.consumables[id]--;
+    if(id === 'stirFrenzy'){
+      state.stirFrenzyTimer = 4;
+      spawnFloatNumber('STIR FRENZY!', 'crit', 50, 22);
+    } else if(id === 'timeFreeze'){
+      state.timeFreezeTimer = 3;
+      spawnFloatNumber('TIME FROZEN!', 'crit', 50, 22);
+    } else if(id === 'goldenDrop'){
+      const bonus = Math.floor(state.target * 0.15);
+      addMana(bonus);
+      spawnFloatNumber('+' + fmt(bonus), 'gold', 50, 22);
+    }
+    sfxBuy();
+    updateUI();
+  }
+
+  function buyConsumable(id){
+    const c = CONSUMABLES.find(x => x.id === id);
+    if(!c) return;
+    const cost = getConsumableCost(c);
+    if(state.gold < cost) return;
+    state.gold -= cost;
+    state.consumables[id] = (state.consumables[id] || 0) + 1;
+    sfxBuy();
+    goldValue.textContent = fmt(state.gold);
+    renderConsumableShop();
+  }
+
+  /* =========================================================
+     ROUND FLOW
+  ========================================================= */
+  function startRun(){
+    closePauseMenu();
+    state = freshState();
+    state.phase = 'brewing';
+    state.timer = getRoundTime();
+    updateCauldronVisuals();
+    updateUI();
+    startOverlay.classList.add('hidden');
+    shopOverlay.classList.add('hidden');
+    gameoverOverlay.classList.add('hidden');
+  }
+
+  function beginOrder(){
+    state.timer = getRoundTime();
+    state.dragonfireCounter = 0;
+    state.clickCountRun = 0;
+    state.mana = 0;
+    state.quotaMet = false;
+    state.stirFrenzyTimer = 0;
+    state.timeFreezeTimer = 0;
+    state.unstableBrewClock = 0;
+    if(hasRelic('starter')){
+      state.mana = Math.floor(state.target * 0.10);
+      if(state.mana >= state.target){ state.quotaMet = true; }
+    }
+    state.phase = 'brewing';
+    updateUI();
+  }
+
+  function succeedRound(){
+    if(state.phase !== 'brewing') return;
+    closePauseMenu();
+    state.phase = 'roundEnd';
+    const surplus = Math.max(0, state.mana - state.target);
+    const goldEarned = getSurplusGold(surplus);
+    bumpGold(goldEarned);
+    sfxSuccess();
+
+    shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
+    shopSummary.textContent = 'Surplus of ' + fmt(surplus) + ' Essence converted into ' + fmt(goldEarned) + ' 🪙 Gold.';
+
+    state.rerollCount = 0;
+    rollShopOffers();
+    renderShop();
+    state.phase = 'shop';
+    shopOverlay.classList.remove('hidden');
+    updateUI();
+  }
+
+  function failRound(){
+    closePauseMenu();
+    state.phase = 'gameover';
+    sfxFail();
+    renderGameOver();
+    gameoverOverlay.classList.remove('hidden');
+  }
+
+  function cashOutNow(){
+    if(state.phase === 'brewing' && state.quotaMet && !isPaused){
+      succeedRound();
+    }
+  }
+
+  function proceedToNextRound(){
+    shopOverlay.classList.add('hidden');
+    state.round++;
+    state.target = getOrderTarget(state.round);
+    beginOrder();
+  }
+
+  /* =========================================================
+     SHOP / RELIC DRAFT
+  ========================================================= */
+  function rollShopOffers(){
+    const pool = RELICS.filter(r => !hasRelic(r.id));
+    const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+    state.shopOffers = shuffled.slice(0, 3).map(r => r.id);
+  }
+
+  function renderShop(){
+    shopCards.innerHTML = '';
+    const pool = RELICS.filter(r => !hasRelic(r.id));
+
+    renderSynergyBadges(synergySummary);
+
+    if(state.shopOffers.length === 0){
+      const msg = document.createElement('p');
+      msg.textContent = 'Every Relic has already been discovered this run. Onward!';
+      shopCards.appendChild(msg);
+    } else {
+      const tagCounts = getTagCounts();
+      state.shopOffers.forEach(id => {
+        const r = RELICS.find(x => x.id === id);
+        if(!r) return;
+        const owned = hasRelic(id);
+        const price = getRelicCost(r);
+        const tagsHtml = (r.tags||[]).map(t => {
+          const info = TAG_INFO[t];
+          return info ? `<span class="tag-pill tag-${t}">${info.icon} ${info.label}</span>` : '';
+        }).join('');
+        const hintsHtml = owned ? '' : (r.tags||[]).map(t => {
+          const hint = getSynergyHint(t, tagCounts[t] || 0);
+          return hint ? `<div class="synergy-hint">${hint}</div>` : '';
+        }).join('');
+        const card = document.createElement('div');
+        card.className = 'relicCard' + (owned ? ' owned' : '') + (r.corrupted ? ' corrupted' : '');
+        card.innerHTML = `
+          <div class="rName">${r.icon} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">⚠ CORRUPTED</span>' : ''}</div>
+          <div class="rTags">${tagsHtml}</div>
+          ${hintsHtml}
+          <div class="rDesc">${r.desc}</div>
+          <button class="rBuy" data-id="${r.id}" ${owned || state.gold < price ? 'disabled' : ''}>
+            ${owned ? 'ACQUIRED' : 'BUY — ' + price + ' 🪙'}
+          </button>
+        `;
+        shopCards.appendChild(card);
+      });
+    }
+
+    rerollBtn.textContent = '🔄 REROLL SHOP (' + getRerollCost() + ' 🪙)';
+    rerollBtn.disabled = state.gold < getRerollCost() || pool.length <= state.shopOffers.length;
+
+    shopCards.querySelectorAll('.rBuy').forEach(btn => {
+      btn.addEventListener('click', () => buyRelic(btn.getAttribute('data-id')));
+    });
+
+    renderConsumableShop();
+  }
+
+  function renderSynergyBadges(container){
+    if(!container) return;
+    const counts = getTagCounts();
+    const activeTags = Object.keys(TAG_INFO).filter(t => counts[t] > 0);
+    if(activeTags.length === 0){
+      container.style.display = 'none';
+      container.innerHTML = '';
+      return;
+    }
+    container.style.display = 'flex';
+    container.innerHTML = activeTags.map(t => {
+      const c = counts[t];
+      const info = TAG_INFO[t];
+      const tiers = TAG_TIERS[t];
+      const boosted = tiers ? c >= tiers[0].count : c >= 2;
+      return `<button type="button" class="tag-pill tag-${t} synergy-badge${boosted ? ' boosted' : ''}" data-tag="${t}">${info.icon} ${info.label} x${c}</button>`;
+    }).join('');
+    container.querySelectorAll('.synergy-badge').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSynergyTooltip(btn, btn.getAttribute('data-tag'));
+      });
+      btn.addEventListener('mouseenter', () => showSynergyTooltip(btn, btn.getAttribute('data-tag')));
+    });
+  }
+
+  function getSynergyTooltipHTML(tag){
+    const counts = getTagCounts();
+    const c = counts[tag] || 0;
+    const info = TAG_INFO[tag];
+    const tiers = TAG_TIERS[tag];
+    if(!tiers){
+      const mult = getSynergyMult(tag);
+      let html = `<div class="tooltip-title">${info.icon} ${info.label} (${c} owned)</div>`;
+      html += `<div class="tooltip-line${c >= 2 ? ' active' : ' inactive'}">${c >= 2 ? '✅ ACTIVE' : '🔒 LOCKED'} — Owning 2+ scales each ${info.label} relic's own effects (currently x${mult.toFixed(2)}).</div>`;
+      return html;
+    }
+    const maxCount = tiers[tiers.length - 1].count;
+    let html = `<div class="tooltip-title">${info.icon} ${info.label} (${c}/${maxCount})</div>`;
+    tiers.forEach(tier => {
+      const active = c >= tier.count;
+      html += `<div class="tooltip-line ${active ? 'active' : 'inactive'}">${active ? '✅ ACTIVE' : '🔒 LOCKED'} — (${tier.count}) ${tier.label}: ${tier.desc}</div>`;
+    });
+    const next = tiers.find(t => c < t.count);
+    if(next){
+      html += `<div class="tooltip-next">Next at ${next.count}: ${next.label} (need ${next.count - c} more)</div>`;
+    } else {
+      html += `<div class="tooltip-next">✨ All tiers unlocked!</div>`;
+    }
+    return html;
+  }
+
+  function showSynergyTooltip(btn, tag){
+    synergyTooltip.innerHTML = getSynergyTooltipHTML(tag);
+    synergyTooltip.dataset.tag = tag;
+    synergyTooltip.classList.remove('hidden');
+    const rect = btn.getBoundingClientRect();
+    synergyTooltip.style.top = (rect.bottom + 6) + 'px';
+    synergyTooltip.style.left = rect.left + 'px';
+    requestAnimationFrame(() => {
+      const tw = synergyTooltip.offsetWidth;
+      const vw = window.innerWidth;
+      let left = rect.left;
+      if(left + tw > vw - 8) left = vw - tw - 8;
+      if(left < 8) left = 8;
+      synergyTooltip.style.left = left + 'px';
+    });
+  }
+
+  function hideSynergyTooltip(){
+    synergyTooltip.classList.add('hidden');
+    synergyTooltip.dataset.tag = '';
+  }
+
+  function toggleSynergyTooltip(btn, tag){
+    if(synergyTooltip.dataset.tag === tag && !synergyTooltip.classList.contains('hidden')){
+      hideSynergyTooltip();
+    } else {
+      showSynergyTooltip(btn, tag);
+    }
+  }
+
+  function getSynergyHint(tag, currentCount){
+    const info = TAG_INFO[tag];
+    const tiers = TAG_TIERS[tag];
+    const newCount = currentCount + 1;
+    if(tiers){
+      for(const tier of tiers){
+        if(currentCount < tier.count && newCount >= tier.count){
+          return `${info.icon} ${info.label} -&gt; Activates (${tier.count}) ${tier.label}!`;
+        }
+      }
+      return null;
+    }
+    if(newCount >= 2 && currentCount < 2){
+      return `${info.icon} ${info.label} -&gt; Activates Synergy Bonus (x${newCount})!`;
+    }
+    if(newCount >= 2){
+      return `${info.icon} ${info.label} -&gt; Boosts Synergy Bonus to x${newCount}!`;
+    }
+    return null;
+  }
+
+  function renderConsumableShop(){
+    if(!consumableShop) return;
+    consumableShop.innerHTML = '';
+    CONSUMABLES.forEach(c => {
+      const cost = getConsumableCost(c);
+      const owned = (state.consumables && state.consumables[c.id]) || 0;
+      const card = document.createElement('div');
+      card.className = 'relicCard';
+      card.innerHTML = `
+        <div class="rName">${c.icon} ${c.name} <span style="color:var(--text-dim); font-size:0.46rem;">(Owned: ${owned})</span></div>
+        <div class="rDesc">${c.desc}</div>
+        <button class="rBuy" data-cid="${c.id}" ${state.gold < cost ? 'disabled' : ''}>BUY — ${cost} 🪙</button>
+      `;
+      consumableShop.appendChild(card);
+    });
+    consumableShop.querySelectorAll('.rBuy').forEach(btn => {
+      btn.addEventListener('click', () => buyConsumable(btn.getAttribute('data-cid')));
+    });
+  }
+
+  function buyRelic(id){
+    const r = RELICS.find(x => x.id === id);
+    if(!r || hasRelic(id)) return;
+    const price = getRelicCost(r);
+    if(state.gold < price) return;
+    state.gold -= price;
+    state.relics.push(id);
+    if(r.liquidTheme) state.liquidTheme = r.liquidTheme;
+    updateCauldronVisuals();
+    sfxBuy();
+    goldValue.textContent = fmt(state.gold);
+    renderShop();
+    renderRelicTray();
+  }
+
+  function rerollShop(){
+    const cost = getRerollCost();
+    if(state.gold < cost) return;
+    state.gold -= cost;
+    state.rerollCount++;
+    sfxBuy();
+    rollShopOffers();
+    renderShop();
+    goldValue.textContent = fmt(state.gold);
+  }
+
+  /* =========================================================
+     GAME OVER
+  ========================================================= */
+  function renderGameOver(){
+    const completed = Math.max(0, state.round - 1);
+    statsList.innerHTML = `
+      <div class="statRow"><span>Orders Fulfilled</span><span>${completed}</span></div>
+      <div class="statRow"><span>Gold Earned</span><span>${fmt(state.totalGoldEarned)} 🪙</span></div>
+      <div class="statRow"><span>Total Taps</span><span>${fmt(state.totalClicksAllTime)}</span></div>
+      <div class="statRow"><span>Peak Mana</span><span>${fmt(state.peakMana)} ✨</span></div>
+      <div class="statRow"><span>Relics Collected</span><span>${state.relics.length} / ${RELICS.length}</span></div>
+    `;
+  }
+
+  /* =========================================================
+     PAUSE / SETTINGS / CHANGELOG
+  ========================================================= */
+  function openPauseMenu(){
+    if(!state || state.phase !== 'brewing') return;
+    isPaused = true;
+    settingsSubpanel.classList.add('hidden');
+    changelogSubpanel.classList.add('hidden');
+    settingsBtn.classList.remove('active');
+    changelogBtn.classList.remove('active');
+    pauseOverlay.classList.remove('hidden');
+  }
+
+  function closePauseMenu(){
+    isPaused = false;
+    settingsSubpanel.classList.add('hidden');
+    changelogSubpanel.classList.add('hidden');
+    settingsBtn.classList.remove('active');
+    changelogBtn.classList.remove('active');
+    pauseOverlay.classList.add('hidden');
+  }
+
+  function togglePauseMenu(){
+    if(isPaused){
+      closePauseMenu();
+    } else {
+      openPauseMenu();
+    }
+  }
+
+  function toggleSfx(){
+    sfxMuted = !sfxMuted;
+    sfxToggleBtn.textContent = sfxMuted ? 'SFX: MUTED' : 'SFX: ON';
+    sfxToggleBtn.style.background = sfxMuted ? 'var(--purple-mid)' : 'var(--amber)';
+    sfxToggleBtn.style.color = sfxMuted ? 'var(--text-light)' : '#2a1a08';
+    sfxStatusText.textContent = sfxMuted ? 'MUTED' : 'ACTIVE';
+    sfxStatusText.style.color = sfxMuted ? 'var(--danger)' : 'var(--success)';
+    if(!sfxMuted) sfxBuy();
+  }
+
+  function toggleSettingsPanel(){
+    const willShow = settingsSubpanel.classList.contains('hidden');
+    if(willShow){
+      settingsSubpanel.classList.remove('hidden');
+      changelogSubpanel.classList.add('hidden');
+      settingsBtn.classList.add('active');
+      changelogBtn.classList.remove('active');
+    } else {
+      settingsSubpanel.classList.add('hidden');
+      settingsBtn.classList.remove('active');
+    }
+  }
+
+  function toggleChangelogPanel(){
+    const willShow = changelogSubpanel.classList.contains('hidden');
+    if(willShow){
+      changelogSubpanel.classList.remove('hidden');
+      settingsSubpanel.classList.add('hidden');
+      changelogBtn.classList.add('active');
+      settingsBtn.classList.remove('active');
+    } else {
+      changelogSubpanel.classList.add('hidden');
+      changelogBtn.classList.remove('active');
+    }
+  }
+
+  /* =========================================================
+     MAIN LOOP
+  ========================================================= */
+  let lastTime = null;
+  function loop(ts){
+    if(lastTime === null) lastTime = ts;
+    const dt = Math.min(0.1, (ts - lastTime) / 1000);
+    lastTime = ts;
+
+    if(!isPaused && state && state.phase === 'brewing'){
+      const mps = getManaPerSecond();
+      if(mps > 0) addMana(mps * dt, true);
+
+      if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
+      if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
+
+      if(hasRelic('unstableBrew')){
+        state.unstableBrewClock = (state.unstableBrewClock || 0) + dt;
+        while(state.unstableBrewClock >= 1){
+          state.unstableBrewClock -= 1;
+          if(Math.random() < 0.08){
+            state.timer = Math.max(0, state.timer - 0.5);
+            spawnFloatNumber('💥 -0.5s', 'danger', 50, 20);
+            sfxRupture();
+          }
+        }
+      }
+
+      if(state.phase === 'brewing'){
+        if(state.timeFreezeTimer <= 0){
+          let timerDt = dt;
+          if(hasTagTier('frost', 1)) timerDt *= 0.8; // Frost Tier (4): Chill State
+          state.timer -= timerDt;
+        }
+        if(state.timer <= 0){
+          state.timer = 0;
+          updateUI();
+          if(state.quotaMet){ succeedRound(); } else { failRound(); }
+        } else {
+          updateUI();
+        }
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  setInterval(function(){
+    if(!isPaused) spawnAmbientFx();
+  }, 320);
+  setInterval(function(){
+    if(!isPaused) spawnAmbientSparkles();
+  }, 450);
+
+  /* =========================================================
+     EVENT WIRING
+  ========================================================= */
+  cauldron.addEventListener('pointerdown', handleCauldronTap);
+  buyStirBtn.addEventListener('click', buyStir);
+  buyBubbleBtn.addEventListener('click', buyBubble);
+  fulfillBtn.addEventListener('click', cashOutNow);
+  startBtn.addEventListener('click', startRun);
+  restartBtn.addEventListener('click', startRun);
+  continueBtn.addEventListener('click', proceedToNextRound);
+  rerollBtn.addEventListener('click', rerollShop);
+
+  pauseBtn.addEventListener('click', togglePauseMenu);
+  resumeBtn.addEventListener('click', closePauseMenu);
+  settingsBtn.addEventListener('click', toggleSettingsPanel);
+  changelogBtn.addEventListener('click', toggleChangelogPanel);
+  closeSettingsBtn.addEventListener('click', () => {
+    settingsSubpanel.classList.add('hidden');
+    settingsBtn.classList.remove('active');
+  });
+  closeChangelogBtn.addEventListener('click', () => {
+    changelogSubpanel.classList.add('hidden');
+    changelogBtn.classList.remove('active');
+  });
+  sfxToggleBtn.addEventListener('click', toggleSfx);
+
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      if(state && state.phase === 'brewing'){
+        togglePauseMenu();
+      }
+    }
+  });
+
+  document.addEventListener('touchmove', function(e){
+    if(e.scale && e.scale !== 1) e.preventDefault();
+  }, { passive:false });
+
+  document.addEventListener('click', function(e){
+    if(synergyTooltip && !synergyTooltip.classList.contains('hidden')){
+      if(!synergyTooltip.contains(e.target) && !e.target.classList.contains('synergy-badge')){
+        hideSynergyTooltip();
+      }
+    }
+  });
+
+  /* =========================================================
+     INIT (idle state before first run)
+  ========================================================= */
+  state = freshState();
+  updateCauldronVisuals();
+  updateUI();
+
+})();
+</script>
+</body>
+</html>
