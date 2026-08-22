@@ -555,7 +555,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1>🌙 THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -590,7 +590,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1>⏸ GAME PAUSED</h1>
-    <div class="pause-ver-tag">✨ Current Build: Alpha v0.5</div>
+    <div class="pause-ver-tag">✨ Current Build: Alpha v0.6</div>
     <p>Brewing cycle frozen. What would you like to do?</p>
     <div class="modal-actions">
       <button class="pixel-btn bigBtn" id="resumeBtn">RESUME GAME</button>
@@ -603,7 +603,7 @@
     <!-- SETTINGS SUBPANEL -->
     <div class="modal-subpanel hidden" id="settingsSubpanel">
       <div class="subpanel-header">
-        <span>⚙ AUDIO SETTINGS</span>
+        <span>⚙ AUDIO &amp; SAVE SETTINGS</span>
         <button class="subpanel-close" id="closeSettingsBtn">✕ CLOSE</button>
       </div>
       <div class="setting-row">
@@ -614,6 +614,9 @@
         <span>AUDIO SYNTH</span>
         <span id="sfxStatusText" style="color:var(--success);">ACTIVE</span>
       </div>
+      <div class="setting-row" style="margin-top:14px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:10px;">
+        <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;">🗑 RESET PROGRESS / NEW RUN</button>
+      </div>
     </div>
 
     <!-- CHANGELOG SUBPANEL -->
@@ -623,7 +626,16 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry">
-        <div class="changelog-ver">✨ Alpha v0.5 (Latest)</div>
+        <div class="changelog-ver">✨ Alpha v0.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Implemented persistent Save &amp; Load system via browser localStorage (apothecary_save_v1).</li>
+          <li>Auto-saves state on completed orders, shop transactions, upgrade purchases, and every 10s.</li>
+          <li>Restores gold, mana, order level, upgrades, relics, synergies, and charms upon page reload.</li>
+          <li>Added "Reset Progress / New Run" option in Pause Settings menu with confirmation prompt.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver">✨ Alpha v0.5</div>
         <ul class="changelog-list">
           <li>Rendering performance optimizations specifically tuned for Firefox / Gecko layout engines.</li>
           <li>Applied strict CSS containment (contain: layout paint style) and pointer-events isolation on particle containers.</li>
@@ -878,6 +890,7 @@
   const synergySummary = $('synergySummary');
   const mainSynergyRow = $('mainSynergyRow');
   const synergyTooltip = $('synergyTooltip');
+  const resetSaveBtn = $('resetSaveBtn');
 
   let sfxMuted = false;
   let isPaused = false;
@@ -1352,6 +1365,7 @@
     state.clickLevel++;
     sfxBuy();
     updateUI();
+    saveGame();
   }
 
   function buyBubble(){
@@ -1363,6 +1377,7 @@
     state.bubblerLevel++;
     sfxBuy();
     updateUI();
+    saveGame();
   }
 
   function useConsumable(id){
@@ -1382,6 +1397,7 @@
     }
     sfxBuy();
     updateUI();
+    saveGame();
   }
 
   function buyConsumable(id){
@@ -1394,6 +1410,7 @@
     sfxBuy();
     goldValue.textContent = fmt(state.gold);
     renderConsumableShop();
+    saveGame();
   }
 
   /* =========================================================
@@ -1409,6 +1426,7 @@
     startOverlay.classList.add('hidden');
     shopOverlay.classList.add('hidden');
     gameoverOverlay.classList.add('hidden');
+    saveGame();
   }
 
   function beginOrder(){
@@ -1426,6 +1444,7 @@
     }
     state.phase = 'brewing';
     updateUI();
+    saveGame();
   }
 
   function succeedRound(){
@@ -1446,6 +1465,7 @@
     state.phase = 'shop';
     shopOverlay.classList.remove('hidden');
     updateUI();
+    saveGame();
   }
 
   function failRound(){
@@ -1454,6 +1474,7 @@
     sfxFail();
     renderGameOver();
     gameoverOverlay.classList.remove('hidden');
+    saveGame();
   }
 
   function cashOutNow(){
@@ -1467,6 +1488,7 @@
     state.round++;
     state.target = getOrderTarget(state.round);
     beginOrder();
+    saveGame();
   }
 
   /* =========================================================
@@ -1664,6 +1686,7 @@
     goldValue.textContent = fmt(state.gold);
     renderShop();
     renderRelicTray();
+    saveGame();
   }
 
   function rerollShop(){
@@ -1675,6 +1698,7 @@
     rollShopOffers();
     renderShop();
     goldValue.textContent = fmt(state.gold);
+    saveGame();
   }
 
   /* =========================================================
@@ -1758,6 +1782,81 @@
   }
 
   /* =========================================================
+     SAVE / LOAD (localStorage: apothecary_save_v1)
+  ========================================================= */
+  const SAVE_KEY = 'apothecary_save_v1';
+
+  function saveGame(){
+    if(!state) return;
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    } catch(e){
+      // Storage error / quota / disabled
+    }
+  }
+
+  function loadGame(){
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if(!raw) return false;
+      const data = JSON.parse(raw);
+      if(!data || typeof data !== 'object') return false;
+
+      const base = freshState();
+      state = Object.assign(base, data);
+
+      if(!state.consumables || typeof state.consumables !== 'object'){
+        state.consumables = {};
+      }
+      CONSUMABLES.forEach(c => {
+        if(typeof state.consumables[c.id] !== 'number') state.consumables[c.id] = 0;
+      });
+      if(!Array.isArray(state.relics)) state.relics = [];
+
+      state.target = getOrderTarget(state.round || 1);
+
+      startOverlay.classList.add('hidden');
+      shopOverlay.classList.add('hidden');
+      gameoverOverlay.classList.add('hidden');
+      pauseOverlay.classList.add('hidden');
+
+      if(state.phase === 'shop'){
+        shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
+        shopSummary.textContent = 'Surplus converted into Gold.';
+        if(!state.shopOffers || state.shopOffers.length === 0){
+          rollShopOffers();
+        }
+        renderShop();
+        shopOverlay.classList.remove('hidden');
+      } else if(state.phase === 'gameover'){
+        renderGameOver();
+        gameoverOverlay.classList.remove('hidden');
+      } else if(state.phase === 'brewing'){
+        // Active brewing resumed
+      } else {
+        state.phase = 'start';
+        startOverlay.classList.remove('hidden');
+      }
+
+      updateCauldronVisuals();
+      updateUI();
+      return true;
+    } catch(e){
+      console.error('Failed to load save:', e);
+      return false;
+    }
+  }
+
+  function resetSave(){
+    if(confirm("Are you sure you want to wipe your save?")){
+      try {
+        localStorage.removeItem(SAVE_KEY);
+      } catch(e){}
+      window.location.reload();
+    }
+  }
+
+  /* =========================================================
      MAIN LOOP
   ========================================================= */
   let lastTime = null;
@@ -1810,6 +1909,9 @@
   setInterval(function(){
     if(!isPaused) spawnAmbientSparkles();
   }, 450);
+  setInterval(function(){
+    if(!isPaused && state && (state.phase === 'brewing' || state.phase === 'shop')) saveGame();
+  }, 10000);
 
   /* =========================================================
      EVENT WIRING
@@ -1836,6 +1938,7 @@
     changelogBtn.classList.remove('active');
   });
   sfxToggleBtn.addEventListener('click', toggleSfx);
+  if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
 
   window.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
@@ -1858,11 +1961,13 @@
   });
 
   /* =========================================================
-     INIT (idle state before first run)
+     INIT (load from localStorage or fresh state)
   ========================================================= */
-  state = freshState();
-  updateCauldronVisuals();
-  updateUI();
+  if(!loadGame()){
+    state = freshState();
+    updateCauldronVisuals();
+    updateUI();
+  }
 
 })();
 </script>
