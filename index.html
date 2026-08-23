@@ -37,6 +37,14 @@
     width:1.1em; height:1.1em; vertical-align:-0.15em;
     display:inline-block; fill:currentColor; flex-shrink:0;
   }
+  .icon.painted{ fill: revert; }
+  .icon path[fill="currentColor"],
+  .icon rect[fill="currentColor"],
+  .icon polygon[fill="currentColor"],
+  .icon circle[fill="currentColor"],
+  .icon ellipse[fill="currentColor"]{
+    fill: currentColor;
+  }
   .ic-gold{ color:#ffd043; }
   .ic-midas{ color:#ffc426; }
   .ic-mana{ color:#c9a6ff; }
@@ -1663,9 +1671,49 @@
 <defs>
 
 <symbol id="icon-coin" viewBox="0 0 24 24">
-  <circle cx="12" cy="12" r="9" fill="currentColor"/>
-  <circle cx="12" cy="12" r="9" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
-  <circle cx="12" cy="12" r="6" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.2"/>
+  <circle cx="12" cy="12" r="10" fill="#291c02"/>
+  <circle cx="12" cy="12" r="9" fill="#8a610e"/>
+  <circle cx="12" cy="12" r="7" fill="#ffd043"/>
+  <circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/>
+  <rect x="11" y="8" width="2" height="8" fill="#8a610e"/>
+  <rect x="9" y="11" width="6" height="2" fill="#8a610e"/>
+</symbol>
+
+<symbol id="icon-hoardersScale" viewBox="0 0 24 24">
+  <path fill="#1a1104" d="M11 1h2v3h5v2h-2v2h2v2h-2v2h-3v3h5v2h-2v2h2v3h-2v2H9v-2h2v-3H9v-2h2v-2H8v-3H5V9h2V7H5V5h5V1z"/>
+  <path fill="#5c4308" d="M12 3h1v5h3v2h-3v2H9v-2H6V8h3V3h3z"/>
+  <path fill="#ffd043" d="M12 4h1v3h2v2H9V7h2V4h1z"/>
+  <rect x="7" y="10" width="1" height="5" fill="#c4942a"/>
+  <rect x="16" y="10" width="1" height="5" fill="#c4942a"/>
+  <path fill="#8a610e" d="M4 15h6v3H4z"/>
+  <path fill="#ffe27a" d="M5 14h4v1H5zM6 13h2v1H6z"/>
+  <path fill="#8a610e" d="M14 15h6v3h-6z"/>
+  <path fill="#ffe27a" d="M15 14h4v1h-4zM16 13h2v1h-2z"/>
+</symbol>
+
+<symbol id="icon-pawnTicket" viewBox="0 0 24 24">
+  <path fill="#1a1104" d="M4 2h16v4a2 2 0 010 4v4a2 2 0 010 4v4H4v-4a2 2 0 010-4V6a2 2 0 010-4z"/>
+  <path fill="#5c4308" d="M5 3h14v3a2 2 0 000 4v4a2 2 0 000 4v3H5v-3a2 2 0 000-4V10a2 2 0 000-4V3z"/>
+  <path fill="#b8860b" d="M6 4h12v2a2 2 0 000 4v4a2 2 0 000 4v2H6v-2a2 2 0 000-4V10a2 2 0 000-4V4z"/>
+  <path fill="#ffd043" d="M7 5h10v14H7V5z"/>
+  <rect x="3" y="9" width="3" height="6" fill="#050308"/>
+  <rect x="18" y="9" width="3" height="6" fill="#050308"/>
+  <rect x="10" y="8" width="4" height="2" fill="#8a230e"/>
+  <rect x="9" y="12" width="6" height="1" fill="#5c4308"/>
+  <rect x="10" y="14" width="4" height="1" fill="#5c4308"/>
+</symbol>
+
+<symbol id="icon-gildedLedger" viewBox="0 0 24 24">
+  <path fill="#1a1104" d="M3 3h4v2h10V3h4v18h-4v-2H7v2H3V3z"/>
+  <path fill="#5c3413" d="M4 4h3v15H4V4zm13 0h3v15h-3V4z"/>
+  <path fill="#8b5220" d="M5 5h1v13H5V5zm13 0h1v13h-1V5z"/>
+  <path fill="#e3c79a" d="M7 4h10v15H7V4z"/>
+  <path fill="#fae4b5" d="M8 5h8v13H8V5z"/>
+  <rect x="10" y="7" width="4" height="1" fill="#8a610e"/>
+  <rect x="10" y="9" width="4" height="1" fill="#8a610e"/>
+  <rect x="10" y="11" width="3" height="1" fill="#8a610e"/>
+  <circle cx="12" cy="15" r="2" fill="#ffd043"/>
+  <circle cx="12" cy="15" r="1" fill="#fff7b8"/>
 </symbol>
 
 <symbol id="icon-sparkle" viewBox="0 0 24 24">
@@ -1682,9 +1730,19 @@
 </symbol>
 
 <symbol id="icon-bellows" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M2 9h6l3 2.5v1L8 15H2l2-3z"/>
-  <path fill="currentColor" d="M11 8.5h5.5L21 5v14l-4.5-3.5H11z"/>
-  <rect x="9.5" y="10" width="2" height="4" fill="currentColor"/>
+  <path fill="#1a0e05" d="M2 10h5v-3h2v-1h6v1h2v3h5v4h-5v3h-2v1H9v-1H7v-3H2v-4z"/>
+  <path fill="#5c3413" d="M7 8h2v-1h6v1h2v8h-2v1H9v-1H7V8z"/>
+  <path fill="#8b5220" d="M8 8h2v-1h4v1h2v7h-2v1H10v-1H8V8z"/>
+  <rect x="10" y="8" width="4" height="2" fill="#c47a37"/>
+  <path fill="#2e1a0b" d="M9 10h6v4H9v-4z"/>
+  <path fill="#d94b18" d="M10 11h4v2h-4v-2z"/>
+  <path fill="#404652" d="M2 11h5v2H2v-2zM17 11h5v2h-5v-2z"/>
+  <path fill="#8793a6" d="M3 11h4v1H3v-1zM18 11h3v1h-3v-1z"/>
+  <rect x="2" y="11" width="1" height="2" fill="#d2dae6"/>
+  <rect x="8" y="9" width="1" height="1" fill="#ffcf4b"/>
+  <rect x="8" y="14" width="1" height="1" fill="#ffcf4b"/>
+  <rect x="15" y="9" width="1" height="1" fill="#ffcf4b"/>
+  <rect x="15" y="14" width="1" height="1" fill="#ffcf4b"/>
 </symbol>
 
 <symbol id="icon-frost" viewBox="0 0 24 24">
@@ -1718,7 +1776,15 @@
 </symbol>
 
 <symbol id="icon-hourglass" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M6 2h12v2l-5 6 5 6v2H6v-2l5-6-5-6z"/>
+  <path fill="#1a1118" d="M4 2h16v4h-2v2h-2v2h-2v4h2v2h2v2h2v4H4v-4h2v-2h2v-2h2v-4H8V8H6V6H4V2z"/>
+  <path fill="#5c3413" d="M5 3h14v2H5V3zm0 16h14v2H5v-2z"/>
+  <rect x="6" y="3" width="12" height="1" fill="#c47a37"/>
+  <rect x="6" y="20" width="12" height="1" fill="#8b5220"/>
+  <path fill="#173847" d="M6 6h12v1h-2v2h-2v2h-1v2h1v2h2v2h2v1H6v-1h2v-2h2v-2h1v-2h-1V9H8V7H6V6z"/>
+  <path fill="#37728a" d="M7 7h10v1h-2v2h-2v1h-2v-1H9V8H7V7zm2 9h6v1h-1v1h-4v-1H9v-1z"/>
+  <path fill="#8fe9ff" d="M8 8h8v1h-2v1h-4V9H8V8zm3 3h2v2h-2v-2zm-2 5h6v2H9v-2z"/>
+  <rect x="10" y="8" width="4" height="1" fill="#ffffff"/>
+  <rect x="10" y="17" width="4" height="1" fill="#ffffff"/>
 </symbol>
 
 <symbol id="icon-gear" viewBox="0 0 24 24">
@@ -1754,7 +1820,15 @@
 </symbol>
 
 <symbol id="icon-moon" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M14 2a10 10 0 108 16 8 8 0 01-8-16z"/>
+  <path fill="#0b172a" d="M12 1h5v2h3v3h2v5h1v4h-1v4h-3v2h-4v1h-3v-1H7v-2H4v-3H3v-5h1V8h2V5h3V3h3V1z"/>
+  <path fill="#1e3a5f" d="M14 3h3v2h3v3h1v5h-1v4h-2v2h-4v1h-2v-2h3v-2h2v-3h1V9h-1V6h-3V4h-3V3h3z"/>
+  <path fill="#4fa8d8" d="M12 3h3v2h3v3h1v5h-1v3h-2v2h-3v-2h2v-2h1V9h-1V7h-2V5h-2V3z"/>
+  <path fill="#a6e3ff" d="M13 4h2v2h2v3h1v4h-1v2h-1v-2h1V9h-1V7h-2V5h-1V4z"/>
+  <rect x="14" y="5" width="1" height="2" fill="#ffffff"/>
+  <rect x="16" y="8" width="1" height="3" fill="#ffffff"/>
+  <rect x="5" y="6" width="2" height="2" fill="#a6e3ff"/>
+  <rect x="4" y="16" width="2" height="2" fill="#ffffff"/>
+  <rect x="8" y="19" width="2" height="2" fill="#70c5f5"/>
 </symbol>
 
 <symbol id="icon-skull" viewBox="0 0 24 24">
@@ -1764,12 +1838,69 @@
 </symbol>
 
 <symbol id="icon-feather" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M20 3c-6 0-14 4-14 12 0 3 2 5 4 6l9-9-8 9c1 .6 2 1 3 1 8 0 12-8 12-14 0-2-3-5-6-5z"/>
+  <path fill="#240702" d="M19 1h4v4h-1v3h-2v3h-2v3h-2v3h-2v3h-2v3h-2v-2h1v-3h2v-3h2v-3h2v-3h2V4h1V1h-2zM4 22h3v-3H4v3z"/>
+  <path fill="#851508" d="M19 3h2v3h-1v3h-2v3h-2v3h-2v3h-2v-2h1v-3h2v-3h2v-3h2V4h-2V3z"/>
+  <path fill="#e84a10" d="M18 3h2v2h-1v3h-2v3h-2v3h-2v-2h1v-3h2v-3h2V4h-2V3z"/>
+  <path fill="#ffb41d" d="M17 4h2v2h-1v2h-2v3h-2v-1h1v-2h2V5h-1V4z"/>
+  <rect x="17" y="4" width="1" height="2" fill="#fff7b8"/>
+  <path fill="#3a1e12" d="M5 21h2v-2H6v-3h2v-2h2v-2h2v-2h2v-2h2V6h2V4h-1v2h-2v2h-2v2h-2v2h-2v2H7v3H5v2z"/>
+  <rect x="4" y="21" width="2" height="2" fill="#e3c79a"/>
 </symbol>
 
 <symbol id="icon-ice" viewBox="0 0 24 24">
   <path fill="currentColor" d="M4 6l8-4 8 4v12l-8 4-8-4z"/>
   <path fill="rgba(255,255,255,0.3)" d="M4 6l8 4v12l-8-4z"/>
+</symbol>
+
+<symbol id="icon-glacialCore" viewBox="0 0 24 24">
+  <path fill="#06121f" d="M8 2h8v2h3v3h2v8h-2v3h-3v2H8v-2H5v-3H3V7h2V4h3V2z"/>
+  <path fill="#163854" d="M8 4h8v2h2v2h2v6h-2v2h-2v2H8v-2H6v-2H4V8h2V6h2V4z"/>
+  <path fill="#2d7fa8" d="M9 6h6v2h2v6h-2v2H9v-2H7V8h2V6z"/>
+  <path fill="#62c4f5" d="M10 7h4v2h2v4h-2v2h-4v-2H8V9h2V7z"/>
+  <rect x="10" y="8" width="3" height="3" fill="#bbf0ff"/>
+  <rect x="11" y="9" width="2" height="2" fill="#ffffff"/>
+  <rect x="11" y="3" width="2" height="1" fill="#99e5ff"/>
+  <rect x="11" y="20" width="2" height="1" fill="#99e5ff"/>
+  <rect x="3" y="11" width="1" height="2" fill="#99e5ff"/>
+  <rect x="20" y="11" width="1" height="2" fill="#99e5ff"/>
+</symbol>
+
+<symbol id="icon-permafrostShard" viewBox="0 0 24 24">
+  <path fill="#06121f" d="M11 1h2v3h4v4h2v6h-2v4h-3v3h-2v2h-2v-2H9v-3H6v-4H4V8h2V4h5V1z"/>
+  <path fill="#164366" d="M11 3h1v4h4v6h1v2h-2v3h-3v2h-1V3z"/>
+  <path fill="#439ecc" d="M10 3h1v17h-1v-2H8v-3H6V8h2V4h2V3z"/>
+  <path fill="#8fe3ff" d="M10 4h1v15H9v-2H7V9h2V5h1V4z"/>
+  <rect x="10" y="5" width="1" height="10" fill="#ffffff"/>
+  <rect x="16" y="9" width="1" height="2" fill="#ffffff"/>
+</symbol>
+
+<symbol id="icon-wintersGrasp" viewBox="0 0 24 24">
+  <path fill="#081421" d="M3 4h4v3h2v3h1v4H9v3H7v3H3v-4h2v-2H4v-4h2V7H3V4zm14 0h4v3h-2v3h-1v4h1v3h2v3h-4v-4h-2v-2h1v-4h-2V7h1V4z"/>
+  <path fill="#2c698d" d="M4 5h2v3h2v3h1v3H8v3H6v2H4v-2h2v-3H5v-4h2V8H4V5zm14 0h2v3h-2v3h-2v4h-1v-3h1v-3h2V8h-2V5z"/>
+  <path fill="#65b8e0" d="M4 6h1v2h2v3h1v2H7v3H5v-1h2v-3H6v-3h1V7H4V6zm15 0h1v2h-1v3h-1v3h-1v-2h1V9h1V7h-1V6z"/>
+  <path fill="#b8f0ff" d="M11 6h2v12h-2V6zm-5 5h12v2H6v-2z"/>
+  <rect x="9" y="8" width="2" height="2" fill="#ffffff"/>
+  <rect x="13" y="8" width="2" height="2" fill="#ffffff"/>
+  <rect x="9" y="14" width="2" height="2" fill="#ffffff"/>
+  <rect x="13" y="14" width="2" height="2" fill="#ffffff"/>
+  <rect x="11" y="11" width="2" height="2" fill="#ffffff"/>
+</symbol>
+
+<symbol id="icon-rimeCaliper" viewBox="0 0 24 24">
+  <path fill="#0d1824" d="M10 2h4v3h2v3h2v8h-3v-4h-1V9h-2V5h-2v4H9v3H8v4H5V8h2V5h3V2z"/>
+  <path fill="#3a5973" d="M11 3h2v3h2v4h1v6h-1v-4h-1V8h-2V4h-1v4H9v4H8v4H7v-6h1V6h2V3z"/>
+  <path fill="#7dd8fa" d="M10 4h1v2h2v2h2v4h-1V9h-2V5h-1V4zM7 9h1v3h1v4h-1v-3H7V9zm9 0h1v3h1v3h-1v-2h-1V9z"/>
+  <rect x="11" y="2" width="2" height="2" fill="#ffffff"/>
+  <rect x="7" y="16" width="2" height="3" fill="#bbf0ff"/>
+  <rect x="15" y="16" width="2" height="3" fill="#bbf0ff"/>
+</symbol>
+
+<symbol id="icon-absoluteZero" viewBox="0 0 24 24">
+  <path fill="#040b14" d="M11 1h2v4h4v2h2v4h4v2h-4v4h-2v2h-4v4h-2v-4H7v-2H5v-4H1v-2h4V7h2V5h4V1z"/>
+  <path fill="#1c5578" d="M9 3h6v2h3v3h2v4h1v2h-1v4h-2v3h-3v2H9v-2H6v-3H4v-4H3v-2h1V8h2V5h3V3z"/>
+  <path fill="#54bfe6" d="M11 2h2v5h3v2h5v2h-5v2h-3v5h-2v-5H8v-2H3v-2h5V9h3V2z"/>
+  <path fill="#a3edff" d="M11 4h2v2h-2V4zm-5 5h2v2H6V9zm10 0h2v2h-2V9zm-5 7h2v2h-2v-2z"/>
+  <rect x="10" y="10" width="4" height="4" fill="#ffffff"/>
 </symbol>
 
 <symbol id="icon-rainbow" viewBox="0 0 24 24">
@@ -1794,9 +1925,97 @@
   <circle cx="14.5" cy="12.5" r="1" fill="#000"/>
 </symbol>
 
+<symbol id="icon-whisk" viewBox="0 0 24 24">
+  <path fill="#090514" d="M4 3h4v4h8V3h4v6h-1v6h-1v4h-2v2h-8v-2H6v-4H5V9H4V3z"/>
+  <path fill="#1a102e" d="M5 4h2v4h10V4h2v5h-1v6h-1v4h-2v1H9v-1H7v-4H6V9H5V4z"/>
+  <path fill="#2e1952" d="M6 7h12v7h-1v4h-2v1h-6v-1H7v-4H6V7z"/>
+  <rect x="5" y="4" width="1" height="2" fill="#c186ff"/>
+  <rect x="18" y="4" width="1" height="2" fill="#c186ff"/>
+  <rect x="8" y="9" width="2" height="3" fill="#ffc426"/>
+  <rect x="14" y="9" width="2" height="3" fill="#ffc426"/>
+  <rect x="9" y="10" width="1" height="2" fill="#090514"/>
+  <rect x="14" y="10" width="1" height="2" fill="#090514"/>
+  <rect x="8" y="9" width="1" height="1" fill="#ffffff"/>
+  <rect x="15" y="9" width="1" height="1" fill="#ffffff"/>
+  <rect x="11" y="12" width="2" height="1" fill="#e2b8ff"/>
+  <rect x="8" y="17" width="8" height="2" fill="#8a5a10"/>
+  <rect x="9" y="17" width="6" height="1" fill="#ffd043"/>
+  <rect x="11" y="18" width="2" height="2" fill="#ffe27a"/>
+  <rect x="11" y="20" width="2" height="1" fill="#ffd043"/>
+</symbol>
+
+<symbol id="icon-crucible" viewBox="0 0 24 24">
+  <path fill="#120421" d="M6 2h12v3h-1v2h-1v2h2v7h-2v3h-1v2H9v-2H8v-3H6V9h2V7H7V5H6V2z"/>
+  <path fill="#3b1559" d="M7 4h10v2h-1v2h-1v2h2v7h-2v2h-6v-2H7V10h2V8H8V6H7V4z"/>
+  <path fill="#5e268a" d="M8 5h8v1h-1v2h-1v2h1v6h-1v2h-4v-2H9V10h1V8H9V6H8V5z"/>
+  <path fill="#8e44cc" d="M9 10h6v6H9v-6z"/>
+  <path fill="#c98aff" d="M9 3h6v2H9V3zm1 8h4v4h-4v-4z"/>
+  <rect x="10" y="3" width="4" height="1" fill="#ffffff"/>
+  <rect x="11" y="12" width="2" height="2" fill="#ffffff"/>
+  <rect x="4" y="6" width="2" height="2" fill="#e2c2ff"/>
+  <rect x="18" y="6" width="2" height="2" fill="#e2c2ff"/>
+  <rect x="3" y="14" width="2" height="2" fill="#ffd043"/>
+  <rect x="19" y="14" width="2" height="2" fill="#ffd043"/>
+</symbol>
+
+<symbol id="icon-starter" viewBox="0 0 24 24">
+  <path fill="#1b120c" d="M5 2h14v3h-1v2h2v12h-2v3H4v-3h1V4H4V2h1z"/>
+  <path fill="#6e4823" d="M6 4h12v1H7v14h11v1H6V4z"/>
+  <path fill="#b5874c" d="M7 5h10v1H8v13h9v1H7V5z"/>
+  <path fill="#e3bc7d" d="M8 6h8v13H8V6z"/>
+  <path fill="#fae4b5" d="M9 6h6v12H9V6z"/>
+  <rect x="10" y="8" width="4" height="1" fill="#523214"/>
+  <rect x="10" y="10" width="5" height="1" fill="#523214"/>
+  <rect x="10" y="12" width="3" height="1" fill="#523214"/>
+  <rect x="11" y="14" width="3" height="3" fill="#8f2d56"/>
+  <rect x="12" y="15" width="1" height="1" fill="#ffd043"/>
+  <rect x="12" y="17" width="1" height="2" fill="#8f2d56"/>
+</symbol>
+
+<symbol id="icon-arcaneConduit" viewBox="0 0 24 24">
+  <path fill="#0f051c" d="M11 1h2v3h3v2h2v4h1v4h-1v4h-2v2h-3v3h-2v-3H8v-2H6v-4H5v-4h1V6h2V4h3V1z"/>
+  <path fill="#2c0c4a" d="M11 3h2v2h3v3h1v4h1v2h-1v3h-2v2h-3v2h-1v-2H8v-2H6v-3h1V9h2V5h2V3z"/>
+  <path fill="#692ab8" d="M11 4h2v2h2v3h1v4h-1v3h-2v2h-2v-2H9v-3H8V9h2V6h1V4z"/>
+  <path fill="#a35cf0" d="M11 5h1v4h3v4h-1v2h-2v-2h-1V5z"/>
+  <path fill="#d8a8ff" d="M11 6h2v3h-1v2h1v3h-2v-2h1V9h-1V6z"/>
+  <rect x="11" y="7" width="1" height="2" fill="#ffffff"/>
+  <rect x="12" y="11" width="1" height="2" fill="#ffffff"/>
+  <rect x="3" y="11" width="2" height="2" fill="#e8c2ff"/>
+  <rect x="19" y="11" width="2" height="2" fill="#e8c2ff"/>
+</symbol>
+
+<symbol id="icon-bifrost" viewBox="0 0 24 24">
+  <path fill="#1a041e" d="M11 2h2v2h3v2h3v3h2v4h-2v3h-3v2h-3v2h-2v-2H8v-2H5v-3H3V9h2V6h3V4h3V2z"/>
+  <path fill="#ff4a68" d="M10 4h4v2h2v2h-2V7h-4V6h-2V4h2z"/>
+  <path fill="#ffb426" d="M16 6h2v3h2v4h-2v-2h-1V9h-1V6z"/>
+  <path fill="#4cd984" d="M10 16h4v2h2v2h-2v-1h-4v1H8v-2h2v-2z"/>
+  <path fill="#42b6ff" d="M6 9h1v2h1v2h2v2H8v-1H6v-2H4V9h2z"/>
+  <path fill="#b85cf5" d="M9 8h6v6H9V8z"/>
+  <path fill="#f38aff" d="M10 9h4v4h-4V9z"/>
+  <rect x="11" y="10" width="2" height="2" fill="#ffffff"/>
+</symbol>
+
+<symbol id="icon-catalyst" viewBox="0 0 24 24">
+  <path fill="#24000f" d="M12 1h3v4h3v2h-2v3h4v4h-4v2h3v4h-4v3h-3v-3H9v-2h2v-3H7V9h4V7H9V3h3V1z"/>
+  <path fill="#7a0026" d="M12 3h2v3h2v2h-1v2h3v2h-3v2h2v3h-3v2h-2v-2h-1v-2H8v-2h3V9H9V7h2V5h1V3z"/>
+  <path fill="#e6004c" d="M12 4h1v3h3v2h-3v2h2v2h-2v3h-1v-2h-2v-2h2V9h-2V7h2V4z"/>
+  <path fill="#ff7099" d="M12 5h1v3h2v1h-2v2h1v1h-2v2h-1v-2h-1v-1h2V9h-1V8h1V5z"/>
+  <rect x="11" y="8" width="2" height="3" fill="#ffffff"/>
+  <rect x="10" y="9" width="4" height="1" fill="#ffffff"/>
+  <rect x="4" y="5" width="2" height="2" fill="#ff7099"/>
+  <rect x="18" y="3" width="2" height="2" fill="#ffffff"/>
+  <rect x="19" y="16" width="2" height="2" fill="#ff2668"/>
+  <rect x="3" y="15" width="2" height="2" fill="#ffffff"/>
+</symbol>
+
 <symbol id="icon-pepper" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M8 4c1-1.5 3-2 4-1s0 2-1 3c3-1 6 0 7 3 1.5 4-2 10-8 10-5 0-8-4-7-8 1-3 3-5 5-7z"/>
-  <path fill="#3a7d2c" d="M8 4c1-1.5 3-2 4-1-1 .5-1.5 1-2 2z"/>
+  <path fill="#220505" d="M10 2h4v2h-2v2h3v2h2v3h1v5h-1v3h-2v2h-3v1h-3v-1H7v-3H6v-5h1V8h2V6h1V2z"/>
+  <path fill="#931313" d="M10 6h4v2h2v3h1v5h-1v3h-2v2h-3v-2H9v-3H7V8h2V6h1z"/>
+  <path fill="#e62d19" d="M10 7h3v2h2v4h1v4h-1v2h-2v-1h-2v-3H8V9h2V7z"/>
+  <path fill="#ff9421" d="M10 8h2v2h1v3h-1v2h-2v-3H9V9h1V8z"/>
+  <rect x="10" y="9" width="1" height="2" fill="#fff5a6"/>
+  <path fill="#255914" d="M11 2h2v3h-1v2h-1V4h-1V3h1V2z"/>
+  <rect x="12" y="2" width="1" height="2" fill="#58a62d"/>
 </symbol>
 
 <symbol id="icon-biohazard" viewBox="0 0 24 24">
@@ -1809,7 +2028,40 @@
 </symbol>
 
 <symbol id="icon-explosion" viewBox="0 0 24 24">
-  <path fill="currentColor" d="M12 1l2 6 6-2-3 6 5 3-6 2 1 6-5-4-5 4 1-6-6-2 5-3-3-6 6 2z"/>
+  <path fill="#240702" d="M11 1h2v3h3v2h3v3h4v4h-3v3h-2v3h-3v4h-4v-3H8v-2H5v-4H1v-4h3V7h3V4h4V1z"/>
+  <path fill="#5a180a" d="M11 3h2v2h3v3h3v3h2v2h-2v3h-3v2h-2v3h-2v-3H8v-2H6v-3H4v-2h3V8h2V5h2V3z"/>
+  <path fill="#e64213" d="M10 5h4v2h3v3h2v4h-2v2h-2v2h-4v-2H8v-2H6v-3h2V8h2V5z"/>
+  <path fill="#ff9914" d="M10 7h4v2h2v4h-2v2h-3v-1H9v-2H8v-2h2V7z"/>
+  <rect x="11" y="9" width="2" height="3" fill="#fff8bd"/>
+  <rect x="10" y="10" width="4" height="1" fill="#ffffff"/>
+  <rect x="3" y="4" width="2" height="2" fill="#ff9914"/>
+  <rect x="19" y="4" width="2" height="2" fill="#ffd542"/>
+  <rect x="20" y="17" width="2" height="2" fill="#ff5e14"/>
+</symbol>
+
+<symbol id="icon-sigil" viewBox="0 0 24 24">
+  <path fill="#1a0a0d" d="M8 2h8v2h3v3h2v8h-2v3h-3v2H8v-2H5v-3H3V7h2V4h3V2z"/>
+  <path fill="#4d2427" d="M8 4h8v2h2v2h2v6h-2v2h-2v2H8v-2H6v-2H4V8h2V6h2V4z"/>
+  <path fill="#301518" d="M9 5h6v1h2v2h1v6h-1v2h-2v1H9v-1H7v-2H6V8h1V6h2V5z"/>
+  <path fill="#a31818" d="M11 6h2v3h-2V6zm-3 4h8v2H8v-2zm3 3h2v5h-2v-5z"/>
+  <path fill="#ff5c1c" d="M11 7h2v2h-2V7zm-2 4h6v1H9v-1zm2 2h2v4h-2v-4z"/>
+  <rect x="11" y="8" width="2" height="1" fill="#ffe27a"/>
+  <rect x="11" y="11" width="2" height="1" fill="#ffffff"/>
+  <rect x="11" y="14" width="2" height="2" fill="#ffe27a"/>
+</symbol>
+
+<symbol id="icon-cinderbrand" viewBox="0 0 24 24">
+  <path fill="#1a0808" d="M5 4h14v3h-1v2h-1v8h-1v2h-1v2H9v-2H8v-2H7V9H6V7H5V4z"/>
+  <path fill="#381d1d" d="M6 7h12v2h-1v8h-1v2H8v-2H7V9H6V7z"/>
+  <path fill="#542e2e" d="M7 8h10v1H8v7h8v1H8V8z"/>
+  <path fill="#9c150c" d="M7 5h10v2H7V5z"/>
+  <path fill="#ff4914" d="M8 5h8v1H8V5z"/>
+  <path fill="#ffaa2b" d="M9 4h6v1H9V4z"/>
+  <path fill="#e62d19" d="M11 1h2v3h-2V1z"/>
+  <path fill="#ffd043" d="M11 2h2v2h-2V2z"/>
+  <rect x="11" y="3" width="2" height="1" fill="#ffffff"/>
+  <rect x="7" y="19" width="2" height="3" fill="#1a0808"/>
+  <rect x="15" y="19" width="2" height="3" fill="#1a0808"/>
 </symbol>
 
 <symbol id="icon-jar" viewBox="0 0 24 24">
@@ -1871,7 +2123,7 @@
         </button>
       </div>
       <div class="top-currencies">
-        <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
+        <div id="goldDisplay"><svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg> <span id="goldValue">0</span></div>
         <div id="shardDisplay"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> <span data-shard-count>0</span></div>
       </div>
     </div>
@@ -1931,7 +2183,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.5</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1944,7 +2196,7 @@
   <div class="panelCard pixel-panel">
     <div class="shop-gold-bar" id="shopGoldBar">
       <span class="shop-gold-label">YOUR GOLD</span>
-      <span class="shop-gold-amount"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="shopGoldValue">0</span></span>
+      <span class="shop-gold-amount"><svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg> <span id="shopGoldValue">0</span></span>
     </div>
     <h2 id="shopTitle">ORDER FULFILLED!</h2>
     <p id="shopSummary">Surplus converted to Gold.</p>
@@ -1956,7 +2208,7 @@
     <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> ALCHEMIST'S SUPPLY SHELF</div>
     <div id="consumableShop" class="shop-shelf"></div>
 
-    <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon ic-gold"><use href="#icon-coin"></use></svg>)</button>
+    <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg>)</button>
     <button class="smallBtn" id="shopSanctumBtn" style="color:var(--danger); border-color:#ff5d6c;"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> RETREAT TO SANCTUM</button>
     <br>
     <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
@@ -1978,7 +2230,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.5</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2053,7 +2305,31 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Midas relics now have their own painted pixel icons — a hoarder's scale, a pawn ticket, a gilded ledger, and a cursed gold coin.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.4</div>
+        <ul class="changelog-list">
+          <li>Arcane and Chaos relics now have their own painted pixel icons — a familiar, a gilded crucible, a starter scroll, a conduit spire, a bifrost blossom, and a volatile catalyst.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.3</div>
+        <ul class="changelog-list">
+          <li>The seven Frost relics now have their own painted pixel icons — moon dust, a frozen hourglass, a glacial core, winter's grasp, rime calipers, a permafrost shard, and absolute zero.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.2</div>
+        <ul class="changelog-list">
+          <li>The six Fire relics now wear their own painted pixel icons — a chili, bellows, magma burst, phoenix plume, ashen rune, and cinderbrand crucible.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.1</div>
         <ul class="changelog-list">
           <li>Order affixes and Guild Boss mandates now sit as a hoverable badge on the left of the cauldron, instead of a bulky banner under the order title.</li>
         </ul>
@@ -2723,7 +2999,7 @@
     { id:'dragonfire', name:"Dragonfire Pepper", icon:'pepper', cost:22, tags:['fire'],
       desc:"Clicks generate +40% Mana per level.",
       liquidTheme:'dragonfire' },
-    { id:'whisk', name:"Familiar's Whisk", icon:'cat', cost:28, tags:['arcane'],
+    { id:'whisk', name:"Familiar's Whisk", icon:'whisk', cost:28, tags:['arcane'],
       desc:"A spectral cat stirs the pot every second, generating 6% of your click power as bonus Mana/sec.",
       liquidTheme:null },
     { id:'moonstone', name:"Moonstone Dust", icon:'moon', cost:26, tags:['frost'],
@@ -2732,19 +3008,19 @@
     { id:'hourglass', name:"Stasis Hourglass", icon:'hourglass', cost:18, tags:['frost'],
       desc:"Adds +8 seconds to every order deadline at Lv 1, +14s at Lv 2, and +20s at Lv 3.",
       liquidTheme:null },
-    { id:'bifrost', name:"Bifrost Blossom", icon:'rainbow', cost:24, tags:['chaos'],
+    { id:'bifrost', name:"Bifrost Blossom", icon:'bifrost', cost:24, tags:['chaos'],
       desc:"Every tap has a 10% chance to also yield 1 Gold Coin directly.",
       liquidTheme:'bifrost', unlockOrder:3 },
-    { id:'crucible', name:"Philosopher's Crucible", icon:'urn', cost:32, tags:['arcane'],
+    { id:'crucible', name:"Philosopher's Crucible", icon:'crucible', cost:32, tags:['arcane'],
       desc:"Increases the Gold conversion rate for surplus Mana by 50%.",
       liquidTheme:'crucible', unlockOrder:4 },
-    { id:'starter', name:"Alchemist's Starter", icon:'scroll', cost:28, tags:['arcane'],
+    { id:'starter', name:"Alchemist's Starter", icon:'starter', cost:28, tags:['arcane'],
       desc:"Instantly satisfies 10% of the required quota at the start of every order.",
       liquidTheme:null, unlockTotalTaps:200 },
-    { id:'catalyst', name:"Volatile Catalyst", icon:'lightning', cost:26, tags:['chaos'],
+    { id:'catalyst', name:"Volatile Catalyst", icon:'catalyst', cost:26, tags:['chaos'],
       desc:"Mana generated per second is boosted +40% per level.",
       liquidTheme:null, unlockOrder:3 },
-    { id:'ashenSigil', name:"Ashen Sigil", icon:'fire', cost:22, tags:['fire'],
+    { id:'ashenSigil', name:"Ashen Sigil", icon:'sigil', cost:22, tags:['fire'],
       desc:"Residual embers linger in the pot, adding +25% Click Power per level to every tap.",
       liquidTheme:null },
     { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
@@ -2753,37 +3029,37 @@
     { id:'bellows', name:"Combustion Bellows", icon:'bellows', cost:24, tags:['fire'],
       desc:"Every consecutive tap without a 1.0s pause builds +5% Heat (up to +50% Click Power at Lv 1, +75% at Lv 2, +100% at Lv 3); pausing resets the streak.",
       liquidTheme:null },
-    { id:'cinderbrand', name:"Cinderbrand Crucible", icon:'fire', cost:26, tags:['fire'],
+    { id:'cinderbrand', name:"Cinderbrand Crucible", icon:'cinderbrand', cost:26, tags:['fire'],
       desc:"Active taps have an 8% chance to ignite the brew for 3.0s, passively ticking for 50% of your click power (65% at Lv 2, 80% at Lv 3) each second.",
       liquidTheme:null },
     { id:'magmaGeode', name:"Magma Geode", icon:'explosion', cost:28, tags:['fire'],
       desc:"Reaching 50% of an order's quota triggers a Magma Eruption, instantly brewing 10% of the remaining quota at Lv 1 (15% at Lv 2, 20% at Lv 3) in a burst of fire particles.",
       liquidTheme:'dragonfire' },
-    { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:22, tags:['frost'],
+    { id:'glacialCore', name:"Glacial Core", icon:'glacialCore', cost:22, tags:['frost'],
       desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0s (longer at higher levels).",
       liquidTheme:null, unlockOrder:3 },
-    { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
+    { id:'wintersGrasp', name:"Winter's Grasp", icon:'wintersGrasp', cost:24, tags:['frost'],
       desc:"Every tap has a 6% chance at Lv 1 (9% at Lv 2, 12% at Lv 3) to freeze the deadline for 0.75s (longer at higher levels).",
       liquidTheme:null, unlockOrder:4 },
-    { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'hourglass', cost:22, tags:['frost'],
+    { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'rimeCaliper', cost:22, tags:['frost'],
       desc:"Slows deadline drain speed by 25% at Lv 1 (35% at Lv 2, 45% at Lv 3) whenever less than 10.0s remain on the clock.",
       liquidTheme:null, unlockOrder:3 },
-    { id:'permafrostShard', name:"Permafrost Shard", icon:'ice', cost:26, tags:['frost'],
+    { id:'permafrostShard', name:"Permafrost Shard", icon:'permafrostShard', cost:26, tags:['frost'],
       desc:"Whenever the deadline is frozen, active Click Power is multiplied by 2.0x at Lv 1 (2.5x at Lv 2, 3.0x at Lv 3).",
       liquidTheme:null, unlockOrder:4 },
-    { id:'absoluteZero', name:"Absolute Zero", icon:'frost', cost:30, tags:['frost'],
+    { id:'absoluteZero', name:"Absolute Zero", icon:'absoluteZero', cost:30, tags:['frost'],
       desc:"Consuming any Ingredient Charm instantly triggers a 1.5s deadline freeze (2.0s at Lv 2, 2.5s at Lv 3).",
       liquidTheme:null, unlockOrder:5 },
-    { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcane', cost:30, tags:['arcane'],
+    { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcaneConduit', cost:30, tags:['arcane'],
       desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
       liquidTheme:null, unlockLifetimeShards:50 },
-    { id:'hoardersScale', name:"Hoarder's Scale", icon:'coin', cost:24, tags:['midas'],
+    { id:'hoardersScale', name:"Hoarder's Scale", icon:'hoardersScale', cost:24, tags:['midas'],
       desc:"Earn +10% interest on unspent Gold when completing an order (up to +15 Gold).",
       liquidTheme:null, unlockLifetimeShards:25 },
-    { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'scroll', cost:20, tags:['midas'],
+    { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'pawnTicket', cost:20, tags:['midas'],
       desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, and even more at higher levels.",
       liquidTheme:null, unlockTotalTaps:400 },
-    { id:'gildedLedger', name:"Gilded Ledger", icon:'urn', cost:28, tags:['midas'],
+    { id:'gildedLedger', name:"Gilded Ledger", icon:'gildedLedger', cost:28, tags:['midas'],
       desc:"Fulfilling an order grants a +12 Gold bounty per level.",
       liquidTheme:null, unlockOrder:5 },
   ];
@@ -3251,7 +3527,20 @@
      DOM REFS
   ========================================================= */
   const $ = (id) => document.getElementById(id);
-  function icon(name, cls){ return '<svg class="icon ' + (cls||'') + '"><use href="#icon-' + name + '"></use></svg>'; }
+  const PAINTED_ICONS = {
+    pepper:1, bellows:1, explosion:1, feather:1, sigil:1, cinderbrand:1,
+    moon:1, hourglass:1, glacialCore:1, wintersGrasp:1, rimeCaliper:1, permafrostShard:1, absoluteZero:1,
+    whisk:1, crucible:1, starter:1, arcaneConduit:1, bifrost:1, catalyst:1,
+    hoardersScale:1, pawnTicket:1, gildedLedger:1, coin:1
+  };
+  function icon(name, cls){
+    const painted = PAINTED_ICONS[name] ? ' painted' : '';
+    const sym = document.getElementById('icon-' + name);
+    if(sym){
+      return '<svg class="icon' + painted + ' ' + (cls||'') + '" viewBox="0 0 24 24" aria-hidden="true">' + sym.innerHTML + '</svg>';
+    }
+    return '<svg class="icon' + painted + ' ' + (cls||'') + '"><use href="#icon-' + name + '"></use></svg>';
+  }
   const roundLabel = $('roundLabel');
   const modifierTray = $('modifierTray');
   const affixBadge = $('affixBadge');
