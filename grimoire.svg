@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" shape-rendering="crispEdges">
+  <!-- Outer Drop Shadow / Base Outline -->
+  <rect x="5" y="3" width="22" height="26" fill="#000000"/>
+  
+  <!-- Leather Cover Base (Dark Void Purple / Deep Leather) -->
+  <rect x="6" y="4" width="20" height="24" fill="#1c0f30"/>
+  <rect x="7" y="5" width="18" height="22" fill="#2a1642"/>
+  
+  <!-- Book Spine & Hinges (Left Edge) -->
+  <rect x="5" y="4" width="3" height="24" fill="#140b22"/>
+  <rect x="5" y="7" width="4" height="2" fill="#f4b860"/>
+  <rect x="5" y="21" width="4" height="2" fill="#f4b860"/>
+  
+  <!-- Aged Parchment Pages (Right Edge & Bottom) -->
+  <rect x="23" y="6" width="3" height="20" fill="#dfd0b5"/>
+  <rect x="24" y="7" width="2" height="18" fill="#f5eedc"/>
+  <rect x="23" y="11" width="3" height="1" fill="#8c7853"/>
+  <rect x="23" y="16" width="3" height="1" fill="#8c7853"/>
+  
+  <!-- Gold Corner Protectors -->
+  <!-- Top Right -->
+  <rect x="20" y="4" width="5" height="2" fill="#f4b860"/>
+  <rect x="23" y="6" width="2" height="3" fill="#f4b860"/>
+  <rect x="21" y="5" width="3" height="1" fill="#ffd27a"/>
+  
+  <!-- Bottom Right -->
+  <rect x="20" y="26" width="5" height="2" fill="#f4b860"/>
+  <rect x="23" y="23" width="2" height="3" fill="#f4b860"/>
+  <rect x="21" y="26" width="3" height="1" fill="#ffd27a"/>
+  
+  <!-- Center Emblem: Arcane Eye of Midas (Gold & Amber) -->
+  <!-- Outer Diamond / Star Frame -->
+  <rect x="14" y="10" width="4" height="2" fill="#f4b860"/>
+  <rect x="12" y="12" width="8" height="2" fill="#f4b860"/>
+  <rect x="10" y="14" width="12" height="4" fill="#f4b860"/>
+  <rect x="12" y="18" width="8" height="2" fill="#f4b860"/>
+  <rect x="14" y="20" width="4" height="2" fill="#f4b860"/>
+  
+  <!-- Inner Highlight Core -->
+  <rect x="13" y="13" width="6" height="6" fill="#ffd27a"/>
+  <rect x="15" y="11" width="2" height="10" fill="#ffd27a"/>
+  
+  <!-- Glowing Eye Core (Arcane Violet Glint) -->
+  <rect x="14" y="15" width="4" height="2" fill="#c9a6ff"/>
+  <rect x="15" y="15" width="2" height="2" fill="#ffffff"/>
+  
+  <!-- Front Metal Latch Strap -->
+  <rect x="21" y="14" width="4" height="4" fill="#000000"/>
+  <rect x="22" y="15" width="3" height="2" fill="#f4b860"/>
+  <circle cx="23.5" cy="16" r="0.5" fill="#ffffff"/>
+</svg>

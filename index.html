@@ -96,7 +96,7 @@
   #app{
     position:relative; z-index:2;
     width:100%; height:100%;
-    max-width:560px; margin:0 auto;
+    max-width:min(94vw, 1080px); margin:0 auto;
     display:flex; flex-direction:column; justify-content:space-between;
     padding: env(safe-area-inset-top,10px) 10px env(safe-area-inset-bottom,10px);
     overflow:hidden;
@@ -137,6 +137,31 @@
   @keyframes goldPulse{ 0%{transform:scale(1.5); color:#fff;} 100%{transform:scale(1);} }
   .icon-btn{
     padding:6px 10px; font-size:0.55rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .grimoire-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, filter 0.1s ease;
+  }
+  .grimoire-btn img {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 0 #000);
+  }
+  .grimoire-btn:hover {
+    transform: scale(1.15) translateY(-2px);
+    filter: drop-shadow(0 0 6px rgba(244, 184, 96, 0.8));
+  }
+  .grimoire-btn:active {
+    transform: scale(0.95) translateY(1px);
   }
   #relicTray, .relic-badge-row{ display:flex; gap:5px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
   .relic-badge{
@@ -237,28 +262,26 @@
   @keyframes fulfillGlow{ 0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(244,184,96,0.6);} 50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 6px rgba(244,184,96,0.15);} }
 
   /* ---------- CAULDRON STAGE ---------- */
-  #cauldronStage{
-    position:relative; flex:1; min-height:0;
-    display:flex; align-items:center; justify-content:center;
-    margin:10px 0;
-    overflow:visible;
+  #cauldronStage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+    overflow: visible;
   }
-  #glowAura{
-    position:absolute; inset:-15px; border-radius:50%; z-index:0;
-    pointer-events:none;
-    background: radial-gradient(circle at 50% 50%, var(--aura-c1, rgba(168,110,255,0.65)) 0%, var(--aura-c2, rgba(168,110,255,0.35)) 50%, transparent 80%);
-    box-shadow: 0 0 25px 6px var(--aura-c1, rgba(168,110,255,0.45));
-    filter: blur(8px);
-    opacity:0.75;
-    transition: background 0.6s ease, box-shadow 0.6s ease;
-    animation: auraPulse 1.2s steps(6) infinite;
-  }
-  @keyframes auraPulse{ 0%,100%{ transform:scale(1); opacity:0.75; } 50%{ transform:scale(1.04); opacity:0.9; } }
 
-  #cauldron{
-    position:relative; width:clamp(190px,50vw,270px); aspect-ratio:1/1; cursor:pointer;
+  #cauldron {
+    position: relative;
+    z-index: 1;
+    /* Enlarged to fill the desktop and mobile brewing stage */
+    width: clamp(340px, 58vw, 490px);
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    overflow:visible;
+    overflow: visible;
   }
   #cauldron.squish{ animation: squish 0.2s steps(3); }
   @keyframes squish{
@@ -267,37 +290,49 @@
     100%{ transform:scale(1,1); }
   }
 
-  /* Grounding contact shadow beneath the cauldron's clawed feet, for depth */
-  #cauldron::after{
-    content:""; position:absolute; left:50%; bottom:-2%;
-    width:56%; height:9%; transform:translateX(-50%);
-    background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 55%, transparent 80%);
-    filter: blur(1.5px);
-    z-index:0; pointer-events:none;
+  #cauldronImg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    image-rendering: pixelated;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.75)) contrast(1.06) saturate(1.08);
+  }
+  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.75)) contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
+
+  /* Grounding contact shadow directly beneath the feet */
+  #cauldron::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2%;
+    width: 62%;
+    height: 10%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 55%, transparent 80%);
+    filter: blur(2px);
+    z-index: 0;
+    pointer-events: none;
   }
 
-  #cauldronImg{
-    position:absolute; inset:0; width:100%; height:100%; z-index:1;
-    image-rendering:pixelated; pointer-events:none; user-select:none; -webkit-user-drag:none;
-    filter: drop-shadow(0 9px 7px rgba(0,0,0,0.55)) contrast(1.06) saturate(1.08);
-  }
-  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 9px 7px rgba(0,0,0,0.55)) contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
-
-  /* Rivet-stud glints layered over the cauldron art, echoing the polished-
-     iron look of the reference art without touching the pixel-art asset. */
-  .cauldron-stud{
-    position:absolute; width:5%; aspect-ratio:1/1; z-index:3; pointer-events:none;
-    border-radius:50%;
-    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9) 0%, rgba(200,200,210,0.35) 45%, transparent 75%);
-  }
-  .cauldron-stud.stud-l{ left:9%; top:47%; }
-  .cauldron-stud.stud-r{ right:9%; top:47%; }
-
-  #liquidPixel{
-    position:absolute; left:19%; right:19%; top:10%; height:19%;
-    border-radius:50%; overflow:hidden; z-index:2;
+  /* Align the animated liquid within the cauldron rim */
+  #liquidPixel {
+    position: absolute;
+    left: 38%;
+    right: 38%;
+    top: 32%;
+    height: 11%;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 1;
     background-color: var(--liq-3);
-    contain: layout paint; pointer-events:none;
+    contain: layout paint;
+    pointer-events: none;
+    box-shadow: inset 0 0 8px rgba(var(--liquid-glow), 0.65);
   }
   #liquidPixel.theme-bifrost{ animation: rainbowSpin 3s linear infinite; }
   @keyframes rainbowSpin{ 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
@@ -521,10 +556,11 @@
     display:flex; align-items:center; justify-content:center;
     padding:16px;
   }
+  #compendiumOverlay{ z-index:21; }
   .overlay.hidden{ display:none !important; }
 
   .panelCard{
-    width:100%; max-width:440px; max-height:90vh; overflow-y:auto;
+    width:90vw; max-width:860px; max-height:90vh; overflow-y:auto;
     background: var(--purple-panel);
     padding:26px 20px;
     text-align:center;
@@ -559,7 +595,7 @@
     border-bottom:1px dashed rgba(255,255,255,0.15); padding-bottom:6px;
   }
 
-  #shopCards{ display:flex; flex-direction:column; gap:12px; margin:0 0 16px; }
+  #shopCards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px; margin:0 0 16px; }
   .shop-vault .relicCard{ box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.15); }
   .relicCard{
     text-align:left; padding:12px; background: rgba(255,255,255,0.04);
@@ -591,6 +627,24 @@
     background: rgba(120,10,25,0.08);
   }
   .corrupted-badge{ color:#ff4d6a; font-size:0.42rem; letter-spacing:0.5px; }
+
+  .compendium-progress{
+    font-size:0.5rem; color:var(--amber); margin:-4px 0 10px;
+  }
+  .compendium-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:12px; margin:4px 0 8px; text-align:left;
+  }
+  .compendium-card{
+    padding:10px; background:rgba(255,255,255,0.04); border:2px solid #000;
+    display:flex; flex-direction:column; gap:5px; min-width:0;
+  }
+  .compendium-card.locked{ background:rgba(0,0,0,0.4); }
+  .compendium-card .cIcon{ font-size:20px; line-height:1; }
+  .compendium-card.locked .cIcon{ filter:brightness(0.2); }
+  .compendium-card .cName{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; }
+  .compendium-card.locked .cName{ color:var(--text-dim); }
+  .compendium-card .cDesc{ font-size:0.42rem; color:var(--text-dim); line-height:1.55; }
 
   /* ---------- SHOP: ALCHEMIST'S SUPPLY SHELF (compact charm row) ---------- */
   .shop-shelf{
@@ -697,10 +751,25 @@
   .subpanel-close:hover{ color: #fff; filter:brightness(1.25); }
   .subpanel-close:active{ transform:translate(1px,2px); box-shadow:0 0 0 #000; }
   .setting-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; font-size:0.55rem; }
-  .changelog-entry{ margin-bottom: 12px; }
+  .changelog-entry{ margin-bottom: 8px; }
   .changelog-entry:last-child{ margin-bottom: 0; }
-  .changelog-ver{ color: var(--amber-glow); font-size: 0.62rem; margin-bottom: 4px; }
-  .changelog-list{ margin: 0; padding-left: 16px; color: var(--text-dim); font-size:0.52rem; line-height: 1.6; }
+  .changelog-ver{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%; margin-bottom:0; padding:7px 8px;
+    color: var(--amber-glow); font-size: 0.58rem; font-family:inherit; text-align:left;
+    background: rgba(0,0,0,0.28); border:2px solid #000; cursor:pointer;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .changelog-ver::after{
+    content:"▸"; color:var(--amber); font-size:0.52rem; flex-shrink:0;
+  }
+  .changelog-entry.open .changelog-ver{
+    margin-bottom:6px; border-color:var(--amber);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 8px rgba(244,184,96,0.35);
+  }
+  .changelog-entry.open .changelog-ver::after{ content:"▾"; }
+  .changelog-list{ display:none; margin: 0; padding: 2px 8px 6px 18px; color: var(--text-dim); font-size:0.52rem; line-height: 1.6; }
+  .changelog-entry.open .changelog-list{ display:block; }
   .changelog-list li{ margin-bottom: 4px; }
   .statRow{ display:flex; justify-content:space-between; font-size:0.56rem; border-bottom:2px dashed rgba(255,255,255,0.1); padding-bottom:8px; line-height:1.6; }
   .statRow span:first-child{ color:var(--text-dim); }
@@ -796,6 +865,14 @@
   <path fill="currentColor" opacity="0.9" d="M4 4a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2zm3 3h9v2H7zm0 4h9v2H7zm0 4h6v2H7z"/>
   <circle cx="5" cy="4" r="2" fill="currentColor"/>
   <circle cx="5" cy="20" r="2" fill="currentColor"/>
+</symbol>
+
+<symbol id="icon-book" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M2 4h9v17H3.2A1.2 1.2 0 012 19.8V4zm11 0h9v15.8A1.2 1.2 0 0120.8 21H13V4z"/>
+  <rect x="4" y="7" width="5" height="1.6" fill="rgba(0,0,0,0.28)"/>
+  <rect x="4" y="11" width="5" height="1.6" fill="rgba(0,0,0,0.28)"/>
+  <rect x="15" y="7" width="5" height="1.6" fill="rgba(0,0,0,0.28)"/>
+  <rect x="15" y="11" width="5" height="1.6" fill="rgba(0,0,0,0.28)"/>
 </symbol>
 
 <symbol id="icon-flask" viewBox="0 0 24 24">
@@ -907,6 +984,9 @@
     <div id="roundLabel">ORDER 1</div>
     <div class="top-actions">
       <button class="pixel-btn icon-btn" id="pauseBtn" title="Pause Game (Esc)"><svg class="icon" id="pauseBtnIcon"><use href="#icon-pause"></use></svg></button>
+      <button id="compendiumBtn" class="grimoire-btn" title="Alchemical Grimoire">
+        <img src="grimoire.svg" alt="Grimoire" draggable="false" />
+      </button>
       <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
     </div>
     <div id="relicTray"></div>
@@ -927,11 +1007,8 @@
 
   <div id="cauldronStage">
     <div id="cauldron">
-      <div id="glowAura"></div>
       <div id="liquidPixel"></div>
-      <img id="cauldronImg" src="cauldron.png" alt="cauldron" draggable="false">
-      <div class="cauldron-stud stud-l"></div>
-      <div class="cauldron-stud stud-r"></div>
+      <img id="cauldronImg" src="cauldron.png" alt="cauldron" draggable="false" />
       <div id="fxLayer"></div>
       <div id="numbersLayer"></div>
     </div>
@@ -961,7 +1038,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.9.0</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.10</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1004,7 +1081,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.9.0</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.10</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1049,8 +1126,78 @@
         <span><svg class="icon ic-amber"><use href="#icon-scroll"></use></svg> VERSION HISTORY</span>
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
+      <div class="changelog-entry open">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.10 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The brew now sits inside the cauldron's rim instead of showing through the handle rings, and sparks rise from that same opening.</li>
+        </ul>
+      </div>
       <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.9.0 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.9</div>
+        <ul class="changelog-list">
+          <li>The cauldron is larger on the brewing stage, and the colored glow behind the pot is gone.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.8</div>
+        <ul class="changelog-list">
+          <li>The cauldron and its glow are larger and more prominent on the brewing stage.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.7</div>
+        <ul class="changelog-list">
+          <li>The cauldron art is recut, and the brew, sparks, and glow now sit cleanly in the pot's new rim and opening.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.6</div>
+        <ul class="changelog-list">
+          <li>The glow now rings the cauldron instead of shining through the pot, and the black silhouette under the sprite is gone.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.5</div>
+        <ul class="changelog-list">
+          <li>The glow behind the cauldron no longer seeps through the rim, clawed feet, or ring hooks.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.4</div>
+        <ul class="changelog-list">
+          <li>The glow behind the cauldron no longer bleeds through the pot's rim, clawed feet, or side rings.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.3</div>
+        <ul class="changelog-list">
+          <li>Version History now folds each build into a clickable tab — only the newest notes are open when you first look.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.2</div>
+        <ul class="changelog-list">
+          <li>The Grimoire button now uses its own leather-bound book art, and it lifts with a gold shimmer when you hover it.</li>
+          <li>On a wide screen, the brew stage stretches out, and the Shop, Grimoire, and Pause menus open as broad panels with relics in columns.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.1</div>
+        <ul class="changelog-list">
+          <li>The Alchemical Grimoire button now shows an open book so it is easy to spot next to Pause.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.0</div>
+        <ul class="changelog-list">
+          <li>Open the Alchemical Grimoire from the top bar to browse every relic you've discovered — unknown ones stay locked until you buy them.</li>
+          <li>Glacial Core now unleashes Frostbite Surge, freezing the deadline for 2 seconds each time you cross 25%, 50%, and 75% of an order's quota.</li>
+          <li>Inspection cards now fade away when you move the cursor off a relic, synergy badge, or charm.</li>
+          <li>The cauldron's glow stays put when you tap, and no longer stains the pot's feet or side rings.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.9.0</div>
         <ul class="changelog-list">
           <li>A new Midas synergy tag joins the brew: two matching relics grant Midas Touch, and four grant Golden Tithe.</li>
           <li>Four new relics arrive — Hoarder's Scale, Alchemist's Pawn Ticket, Gilded Ledger, and the cursed Cursed Midas Coin.</li>
@@ -1230,6 +1377,17 @@
   </div>
 </div>
 
+<!-- GRIMOIRE / RELIC COMPENDIUM -->
+<div class="overlay hidden" id="compendiumOverlay">
+  <div class="panelCard pixel-panel">
+    <h1><svg class="icon ic-amber"><use href="#icon-book"></use></svg> ALCHEMICAL<br>GRIMOIRE</h1>
+    <p>A catalog of relics uncovered on your alchemical journey. Buy a relic from the shop to reveal its secrets.</p>
+    <div class="compendium-progress" id="compendiumProgress">0 / 0 Discovered</div>
+    <div id="compendiumGrid" class="compendium-grid"></div>
+    <button class="pixel-btn bigBtn" id="closeCompendiumBtn">CLOSE GRIMOIRE</button>
+  </div>
+</div>
+
 <div id="synergyTooltip" class="hidden"></div>
 
 <script>
@@ -1333,8 +1491,8 @@
     { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
       desc:"Phoenix ash infuses the brew, adding +20% Mana to every tap.",
       liquidTheme:null },
-    { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:20, tags:['frost'],
-      desc:"A shard of eternal ice adds +5 seconds to the deadline of every order.",
+    { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:22, tags:['frost'],
+      desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0 seconds.",
       liquidTheme:null },
     { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
       desc:"Every Critical Surge also freezes the deadline for 0.5 seconds.",
@@ -1373,17 +1531,6 @@
     crucible:   { c1:'#fff3b0', c2:'#e8b93d', c3:'#a9760a', glow:'232, 185, 61' },
   };
 
-  // Per-tag glow colors used to dynamically re-tint the cauldron's backdrop
-  // aura based on whichever Synergy Tags the player's current Relics lean
-  // into — the aura visually blends toward the player's build.
-  const TAG_AURA_GLOW = {
-    fire:   'rgba(255, 122, 61, 0.55)',
-    frost:  'rgba(143, 208, 245, 0.55)',
-    arcane: 'rgba(193, 134, 255, 0.55)',
-    chaos:  'rgba(255, 77, 106, 0.55)',
-    midas:  'rgba(255, 196, 38, 0.6)',
-  };
-
   /* =========================================================
      STATE
   ========================================================= */
@@ -1416,6 +1563,8 @@
       stirFrenzyTimer: 0,
       timeFreezeTimer: 0,
       unstableBrewClock: 0,
+      discoveredRelics: [],
+      glacialMilestones: { q25:false, q50:false, q75:false },
     };
   }
 
@@ -1477,6 +1626,11 @@
   const mainSynergyRow = $('mainSynergyRow');
   const synergyTooltip = $('synergyTooltip');
   const resetSaveBtn = $('resetSaveBtn');
+  const compendiumBtn = $('compendiumBtn');
+  const compendiumOverlay = $('compendiumOverlay');
+  const compendiumGrid = $('compendiumGrid');
+  const compendiumProgress = $('compendiumProgress');
+  const closeCompendiumBtn = $('closeCompendiumBtn');
 
   let sfxMuted = false;
   let isPaused = false;
@@ -1648,7 +1802,6 @@
   function getRoundTime(){
     let t = ROUND_BASE_TIME;
     if(hasRelic('hourglass')) t += 8;
-    if(hasRelic('glacialCore')) t += 5;
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
     return t;
   }
@@ -1681,30 +1834,10 @@
     document.documentElement.style.setProperty('--liquid-glow', theme.glow);
     liquidPixel.className = state.liquidTheme === 'bifrost' ? 'theme-bifrost' : '';
     buildLiquidBlocks();
-    updateAuraColors(theme);
 
     RELICS.forEach(r => {
       cauldron.classList.toggle('fx-' + r.id, hasRelic(r.id));
     });
-  }
-
-  function updateAuraColors(theme){
-    // Blend the backdrop aura's palette toward whichever Synergy Tags the
-    // player's owned Relics lean into (dominant tag first), falling back to
-    // the current potion's own glow color to fill any remaining slots so a
-    // single-tag or relic-less run still reads as one cohesive glow.
-    theme = theme || LIQUID_THEMES[state.liquidTheme] || LIQUID_THEMES.default;
-    const baseColor = 'rgba(' + theme.glow + ',0.5)';
-    const counts = getTagCounts();
-    const activeTags = Object.keys(TAG_AURA_GLOW)
-      .filter(t => counts[t] > 0)
-      .sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
-    const colors = activeTags.map(t => TAG_AURA_GLOW[t]);
-    while(colors.length < 3) colors.push(baseColor);
-    const root = document.documentElement.style;
-    root.setProperty('--aura-c1', colors[0]);
-    root.setProperty('--aura-c2', colors[1]);
-    root.setProperty('--aura-c3', colors[2]);
   }
 
   function buildLiquidBlocks(){
@@ -1739,7 +1872,8 @@
         e.stopPropagation();
         toggleTooltip(el, getRelicTooltipHTML(id), 'relic-' + id);
       });
-      el.addEventListener('mouseenter', () => showTooltip(el, getRelicTooltipHTML(id), 'relic-' + id));
+      el.addEventListener('mouseenter', () => showHoverTooltip(el, getRelicTooltipHTML(id), 'relic-' + id));
+      el.addEventListener('mouseleave', hideHoverTooltip);
       relicTray.appendChild(el);
     });
   }
@@ -1767,7 +1901,8 @@
           e.stopPropagation();
           toggleTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id);
         });
-        el.addEventListener('mouseenter', () => showTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id));
+        el.addEventListener('mouseenter', () => showHoverTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id));
+        el.addEventListener('mouseleave', hideHoverTooltip);
         pauseRelicTray.appendChild(el);
       });
     }
@@ -1785,7 +1920,8 @@
           e.stopPropagation();
           toggleTooltip(chip, getCharmTooltipHTML(c.id), 'pause-charm-' + c.id);
         });
-        chip.addEventListener('mouseenter', () => showTooltip(chip, getCharmTooltipHTML(c.id), 'pause-charm-' + c.id));
+        chip.addEventListener('mouseenter', () => showHoverTooltip(chip, getCharmTooltipHTML(c.id), 'pause-charm-' + c.id));
+        chip.addEventListener('mouseleave', hideHoverTooltip);
         pauseCharmsRow.appendChild(chip);
       });
     }
@@ -1857,8 +1993,8 @@
       y: ((60 + yPct) / 170) * 100
     };
   }
-  function brewMouthX(){ return 28 + Math.random() * 44; }
-  function brewMouthY(){ return 16 + Math.random() * 6; }
+  function brewMouthX(){ return 41 + Math.random() * 18; }
+  function brewMouthY(){ return 35 + Math.random() * 5; }
 
   function spawnFloatNumber(text, cls, xPct, yPct){
     const pos = cauldronToLayerPct(xPct, yPct);
@@ -2084,6 +2220,7 @@
     state.mana += amount;
     state.lifetimeMana += amount;
     if(state.mana > state.peakMana) state.peakMana = state.mana;
+    if(hasRelic('glacialCore')) checkGlacialMilestones();
     if(state.mana >= state.target){
       if(!state.quotaMet){
         state.quotaMet = true;
@@ -2093,6 +2230,23 @@
       state.quotaMet = false;
     }
     if(!silent) updateUI();
+  }
+
+  function checkGlacialMilestones(){
+    if(!state.glacialMilestones) state.glacialMilestones = { q25:false, q50:false, q75:false };
+    const quota = state.target || 1;
+    const marks = [
+      { key:'q25', pct:0.25 },
+      { key:'q50', pct:0.50 },
+      { key:'q75', pct:0.75 },
+    ];
+    marks.forEach(m => {
+      if(!state.glacialMilestones[m.key] && state.mana >= quota * m.pct){
+        state.glacialMilestones[m.key] = true;
+        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, 2.0);
+        spawnFloatNumber('FROSTBITE!', 'crit', 50, 22);
+      }
+    });
   }
 
   function bumpGold(amount){
@@ -2145,7 +2299,7 @@
     // Tap burst bubbles always pop up out of the liquid opening near the
     // top of the pot, not wherever on the iron body you happened to tap —
     // only their horizontal position follows your tap.
-    const brew = cauldronToLayerPct(clamp(xPct, 28, 72), brewMouthY());
+    const brew = cauldronToLayerPct(clamp(xPct, 41, 59), brewMouthY());
     spawnClickBubbles(brew.x, brew.y);
     sfxClick(crit);
 
@@ -2250,7 +2404,10 @@
   ========================================================= */
   function startRun(){
     closePauseMenu();
+    closeCompendium();
+    const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics.slice() : [];
     state = freshState();
+    state.discoveredRelics = discovered;
     state.phase = 'brewing';
     state.timer = getRoundTime();
     updateCauldronVisuals();
@@ -2270,6 +2427,7 @@
     state.stirFrenzyTimer = 0;
     state.timeFreezeTimer = 0;
     state.unstableBrewClock = 0;
+    state.glacialMilestones = { q25:false, q50:false, q75:false };
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * 0.10);
       if(state.mana >= state.target){ state.quotaMet = true; }
@@ -2415,7 +2573,8 @@
         e.stopPropagation();
         toggleSynergyTooltip(btn, btn.getAttribute('data-tag'));
       });
-      btn.addEventListener('mouseenter', () => showSynergyTooltip(btn, btn.getAttribute('data-tag')));
+      btn.addEventListener('mouseenter', () => showHoverTooltip(btn, getSynergyTooltipHTML(btn.getAttribute('data-tag')), 'tag-' + btn.getAttribute('data-tag')));
+      btn.addEventListener('mouseleave', hideHoverTooltip);
     });
   }
 
@@ -2449,6 +2608,20 @@
      owned relic badges, and ingredient charms so every inspectable thing
      in the game behaves the same way (hover on desktop, tap-to-toggle on
      touch, never triggers a purchase/use by itself). */
+  let lastPointerType = 'mouse';
+  document.addEventListener('pointerdown', (e) => {
+    lastPointerType = e.pointerType || 'mouse';
+  }, true);
+
+  function showHoverTooltip(anchorEl, html, key, preferAbove){
+    if(lastPointerType === 'touch') return;
+    showTooltip(anchorEl, html, key, preferAbove);
+  }
+  function hideHoverTooltip(){
+    if(lastPointerType === 'touch') return;
+    hideTooltip();
+  }
+
   function showTooltip(anchorEl, html, key, preferAbove){
     synergyTooltip.innerHTML = html;
     synergyTooltip.dataset.key = key;
@@ -2605,7 +2778,8 @@
         e.stopPropagation();
         toggleTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true);
       });
-      itemEl.addEventListener('mouseenter', () => showTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true));
+      itemEl.addEventListener('mouseenter', () => showHoverTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true));
+      itemEl.addEventListener('mouseleave', hideHoverTooltip);
     });
   }
 
@@ -2616,6 +2790,17 @@
     if(state.gold < price) return;
     state.gold -= price;
     state.relics.push(id);
+    if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
+    if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
+    if(id === 'glacialCore'){
+      const q = state.target || 1;
+      const m = state.mana || 0;
+      state.glacialMilestones = {
+        q25: m >= q * 0.25,
+        q50: m >= q * 0.50,
+        q75: m >= q * 0.75,
+      };
+    }
     if(r.liquidTheme) state.liquidTheme = r.liquidTheme;
     updateCauldronVisuals();
     sfxBuy();
@@ -2682,6 +2867,71 @@
     pauseOverlay.classList.add('hidden');
   }
 
+  let compendiumHeldPause = false;
+
+  function renderCompendium(){
+    if(!compendiumGrid) return;
+    const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
+    if(compendiumProgress){
+      compendiumProgress.textContent = discovered.length + ' / ' + RELICS.length + ' Discovered';
+    }
+    compendiumGrid.innerHTML = '';
+    RELICS.forEach(r => {
+      const known = discovered.includes(r.id);
+      const card = document.createElement('div');
+      card.className = 'compendium-card' + (known ? '' : ' locked') + (known && r.corrupted ? ' corrupted' : '');
+      if(known){
+        const tagsHtml = (r.tags||[]).map(t => {
+          const info = TAG_INFO[t];
+          return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+        }).join('');
+        card.innerHTML = `
+          <div class="cIcon">${icon(r.icon)}</div>
+          <div class="cName">${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
+          <div class="rTags">${tagsHtml}</div>
+          <div class="cDesc">${r.desc}</div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="cIcon">${icon(r.icon)}</div>
+          <div class="cName">???</div>
+          <div class="cDesc">Discover this relic in the shop to reveal its alchemical secrets.</div>
+        `;
+      }
+      compendiumGrid.appendChild(card);
+    });
+  }
+
+  function openCompendium(){
+    if(!compendiumOverlay) return;
+    hideTooltip();
+    if(state && state.phase === 'brewing' && !isPaused){
+      isPaused = true;
+      document.body.classList.add('game-paused');
+      setPauseButtonIcon();
+      compendiumHeldPause = true;
+    }
+    renderCompendium();
+    compendiumOverlay.classList.remove('hidden');
+  }
+
+  function closeCompendium(){
+    if(!compendiumOverlay) return;
+    compendiumOverlay.classList.add('hidden');
+    if(compendiumHeldPause){
+      compendiumHeldPause = false;
+      isPaused = false;
+      document.body.classList.remove('game-paused');
+      setPauseButtonIcon();
+    }
+  }
+
+  function toggleCompendium(){
+    if(!compendiumOverlay) return;
+    if(compendiumOverlay.classList.contains('hidden')) openCompendium();
+    else closeCompendium();
+  }
+
   function togglePauseMenu(){
     if(isPaused){
       closePauseMenu();
@@ -2713,9 +2963,24 @@
     }
   }
 
+  function setChangelogEntryOpen(entry, open){
+    if(!entry) return;
+    entry.classList.toggle('open', open);
+    const header = entry.querySelector('.changelog-ver');
+    if(header) header.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function resetChangelogAccordion(){
+    if(!changelogSubpanel) return;
+    changelogSubpanel.querySelectorAll('.changelog-entry').forEach((entry, i) => {
+      setChangelogEntryOpen(entry, i === 0);
+    });
+  }
+
   function toggleChangelogPanel(){
     const willShow = changelogSubpanel.classList.contains('hidden');
     if(willShow){
+      resetChangelogAccordion();
       changelogSubpanel.classList.remove('hidden');
       settingsSubpanel.classList.add('hidden');
       changelogBtn.classList.add('active');
@@ -2757,6 +3022,19 @@
         if(typeof state.consumables[c.id] !== 'number') state.consumables[c.id] = 0;
       });
       if(!Array.isArray(state.relics)) state.relics = [];
+      if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
+      state.relics.forEach(id => {
+        if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
+      });
+      if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
+        const q = state.target || 1;
+        const m = state.mana || 0;
+        state.glacialMilestones = {
+          q25: m >= q * 0.25,
+          q50: m >= q * 0.50,
+          q75: m >= q * 0.75,
+        };
+      }
 
       state.target = getOrderTarget(state.round || 1);
 
@@ -2764,6 +3042,7 @@
       shopOverlay.classList.add('hidden');
       gameoverOverlay.classList.add('hidden');
       pauseOverlay.classList.add('hidden');
+      if(compendiumOverlay) compendiumOverlay.classList.add('hidden');
 
       if(state.phase === 'shop'){
         shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
@@ -2871,9 +3150,32 @@
   rerollBtn.addEventListener('click', rerollShop);
 
   pauseBtn.addEventListener('click', togglePauseMenu);
+  if(compendiumBtn) compendiumBtn.addEventListener('click', toggleCompendium);
+  if(closeCompendiumBtn) closeCompendiumBtn.addEventListener('click', closeCompendium);
   resumeBtn.addEventListener('click', closePauseMenu);
   settingsBtn.addEventListener('click', toggleSettingsPanel);
   changelogBtn.addEventListener('click', toggleChangelogPanel);
+  if(changelogSubpanel){
+    changelogSubpanel.addEventListener('click', (e) => {
+      const header = e.target.closest('.changelog-ver');
+      if(!header || !changelogSubpanel.contains(header)) return;
+      const entry = header.closest('.changelog-entry');
+      if(entry) setChangelogEntryOpen(entry, !entry.classList.contains('open'));
+    });
+    changelogSubpanel.addEventListener('keydown', (e) => {
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      const header = e.target.closest('.changelog-ver');
+      if(!header) return;
+      e.preventDefault();
+      const entry = header.closest('.changelog-entry');
+      if(entry) setChangelogEntryOpen(entry, !entry.classList.contains('open'));
+    });
+    changelogSubpanel.querySelectorAll('.changelog-ver').forEach(header => {
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-expanded', header.closest('.changelog-entry').classList.contains('open') ? 'true' : 'false');
+    });
+  }
   closeSettingsBtn.addEventListener('click', () => {
     settingsSubpanel.classList.add('hidden');
     settingsBtn.classList.remove('active');
@@ -2887,6 +3189,10 @@
 
   window.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
+      if(compendiumOverlay && !compendiumOverlay.classList.contains('hidden')){
+        closeCompendium();
+        return;
+      }
       if(state && state.phase === 'brewing'){
         togglePauseMenu();
       }
