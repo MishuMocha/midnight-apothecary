@@ -1739,7 +1739,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.24.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.24.5</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1786,7 +1786,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.24.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.24.5</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1861,7 +1861,19 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Setting Music Volume to 0% now fully silences the brew theme instead of leaving the loop playing underneath.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.4</div>
+        <ul class="changelog-list">
+          <li>Winter's Grasp now has a chance to freeze the deadline on any tap — 6% at Lv 1 for 0.75s, more often and longer as you rank it — instead of waiting for a Critical Surge.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.3</div>
         <ul class="changelog-list">
           <li>Philosopher's Crucible now wraps the pot in a living gold radiance instead of a dull brown halo.</li>
           <li>Midas relics throw bright gold sparkles and tiny coin-glints from the rim and feet, and a tap or hover can flick a little gold speck off the brew.</li>
@@ -2530,7 +2542,7 @@
       desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0s (longer at higher levels).",
       liquidTheme:null, unlockOrder:3 },
     { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
-      desc:"Every Critical Surge also freezes the deadline for 0.5 seconds. Higher levels raise the freeze cap and shorten the cooldown.",
+      desc:"Every tap has a 6% chance at Lv 1 (9% at Lv 2, 12% at Lv 3) to freeze the deadline for 0.75s (longer at higher levels).",
       liquidTheme:null, unlockOrder:4 },
     { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'hourglass', cost:22, tags:['frost'],
       desc:"Slows deadline drain speed by 25% at Lv 1 (35% at Lv 2, 45% at Lv 3) whenever less than 10.0s remain on the clock.",
@@ -2922,6 +2934,7 @@
   let bgmStep = 0;
   let bgmNextTime = 0;
   let bgmClock = null;
+  let lastBgmGain = 0;
 
   const BGM_BPM = 72;
   const BGM_STEPS_PER_LOOP = 128;
@@ -2945,7 +2958,9 @@
     return clampVolume(state && state.bgmVolume, 60) / 100;
   }
   function getBgmGainTarget(){
-    return getBgmVolume() * BGM_MASTER * (bgmDucked ? BGM_DUCK : 1);
+    const vol = getBgmVolume();
+    if(vol <= 0) return 0;
+    return vol * BGM_MASTER * (bgmDucked ? BGM_DUCK : 1);
   }
 
   function ensureAudio(){
@@ -2979,10 +2994,19 @@
   function applyBgmGain(seconds){
     if(!bgmGainNode || !actx) return;
     const t = actx.currentTime;
-    const dur = typeof seconds === 'number' ? seconds : 0.08;
+    const dur = Math.max(0.02, typeof seconds === 'number' ? seconds : 0.08);
+    const target = getBgmGainTarget();
+    const current = Math.max(0, lastBgmGain);
     bgmGainNode.gain.cancelScheduledValues(t);
-    bgmGainNode.gain.setValueAtTime(Math.max(0.0001, bgmGainNode.gain.value), t);
-    bgmGainNode.gain.linearRampToValueAtTime(Math.max(0.0001, getBgmGainTarget()), t + dur);
+    bgmGainNode.gain.setValueAtTime(current, t);
+    if(target <= 0){
+      bgmGainNode.gain.linearRampToValueAtTime(0.0001, t + Math.min(dur, 0.08));
+      bgmGainNode.gain.setValueAtTime(0, t + Math.min(dur, 0.08) + 0.01);
+      lastBgmGain = 0;
+    } else {
+      bgmGainNode.gain.linearRampToValueAtTime(target, t + dur);
+      lastBgmGain = target;
+    }
   }
   function setBgmDucked(ducked){
     bgmDucked = !!ducked;
@@ -3111,8 +3135,10 @@
     if(!state) return;
     state.bgmVolume = clampVolume(value, 60);
     if(bgmVolumeValue) bgmVolumeValue.textContent = state.bgmVolume + '%';
-    unlockAndStartBgm();
-    applyBgmGain(0.06);
+    ensureAudio();
+    if(state.bgmVolume <= 0) stopBgm(0.06);
+    else if(bgmPlaying) applyBgmGain(0.08);
+    else startBgm();
     saveGame();
   }
   function setSfxVolume(value){
@@ -3293,9 +3319,22 @@
       bgmNextTime += bgmStepDur();
     }
   }
+  function stopBgm(fade){
+    applyBgmGain(typeof fade === 'number' ? fade : 0.06);
+    bgmPlaying = false;
+    if(bgmClock){
+      clearInterval(bgmClock);
+      bgmClock = null;
+    }
+  }
   function startBgm(){
     ensureAudio();
-    if(!actx || !bgmGainNode || bgmPlaying) return;
+    if(!actx || !bgmGainNode) return;
+    if(getBgmVolume() <= 0){
+      stopBgm(0.04);
+      return;
+    }
+    if(bgmPlaying) return;
     bgmPlaying = true;
     bgmStep = 0;
     bgmNextTime = actx.currentTime + 0.1;
@@ -3305,6 +3344,10 @@
   }
   function unlockAndStartBgm(){
     ensureAudio();
+    if(getBgmVolume() <= 0){
+      stopBgm(0.02);
+      return;
+    }
     startBgm();
   }
 
@@ -3553,10 +3596,9 @@
         s.summary = 'Frostbite Surge freezes for ' + s.freezeSec.toFixed(1) + 's';
         break;
       case 'wintersGrasp':
-        s.freezeAdd = 0.5 * boon;
-        s.freezeCap = (1.0 + 0.25 * (lv - 1)) * boon;
-        s.icd = 1.0 - 0.15 * (lv - 1);
-        s.summary = 'Crits freeze +' + s.freezeAdd.toFixed(2) + 's (cap ' + s.freezeCap.toFixed(2) + 's, ' + s.icd.toFixed(2) + 's cooldown)';
+        s.freezeChance = [0, 0.06, 0.09, 0.12][lv] * boon;
+        s.freezeSec = [0, 0.75, 1.00, 1.25][lv] * boon;
+        s.summary = Math.round(s.freezeChance * 100) + '% chance on tap to freeze deadline for ' + s.freezeSec.toFixed(2) + 's';
         break;
       case 'rimeCaliper':
         s.slowPct = [0, 0.25, 0.35, 0.45][lv] * boon;
@@ -4547,11 +4589,11 @@
       crit = true;
     }
     if(crit) triggerScreenShake();
-    if(crit && hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
+    if(hasRelic('wintersGrasp') && (state.timeFreezeTimer || 0) <= 0){
       const grasp = getRelicStats('wintersGrasp');
-      if((state.timeFreezeTimer || 0) <= 0){
-        state.timeFreezeTimer = clampFreeze((grasp.freezeAdd || 0.5) + getFreezeBonus());
-        state.wintersGraspCooldown = grasp.icd || 1.0;
+      if(Math.random() < (grasp.freezeChance || 0.06)){
+        state.timeFreezeTimer = clampFreeze((grasp.freezeSec || 0.75) + getFreezeBonus());
+        spawnFloatNumber('WINTER CHILL!', 'crit', xPct, yPct - 12);
       }
     }
 
@@ -6111,6 +6153,7 @@
   });
   if(bgmVolumeSlider){
     bgmVolumeSlider.addEventListener('input', () => setBgmVolume(bgmVolumeSlider.value));
+    bgmVolumeSlider.addEventListener('change', () => setBgmVolume(bgmVolumeSlider.value));
   }
   if(sfxVolumeSlider){
     sfxVolumeSlider.addEventListener('input', () => {
