@@ -124,7 +124,7 @@
   /* ---------- TOP BAR ---------- */
   #topbar{
     display:flex; align-items:center; justify-content:space-between;
-    gap:8px; padding:10px 12px; margin-top:6px;
+    gap:10px; padding:10px 14px; margin-top:6px;
     flex-wrap: wrap;
   }
   #roundLabel{ font-size:0.65rem; color:var(--amber-glow); line-height:1.4; }
@@ -163,24 +163,27 @@
   .grimoire-btn:active {
     transform: scale(0.95) translateY(1px);
   }
-  #relicTray, .relic-badge-row{ display:flex; gap:5px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
+  .relic-badge-row{ display:flex; gap:8px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
   .relic-badge{
     position:relative;
-    width:24px; height:24px;
+    width:42px; height:42px;
+    flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
     background: var(--purple-mid);
     border:2px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
-    font-size:12px;
-    cursor:default;
+    font-size:18px;
+    cursor:pointer;
     overflow:visible;
   }
+  .relic-badge .icon{ width:26px; height:26px; }
   .relic-badge .relic-lv{
-    position:absolute; right:-5px; bottom:-5px;
-    min-width:11px; padding:0 2px;
-    font-size:0.32rem; line-height:1.2; text-align:center;
-    background:#000; color:var(--amber-glow);
-    border:1px solid var(--amber);
+    position:absolute; right:-3px; bottom:-3px;
+    min-width:14px; height:14px; padding:0 3px;
+    font-size:0.42rem; line-height:14px; text-align:center;
+    background:#12080c; color:#ffe27a;
+    border:2px solid #000;
+    box-shadow: 0 0 0 1px var(--amber), inset 0 0 0 1px rgba(255,210,122,0.35);
   }
   .relic-lv-badge{
     font-size:0.42rem; color:var(--amber); letter-spacing:0.4px;
@@ -191,7 +194,22 @@
   }
 
   /* ---------- ORDER / PROGRESS PANEL ---------- */
-  #orderPanel{ margin-top:10px; padding:12px; }
+  #orderPanelShell{ position:relative; margin-top:10px; }
+  #orderPanel{ padding:12px; }
+  #orderPanelShell.quota-met::before{
+    content:"";
+    position:absolute;
+    left:-14px; right:-14px;
+    top:18px;
+    height:44px;
+    pointer-events:none;
+    z-index:0;
+    border-radius:16px;
+    background: radial-gradient(ellipse 80% 90% at 50% 50%, rgba(168,110,255,0.65) 0%, rgba(122,70,210,0.28) 52%, transparent 78%);
+    filter: blur(10px);
+    animation: manaHudGlow 0.85s ease-in-out infinite alternate;
+  }
+  #orderPanel{ position:relative; z-index:1; }
   .barRow{ margin-bottom:10px; }
   .barRow:last-child{ margin-bottom:0; }
   .barLabelRow{ display:flex; justify-content:space-between; font-size:0.56rem; color:var(--text-dim); margin-bottom:5px; line-height:1.4; }
@@ -204,8 +222,8 @@
     content:""; position:absolute; inset:0; pointer-events:none;
   }
   #manaFill{
-    background: linear-gradient(180deg, #d3b4ff 0%, #9e6cf2 45%, #6a34cc 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 10px rgba(158,108,242,0.65);
+    background: linear-gradient(180deg, #a57ae0 0%, #6d3cc4 45%, #3d1878 100%);
+    box-shadow: inset 0 1px 0 rgba(210,180,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.55), 0 0 10px rgba(109,60,196,0.55);
   }
   #manaFill::after{
     background:
@@ -221,14 +239,29 @@
     0%{ background-position: 0 0, 0 0, 0 0, -140px 0; }
     100%{ background-position: 40px 0, -55px 0, 35px 0, 140px 0; }
   }
+  #manaBarRow{ position:relative; }
+  #manaBarRow .barLabelRow,
+  #manaBarRow .barTrack{ position:relative; z-index:1; }
   #manaFill.quota-met{
-    background: linear-gradient(180deg, #fff7c2 0%, #ffd043 45%, #d48b0c 100%);
-    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 14px rgba(255,208,67,0.85);
-    animation: quotaPulse 0.7s ease-in-out infinite alternate;
+    background: linear-gradient(180deg, #c9a6ff 0%, #8a4ee0 45%, #4b1fa0 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.5);
   }
-  @keyframes quotaPulse{
-    0%{ filter: brightness(1) drop-shadow(0 0 4px #ffd043); }
-    100%{ filter: brightness(1.25) drop-shadow(0 0 10px #ffe27a); }
+  #manaBarRow.quota-met::after{
+    content:"";
+    position:absolute;
+    left:-10px; right:-10px;
+    bottom:-8px;
+    height:36px;
+    pointer-events:none;
+    z-index:0;
+    border-radius:10px;
+    background: radial-gradient(ellipse 88% 80% at 50% 55%, rgba(168,110,255,0.7) 0%, rgba(138,78,224,0.35) 45%, transparent 76%);
+    filter: blur(7px);
+    animation: manaHudGlow 0.85s ease-in-out infinite alternate;
+  }
+  @keyframes manaHudGlow{
+    0%{ opacity:0.55; transform:scaleX(0.98); }
+    100%{ opacity:1; transform:scaleX(1.03); }
   }
   #timerFill{
     background: linear-gradient(180deg, #7c0b1b 0%, #4a030d 52%, #1e0004 100%);
@@ -291,23 +324,48 @@
   #fulfillBtn.show{ display:block; animation: fulfillGlow 0.8s steps(4) infinite; }
   @keyframes fulfillGlow{ 0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(244,184,96,0.6);} 50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 6px rgba(244,184,96,0.15);} }
 
-  /* ---------- CAULDRON STAGE ---------- */
-  #cauldronStage {
+  /* ---------- CAULDRON STAGE + RELIC RAIL ---------- */
+  #stageRow {
     position: relative;
     flex: 1;
     min-height: 0;
     display: flex;
+    align-items: stretch;
+    gap: 6px;
+    margin: 8px 0;
+  }
+  #cauldronStage {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-    margin: 8px 0;
     overflow: visible;
+  }
+  #relicTray {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 52px;
+    width: 52px;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px 2px 8px;
+    pointer-events: auto;
+  }
+  #relicTray:empty {
+    display: none;
   }
 
   #cauldron {
     position: relative;
     z-index: 1;
     /* Enlarged to fill the desktop and mobile brewing stage */
-    width: clamp(340px, 58vw, 490px);
+    width: min(clamp(260px, 52vw, 490px), 100%);
     aspect-ratio: 1 / 1;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -712,6 +770,7 @@
   @keyframes tierGlow{ 0%{ box-shadow:0 0 4px rgba(255,208,67,0.5); } 100%{ box-shadow:0 0 10px rgba(255,208,67,0.9); } }
   #synergySummary{ display:none; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
   .tag-row{ display:flex; flex-wrap:wrap; gap:5px; width:100%; margin-top:6px; min-height:0; }
+  #topbar #mainSynergyRow{ flex:1 1 100%; margin-top:4px; }
   button.tag-pill{ appearance:none; -webkit-appearance:none; font-family:inherit; }
   .synergy-badge{ cursor:pointer; }
   .synergy-hint{
@@ -820,6 +879,15 @@
   @media (max-height: 620px){
     #cauldronStage{ min-height:0; }
     #upgradesPanel{ margin-bottom:4px; }
+  }
+  @media (max-width: 560px){
+    #relicTray{
+      flex: 0 0 46px;
+      width: 46px;
+      gap: 6px;
+    }
+    #relicTray .relic-badge{ width:38px; height:38px; }
+    #relicTray .relic-badge .icon{ width:22px; height:22px; }
   }
 </style>
 </head>
@@ -1022,12 +1090,12 @@
       </button>
       <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
     </div>
-    <div id="relicTray"></div>
     <div id="mainSynergyRow" class="tag-row"></div>
   </div>
 
+  <div id="orderPanelShell">
   <div id="orderPanel" class="pixel-panel">
-    <div class="barRow">
+    <div class="barRow" id="manaBarRow">
       <div class="barLabelRow"><span>MANA ESSENCE</span><span id="manaLabelText">0 / 400</span></div>
       <div class="barTrack"><div class="barFill" id="manaFill"></div></div>
     </div>
@@ -1037,14 +1105,18 @@
     </div>
     <button class="pixel-btn" id="fulfillBtn">CASH OUT &amp; END ROUND</button>
   </div>
+  </div>
 
-  <div id="cauldronStage">
-    <div id="cauldron">
-      <div id="liquidPixel"></div>
-      <img id="cauldronImg" src="cauldron.png?v=4" alt="cauldron" draggable="false" />
-      <div id="fxLayer"></div>
-      <div id="numbersLayer"></div>
+  <div id="stageRow">
+    <div id="cauldronStage">
+      <div id="cauldron">
+        <div id="liquidPixel"></div>
+        <img id="cauldronImg" src="cauldron.png?v=4" alt="cauldron" draggable="false" />
+        <div id="fxLayer"></div>
+        <div id="numbersLayer"></div>
+      </div>
     </div>
+    <div id="relicTray"></div>
   </div>
 
   <div id="upgradesPanel">
@@ -1071,7 +1143,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.0</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.3</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1114,7 +1186,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.0</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.3</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1160,7 +1232,25 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.0 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.3 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Hitting the Mana quota now washes a pulsing violet glow off the bar and onto the HUD around it.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.2</div>
+        <ul class="changelog-list">
+          <li>The Mana Essence bar is a deeper purple, and hitting quota makes it pulse with a violet glow instead of turning gold.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.1</div>
+        <ul class="changelog-list">
+          <li>Your relics now sit in a larger vertical rail on the right of the brewing stage, with clearer icons and level badges in the corner.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.0</div>
         <ul class="changelog-list">
           <li>Relics can now be upgraded to Level 3 — the shop shows four offers, including upgrades for relics you already own.</li>
           <li>Higher levels grow that relic's bonuses and timings, and a ★ level badge marks each one on your tray, in pause, and in the shop.</li>
@@ -1653,6 +1743,8 @@
   const goldDisplay = $('goldDisplay');
   const relicTray = $('relicTray');
   const manaFill = $('manaFill');
+  const orderPanelShell = $('orderPanelShell');
+  const manaBarRow = $('manaBarRow');
   const timerFill = $('timerFill');
   const manaLabelText = $('manaLabelText');
   const timerLabelText = $('timerLabelText');
@@ -2420,8 +2512,12 @@
     manaFill.style.width = manaPct + '%';
     if(state.mana >= state.target){
       manaFill.classList.add('quota-met');
+      if(manaBarRow) manaBarRow.classList.add('quota-met');
+      if(orderPanelShell) orderPanelShell.classList.add('quota-met');
     } else {
       manaFill.classList.remove('quota-met');
+      if(manaBarRow) manaBarRow.classList.remove('quota-met');
+      if(orderPanelShell) orderPanelShell.classList.remove('quota-met');
       manaFill.style.backgroundImage = '';
       manaFill.style.animation = '';
       manaFill.style.filter = '';
