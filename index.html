@@ -1356,6 +1356,26 @@
   }
   .talent-path-name{ font-size:0.5rem; color:var(--amber-glow); letter-spacing:1px; line-height:1.4; }
   .talent-path-tag{ font-size:0.38rem; color:var(--text-dim); margin-top:3px; }
+  .talent-path-invest{ margin-top:8px; }
+  .talent-path-invest-label{ font-size:0.36rem; color:var(--amber); letter-spacing:0.5px; }
+  .talent-path-bar{
+    position:relative;
+    height:10px; margin:6px 4px 5px;
+    background:rgba(0,0,0,0.55); border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-dark);
+  }
+  .talent-path-bar-fill{
+    height:100%; width:0;
+    background: linear-gradient(90deg, #8a5cf0 0%, #e8b93d 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+  }
+  .talent-path-bar-tick{
+    position:absolute; top:-2px; bottom:-2px;
+    width:2px; background:#ffe37a;
+    box-shadow: 0 0 4px rgba(255,210,122,0.7);
+    pointer-events:none;
+  }
+  .talent-path-invest-gates{ font-size:0.32rem; color:var(--text-dim); line-height:1.4; }
   .talent-node{
     position:relative;
     display:flex; flex-direction:column; gap:8px; align-items:stretch;
@@ -1363,14 +1383,14 @@
     border:3px solid #000;
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
   }
-  .talent-node:not(.capstone)::before{
+  .talent-path .talent-node:not(:last-child)::before{
     content:'';
     position:absolute; left:50%; bottom:-18px; transform:translateX(-50%);
     width:0; height:16px;
     border-left:3px dashed rgba(201,166,255,0.28);
     pointer-events:none;
   }
-  .talent-node:not(.capstone)::after{
+  .talent-path .talent-node:not(:last-child)::after{
     content:'';
     position:absolute; left:50%; bottom:-10px;
     width:8px; height:8px;
@@ -1379,12 +1399,12 @@
     transform:translate(-50%, 0) rotate(45deg);
     pointer-events:none;
   }
-  .talent-node.unlocked:not(.capstone)::before,
-  .talent-node.owned:not(.capstone)::before{ border-left-color:rgba(244,184,96,0.55); }
-  .talent-node.unlocked:not(.capstone)::after,
-  .talent-node.owned:not(.capstone)::after{ border-color:rgba(244,184,96,0.55); }
-  .talent-node.maxed:not(.capstone)::before{ border-left-color:var(--amber); }
-  .talent-node.maxed:not(.capstone)::after{ border-color:var(--amber); }
+  .talent-path .talent-node.unlocked:not(:last-child)::before,
+  .talent-path .talent-node.owned:not(:last-child)::before{ border-left-color:rgba(244,184,96,0.55); }
+  .talent-path .talent-node.unlocked:not(:last-child)::after,
+  .talent-path .talent-node.owned:not(:last-child)::after{ border-color:rgba(244,184,96,0.55); }
+  .talent-path .talent-node.maxed:not(:last-child)::before{ border-left-color:var(--amber); }
+  .talent-path .talent-node.maxed:not(:last-child)::after{ border-color:var(--amber); }
   .talent-node.locked{ opacity:0.42; }
   .talent-node.unlocked{
     border-color:var(--amber);
@@ -1399,6 +1419,11 @@
     background: radial-gradient(circle at 50% 0%, rgba(255,210,122,0.22) 0%, rgba(0,0,0,0.38) 70%);
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 12px rgba(255,210,122,0.55);
   }
+  .talent-node.prestige{
+    border-color:#e8b93d;
+    background: radial-gradient(circle at 50% 0%, rgba(232,185,61,0.18) 0%, rgba(42,16,64,0.55) 72%);
+  }
+  .talent-node.prestige .talent-name{ color:#ffe37a; }
   .talent-lock{
     position:absolute; top:-8px; right:-8px;
     width:20px; height:20px;
@@ -1420,6 +1445,13 @@
   .talent-name{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; margin-bottom:4px; }
   .talent-desc{ font-size:0.4rem; color:var(--text-dim); line-height:1.55; }
   .talent-req{ font-size:0.36rem; color:#c9a6ff; line-height:1.45; margin-top:5px; }
+  .talent-req.branch-lock{
+    display:inline-block;
+    margin-top:6px; padding:3px 6px;
+    border:2px solid #6a4a16; background:rgba(42,16,8,0.65);
+    color:#ffd27a; letter-spacing:0.3px;
+  }
+  .talent-req.branch-lock .icon{ width:10px; height:10px; vertical-align:-1px; }
   .talent-rank{ font-size:0.4rem; color:var(--amber); margin-top:5px; }
   .talent-buy{
     flex-shrink:0; align-self:stretch;
@@ -1739,7 +1771,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.24.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.25</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1786,7 +1818,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.24.5</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.25</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1861,7 +1893,15 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.5 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.25 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfil more orders.</li>
+          <li>Sanctum talents cost more, and later nodes stay locked until you have spent enough shards in that branch.</li>
+          <li>Each path now has a late-game sink — Alchemical Mastery, Temporal Anchor, and Gilded Prosperity — that keeps taking shards for more essence, longer deadlines, or richer gold.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.24.5</div>
         <ul class="changelog-list">
           <li>Setting Music Volume to 0% now fully silences the brew theme instead of leaving the loop playing underneath.</li>
         </ul>
@@ -2407,7 +2447,7 @@
 <div class="overlay hidden" id="sanctumOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL<br>SANCTUM</h1>
-    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later nodes stay locked until you invest in the one above.</p>
+    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later tiers stay locked until you have invested enough shards in that branch.</p>
     <div class="sanctum-vault"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> Mana Shards: <span id="sanctumShardValue" data-shard-count>0</span></div>
     <div id="sanctumTree" class="sanctum-tree"></div>
     <button class="pixel-btn bigBtn" id="closeSanctumBtn">CLOSE SANCTUM</button>
@@ -2598,8 +2638,9 @@
   const PHILOSOPHER_STONE_CHANCE = 0.09;
 
   const META_SAVE_KEY = 'apothecary_meta_v1';
-  const SHARDS_PER_ORDER = 5;
-  const SHARDS_PER_MANA = 2000;
+  const SHARDS_PER_MANA = 6000;
+  const BRANCH_TIER2_INVEST = 40;
+  const BRANCH_TIER3_INVEST = 120;
   const TALENT_PATHS = [
     { id:'potency', name:'ALCHEMY', tag:'Potency Path', icon:'urn' },
     { id:'chronos', name:'CHRONOS', tag:'Time Path', icon:'hourglass' },
@@ -2609,39 +2650,51 @@
     { id:'deepCauldron', name:'Deep Cauldron', icon:'urn', path:'potency', tier:1, maxLv:3,
       desc:'+10% base Click Power and Passive Mana generation per rank.',
       bonusLine: function(lv){ return '+' + (lv * 10) + '% base brew power'; },
-      baseCost:16, costGrowth:1.65 },
+      baseCost:35, costGrowth:1.65 },
     { id:'arcaneKeenness', name:'Arcane Keenness', icon:'moon', path:'potency', tier:2, requires:'deepCauldron', maxLv:5,
       desc:'+1% innate Critical Surge chance on every tap, even without Moonstone Dust.',
       bonusLine: function(lv){ return '+' + lv + '% innate crit chance'; },
-      baseCost:12, costGrowth:1.6 },
+      baseCost:50, costGrowth:1.6 },
     { id:'continuousStirring', name:'Continuous Stirring', icon:'spoon', path:'potency', tier:3, requires:'arcaneKeenness', maxLv:3,
       desc:'Hold down the mouse button or touch screen on the cauldron to stir continuously at 5 taps/sec (8 at Lv 2, 12 at Lv 3).',
       bonusLine: function(lv){ return lv > 0 ? ([0,5,8,12][lv] + ' taps/sec while held') : 'Tap the cauldron by hand'; },
-      baseCost:20, costGrowth:1.55 },
+      baseCost:150, costGrowth:1.55 },
+    { id:'alchemicalMastery', name:'Alchemical Mastery', icon:'sparkle', path:'potency', tier:4, requires:'continuousStirring', maxLv:20,
+      desc:'+1% Global Mana Essence multiplier per rank.',
+      bonusLine: function(lv){ return '+' + lv + '% global essence'; },
+      baseCost:150, costGrowth:1.45 },
     { id:'chronoInfusion', name:'Chrono-Infusion', icon:'hourglass', path:'chronos', tier:1, maxLv:5,
       desc:'+1.0s to every order deadline per rank.',
       bonusLine: function(lv){ return '+' + lv.toFixed(1) + 's base deadline'; },
-      baseCost:8, costGrowth:1.55 },
+      baseCost:20, costGrowth:1.55 },
     { id:'stasisMastery', name:'Stasis Mastery', icon:'ice', path:'chronos', tier:2, requires:'chronoInfusion', maxLv:3,
       desc:'Extends every Freeze duration by +0.5s per rank.',
       bonusLine: function(lv){ return '+' + (lv * 0.5).toFixed(1) + 's freeze duration'; },
-      baseCost:14, costGrowth:1.55 },
+      baseCost:60, costGrowth:1.55 },
     { id:'secondBreath', name:'Second Breath', icon:'feather', path:'chronos', tier:3, requires:'stasisMastery', maxLv:3,
       desc:'Once per order, a boiled-over deadline grants +1.5s per rank instead of ending the brew.',
       bonusLine: function(lv){ return lv > 0 ? 'Boil-over save +' + (lv * 1.5).toFixed(1) + 's' : 'No second breath'; },
-      baseCost:22, costGrowth:1.6 },
+      baseCost:180, costGrowth:1.6 },
+    { id:'temporalAnchor', name:'Temporal Anchor', icon:'hourglass', path:'chronos', tier:4, requires:'secondBreath', maxLv:20,
+      desc:'+0.5s Base Deadline to all orders per rank.',
+      bonusLine: function(lv){ return '+' + (lv * 0.5).toFixed(1) + 's base deadline'; },
+      baseCost:150, costGrowth:1.45 },
     { id:'merchantsPurse', name:"Merchant's Purse", icon:'coin', path:'commerce', tier:1, maxLv:5,
       desc:'Start every new brew with +5 Gold per rank.',
       bonusLine: function(lv){ return 'Start with +' + (lv * 5) + ' Gold'; },
-      baseCost:10, costGrowth:1.5 },
+      baseCost:25, costGrowth:1.5 },
     { id:'expandedPedestal', name:'Expanded Pedestal', icon:'sparkle', path:'commerce', tier:2, requires:'merchantsPurse', maxLv:1,
       desc:'The Relic Pedestal permanently offers a fifth shop card.',
       bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
-      baseCost:40, costGrowth:1 },
+      baseCost:75, costGrowth:1 },
     { id:'bargainMaster', name:'Bargain Master', icon:'refresh', path:'commerce', tier:3, requires:'expandedPedestal', maxLv:3,
       desc:'Permanently discounts shop rerolls by 1 Gold per rank.',
       bonusLine: function(lv){ return lv > 0 ? '-' + lv + ' Gold shop rerolls' : 'Full reroll price'; },
-      baseCost:18, costGrowth:1.5 },
+      baseCost:120, costGrowth:1.5 },
+    { id:'gildedProsperity', name:'Gilded Prosperity', icon:'coin', path:'commerce', tier:4, requires:'bargainMaster', maxLv:20,
+      desc:'+2% Gold payout on all order completions per rank.',
+      bonusLine: function(lv){ return '+' + (lv * 2) + '% gold on orders'; },
+      baseCost:150, costGrowth:1.45 },
   ];
 
   const LIQUID_THEMES = {
@@ -2763,6 +2816,33 @@
   function getTalentById(id){
     return TALENTS.find(t => t.id === id) || null;
   }
+  function getTalentInvestedCost(talent, ranks){
+    if(!talent || ranks <= 0) return 0;
+    const n = Math.min(ranks, talent.maxLv);
+    let spent = 0;
+    for(let i = 0; i < n; i++){
+      spent += Math.round(talent.baseCost * Math.pow(talent.costGrowth, i));
+    }
+    return spent;
+  }
+  function getBranchShardsInvested(pathId){
+    let spent = 0;
+    TALENTS.forEach(t => {
+      if(t.path === pathId) spent += getTalentInvestedCost(t, getTalentLevel(t.id));
+    });
+    return spent;
+  }
+  function getTalentPathName(pathId){
+    const path = TALENT_PATHS.find(p => p.id === pathId);
+    if(!path || !path.name) return 'this branch';
+    return path.name.charAt(0) + path.name.slice(1).toLowerCase();
+  }
+  function getBranchInvestGate(talent){
+    if(!talent) return 0;
+    if(talent.tier >= 3) return BRANCH_TIER3_INVEST;
+    if(talent.tier >= 2) return BRANCH_TIER2_INVEST;
+    return 0;
+  }
   function isTalentPrereqMet(talent){
     if(!talent) return false;
     if(talent.requires){
@@ -2773,17 +2853,25 @@
       const hasTier = TALENTS.some(t => t.path === talent.path && t.tier === talent.minTier && getTalentLevel(t.id) >= 1);
       if(!hasTier) return false;
     }
+    const gate = getBranchInvestGate(talent);
+    if(gate > 0 && getBranchShardsInvested(talent.path) < gate) return false;
     return true;
   }
   function getTalentPrereqLabel(talent){
     if(!talent) return '';
+    const labels = [];
     if(talent.requires){
       const parent = getTalentById(talent.requires);
       const need = talent.minRank || 1;
-      return 'Requires Rank ' + need + ' ' + (parent ? parent.name : talent.requires);
+      labels.push('Requires Rank ' + need + ' ' + (parent ? parent.name : talent.requires));
     }
-    if(talent.minTier) return 'Requires a Tier ' + talent.minTier + ' talent on this path';
-    return '';
+    if(talent.minTier) labels.push('Requires a Tier ' + talent.minTier + ' talent on this path');
+    const gate = getBranchInvestGate(talent);
+    if(gate > 0){
+      const spent = getBranchShardsInvested(talent.path);
+      labels.push('Requires ' + gate + ' Shards spent in ' + getTalentPathName(talent.path) + ' (' + spent + '/' + gate + ')');
+    }
+    return labels.join(' · ');
   }
   function getTalentCost(talent){
     if(!talent) return 0;
@@ -2802,6 +2890,8 @@
     return clamp(Number(seconds) || 0, 0, MAX_FREEZE_TIME);
   }
   function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
+  function getAlchemicalMasteryMult(){ return 1 + 0.01 * getTalentLevel('alchemicalMastery'); }
+  function getGildedProsperityMult(){ return 1 + 0.02 * getTalentLevel('gildedProsperity'); }
   function getShopOfferCount(){ return 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0); }
   function getCareerBestOrder(){
     const runOrder = (state && state.round) ? state.round : 1;
@@ -3773,6 +3863,7 @@
     if(hasRelic('hourglass')) t += getRelicStats('hourglass').bonusTime || 0;
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
     t += getTalentLevel('chronoInfusion');
+    t += 0.5 * getTalentLevel('temporalAnchor');
     return t;
   }
   function getEarlyCompletionGold(){
@@ -3794,7 +3885,8 @@
     return div;
   }
   function getSurplusGold(surplus){
-    return BASE_COMPLETION_GOLD + getEarlyCompletionGold() + Math.max(0, Math.floor((surplus / getSurplusGoldDivisor()) * getGoldRate()));
+    const raw = BASE_COMPLETION_GOLD + getEarlyCompletionGold() + Math.max(0, Math.floor((surplus / getSurplusGoldDivisor()) * getGoldRate()));
+    return Math.floor(raw * getGildedProsperityMult());
   }
   function getSurplusGoldPreview(){
     const surplus = Math.max(0, state.mana - state.target);
@@ -4369,9 +4461,9 @@
     if(cauldron) cauldron.classList.toggle('surplus-urgent', surplusUrgent);
 
     refreshShardReadouts();
-    stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + getClickPower().toFixed(1) + '/click';
+    stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + (getClickPower() * getAlchemicalMasteryMult()).toFixed(1) + '/click';
     stirCost.innerHTML = 'Cost: ' + fmt(getStirCost()) + ' ' + icon('sparkle','ic-mana');
-    bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + getManaPerSecond().toFixed(1) + '/sec';
+    bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + (getManaPerSecond() * getAlchemicalMasteryMult()).toFixed(1) + '/sec';
     bubbleCost.innerHTML = 'Cost: ' + fmt(getBubbleCost()) + ' ' + icon('sparkle','ic-mana');
 
     const canBuyStir = state.phase === 'brewing' && state.mana >= getStirCost();
@@ -4388,6 +4480,7 @@
      CORE GAMEPLAY
   ========================================================= */
   function addMana(amount, silent){
+    amount *= getAlchemicalMasteryMult();
     state.mana += amount;
     state.lifetimeMana += amount;
     if(state.mana > state.peakMana) state.peakMana = state.mana;
@@ -4631,7 +4724,7 @@
     const playSfx = (now - lastTapSfxAt) >= TAP_SFX_MIN_MS;
     if(showFx){
       lastTapFxAt = now;
-      spawnFloatNumber('+' + fmt(power), crit ? 'crit' : '', xPct, yPct);
+      spawnFloatNumber('+' + fmt(power * getAlchemicalMasteryMult()), crit ? 'crit' : '', xPct, yPct);
       if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
       const brew = cauldronToLayerPct(clamp(xPct, 41, 59), brewMouthY());
       spawnClickBubbles(brew.x, brew.y);
@@ -4837,11 +4930,13 @@
     state.phase = 'roundEnd';
     const surplus = Math.max(0, state.mana - state.target);
     let goldEarned = getSurplusGold(surplus);
-    if(hasRelic('gildedLedger')) goldEarned += getRelicStats('gildedLedger').bounty || 12;
+    let relicGold = 0;
+    if(hasRelic('gildedLedger')) relicGold += getRelicStats('gildedLedger').bounty || 12;
     if(hasRelic('hoardersScale')){
       const scale = getRelicStats('hoardersScale');
-      goldEarned += Math.min(scale.interestCap || 15, Math.floor(state.gold * (scale.interestPct || 0.10)));
+      relicGold += Math.min(scale.interestCap || 15, Math.floor(state.gold * (scale.interestPct || 0.10)));
     }
+    goldEarned += Math.floor(relicGold * getGildedProsperityMult());
     bumpGold(goldEarned);
     meta.career.bestOrder = Math.max(meta.career.bestOrder || 1, state.round || 1);
     saveMeta();
@@ -5369,7 +5464,7 @@
   }
   function calcShardPayout(){
     const completed = getCompletedOrdersForPayout();
-    const fromOrders = completed * SHARDS_PER_ORDER;
+    const fromOrders = Math.floor(Math.pow(completed, 1.4) * 3);
     const fromMana = Math.floor(((state && state.lifetimeMana) || 0) / SHARDS_PER_MANA);
     return fromOrders + fromMana;
   }
@@ -5409,10 +5504,22 @@
     TALENT_PATHS.forEach(path => {
       const col = document.createElement('div');
       col.className = 'talent-path';
+      const invested = getBranchShardsInvested(path.id);
+      const barMax = BRANCH_TIER3_INVEST;
+      const fillPct = Math.max(0, Math.min(100, (invested / barMax) * 100));
+      const tickPct = (BRANCH_TIER2_INVEST / barMax) * 100;
       col.innerHTML = `
         <div class="talent-path-header">
           <div class="talent-path-name">${icon(path.icon)} ${path.name}</div>
           <div class="talent-path-tag">${path.tag}</div>
+          <div class="talent-path-invest">
+            <div class="talent-path-invest-label">${invested} shards invested</div>
+            <div class="talent-path-bar">
+              <div class="talent-path-bar-fill" style="width:${fillPct}%"></div>
+              <div class="talent-path-bar-tick" style="left:${tickPct}%"></div>
+            </div>
+            <div class="talent-path-invest-gates">T2 ${Math.min(invested, BRANCH_TIER2_INVEST)}/${BRANCH_TIER2_INVEST} · Capstone ${Math.min(invested, BRANCH_TIER3_INVEST)}/${BRANCH_TIER3_INVEST}</div>
+          </div>
         </div>
       `;
       TALENTS.filter(t => t.path === path.id).sort((a, b) => a.tier - b.tier).forEach(t => {
@@ -5422,19 +5529,23 @@
         const cost = getTalentDisplayCost(t);
         const canBuy = unlocked && !maxed && meta.manaShards >= cost && isFinite(getTalentCost(t));
         const req = getTalentPrereqLabel(t);
+        const gate = getBranchInvestGate(t);
+        const branchShort = gate > 0 && getBranchShardsInvested(t.path) < gate;
         const node = document.createElement('div');
         let nodeState = ' locked';
         if(unlocked && maxed) nodeState = ' unlocked maxed';
         else if(unlocked && lv > 0) nodeState = ' unlocked owned';
         else if(unlocked) nodeState = ' unlocked';
         else if(lv > 0) nodeState = ' owned';
-        node.className = 'talent-node' + (t.tier >= 3 ? ' capstone' : '') + nodeState;
+        const tierClass = t.tier >= 4 ? ' prestige' : (t.tier >= 3 ? ' capstone' : '');
+        node.className = 'talent-node' + tierClass + nodeState;
         node.innerHTML = `
           ${unlocked ? '' : '<div class="talent-lock">' + icon('lock') + '</div>'}
           <div class="talent-gem">${icon(t.icon)}</div>
           <div class="talent-body">
             <div class="talent-name">${t.name}</div>
             <div class="talent-desc">${t.desc}</div>
+            ${!unlocked && branchShort ? '<div class="talent-req branch-lock">' + icon('lock') + ' ' + getTalentPathName(t.path) + ' ' + getBranchShardsInvested(t.path) + '/' + gate + '</div>' : ''}
             ${!unlocked && req ? '<div class="talent-req">' + req + '</div>' : ''}
             <div class="talent-rank">${maxed ? 'MAX Lv ' + lv : ('Lv ' + lv + ' / ' + t.maxLv)} · ${t.bonusLine(lv)}</div>
           </div>
