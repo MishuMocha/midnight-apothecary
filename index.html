@@ -734,6 +734,11 @@
     pointer-events:none;
   }
   .consumable-btn .cBuffTimer:empty{ display:none; }
+  .consumable-btn .cHotkey{
+    position:absolute; right:3px; bottom:2px;
+    font-size:0.32rem; color:var(--text-dim); letter-spacing:0.5px;
+    pointer-events:none; opacity:0.7;
+  }
 
   /* ---------- OVERLAYS / MODALS ---------- */
   .hidden{ display:none !important; }
@@ -870,6 +875,22 @@
 
   .compendium-progress{
     font-size:0.5rem; color:var(--amber); margin:-4px 0 10px;
+  }
+  .grimoire-tabs{
+    display:flex; gap:8px; justify-content:center; margin:0 0 12px;
+  }
+  .grimoire-tab{
+    flex:1; max-width:240px; padding:8px 10px; font-size:0.42rem;
+    background:var(--purple-mid); color:var(--text-dim);
+    border:3px solid #000; font-family:inherit; cursor:pointer;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 3px 0 #000;
+  }
+  .grimoire-tab:hover{ filter:brightness(1.15); }
+  .grimoire-tab.active{
+    color:var(--amber-glow); border-color:var(--amber);
+  }
+  .grimoire-tab.corrupted-tab.active{
+    color:#ff6b7d; border-color:#ff2a4b;
   }
   .compendium-grid{
     display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
@@ -1410,7 +1431,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.16.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.17.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1456,7 +1477,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.16.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.17.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1509,7 +1530,20 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.17.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Grimoire's Standard tab always shows the clean relic. Corrupted variants stay in the Corrupted tab, even if that's the copy you're brewing with.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.17</div>
+        <ul class="changelog-list">
+          <li>Holding the cauldron now stirs on its own once you unlock Continuous Stirring in the Sanctum — no extra clicker required.</li>
+          <li>The Grimoire splits into Standard and Corrupted catalogues, and keys 1, 2, and 3 toss Stir Frenzy, Time Freeze, and Golden Droplet.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16.1</div>
         <ul class="changelog-list">
           <li>Relic icons now glow in their synergy color — fire, frost, arcane, chaos, or midas — on the rail, in the shop, and in the Grimoire.</li>
         </ul>
@@ -1908,6 +1942,10 @@
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-amber"><use href="#icon-book"></use></svg> ALCHEMICAL<br>GRIMOIRE</h1>
     <p>A catalog of relics uncovered on your alchemical journey. Buy a relic from the shop to reveal its secrets.</p>
+    <div class="grimoire-tabs">
+      <button type="button" class="grimoire-tab active" id="grimoireTabStandard">STANDARD RELICS</button>
+      <button type="button" class="grimoire-tab corrupted-tab" id="grimoireTabCorrupted">CORRUPTED RELICS</button>
+    </div>
     <div class="compendium-progress" id="compendiumProgress">0 / 0 Discovered</div>
     <div id="compendiumGrid" class="compendium-grid"></div>
     <button class="pixel-btn bigBtn" id="closeCompendiumBtn">CLOSE GRIMOIRE</button>
@@ -2101,6 +2139,10 @@
       desc:'The Relic Pedestal permanently offers a fifth shop card.',
       bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
       baseCost:40, costGrowth:1 },
+    { id:'continuousStirring', name:'Continuous Stirring', icon:'spoon', maxLv:3,
+      desc:'Hold down the mouse button or touch screen on the cauldron to stir continuously at 5 taps/sec (8 at Lv 2, 12 at Lv 3).',
+      bonusLine: function(lv){ return lv > 0 ? ([0,5,8,12][lv] + ' taps/sec while held') : 'Tap the cauldron by hand'; },
+      baseCost:20, costGrowth:1.55 },
   ];
 
   const LIQUID_THEMES = {
@@ -2147,6 +2189,7 @@
       wintersGraspCooldown: 0,
       unstableBrewClock: 0,
       discoveredRelics: [],
+      discoveredCorrupted: {},
       glacialMilestones: { q25:false, q50:false, q75:false },
       bgmVolume: 60,
       sfxVolume: 80,
@@ -2316,6 +2359,8 @@
   const compendiumGrid = $('compendiumGrid');
   const compendiumProgress = $('compendiumProgress');
   const closeCompendiumBtn = $('closeCompendiumBtn');
+  const grimoireTabStandard = $('grimoireTabStandard');
+  const grimoireTabCorrupted = $('grimoireTabCorrupted');
 
   let isPaused = false;
 
@@ -2712,6 +2757,41 @@
     return { id: id, corrupted: true, curseType: rollCurseType(), boonMult: rollBoonMult() };
   }
   function shopOfferId(entry){ return (entry && typeof entry === 'object') ? entry.id : entry; }
+  function normalizeDiscoveredCorrupted(raw){
+    const map = {};
+    if(!raw) return map;
+    if(Array.isArray(raw)){
+      raw.forEach(id => {
+        if(typeof id === 'string' && RELICS.some(r => r.id === id)) map[id] = { curseType: null, boonMult: 1.8 };
+      });
+      return map;
+    }
+    if(typeof raw === 'object'){
+      Object.keys(raw).forEach(id => {
+        if(!RELICS.some(r => r.id === id)) return;
+        const rec = raw[id] && typeof raw[id] === 'object' ? raw[id] : {};
+        map[id] = {
+          curseType: rec.curseType || null,
+          boonMult: typeof rec.boonMult === 'number' ? rec.boonMult : 1.8
+        };
+      });
+    }
+    return map;
+  }
+  function noteDiscoveredCorrupted(id, rec){
+    if(!id || !RELICS.some(r => r.id === id)) return;
+    if(!state.discoveredCorrupted || typeof state.discoveredCorrupted !== 'object' || Array.isArray(state.discoveredCorrupted)){
+      state.discoveredCorrupted = {};
+    }
+    const prev = state.discoveredCorrupted[id] || {};
+    state.discoveredCorrupted[id] = {
+      curseType: (rec && rec.curseType) || prev.curseType || null,
+      boonMult: (rec && rec.boonMult > 1) ? rec.boonMult : (prev.boonMult || 1.8)
+    };
+  }
+  function isCorruptedDiscovered(id){
+    return !!(state && state.discoveredCorrupted && state.discoveredCorrupted[id]);
+  }
   function normalizeShopOffers(raw){
     if(!Array.isArray(raw)) return [];
     return raw.map(entry => {
@@ -3135,7 +3215,7 @@
     // player's click, which made the charms appear completely unresponsive.
     if(consumableButtons.children.length !== CONSUMABLES.length){
       consumableButtons.innerHTML = '';
-      CONSUMABLES.forEach(c => {
+      CONSUMABLES.forEach((c, i) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'consumable-btn';
@@ -3143,7 +3223,8 @@
         btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' +
           '<span class="cLabel">' + c.name + '</span>' +
           '<span class="cCount">0</span>' +
-          '<span class="cBuffTimer"></span>';
+          '<span class="cBuffTimer"></span>' +
+          '<span class="cHotkey">[' + (i + 1) + ']</span>';
         btn.addEventListener('pointerdown', (e) => { e.preventDefault(); useConsumable(c.id); }, { passive:false });
         consumableButtons.appendChild(btn);
       });
@@ -3519,37 +3600,76 @@
 
   function getStageRect(){ return cauldron.getBoundingClientRect(); }
 
-  function handleCauldronTap(e){
-    if(state.phase !== 'brewing' || isPaused) return;
-    unlockAndStartBgm();
-    e.preventDefault();
+  const TAP_FX_MIN_MS = 45;
+  const TAP_SFX_MIN_MS = 40;
+  let lastTapFxAt = 0;
+  let lastTapSfxAt = 0;
+  let lastTapPoint = { x: 50, y: 30 };
+  let stirHoldTimer = null;
 
+  function getStirHoldRate(){
+    return [0, 5, 8, 12][getTalentLevel('continuousStirring')] || 0;
+  }
+  function stopStirHold(){
+    if(stirHoldTimer){
+      clearInterval(stirHoldTimer);
+      stirHoldTimer = null;
+    }
+  }
+  function readTapPoint(e){
+    if(!e) return lastTapPoint;
     const rect = getStageRect();
     const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
     const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
-    let xPct = 50, yPct = 30;
     if(typeof clientX === 'number' && rect.width){
-      xPct = clamp(((clientX - rect.left) / rect.width) * 100, 5, 95);
-      yPct = clamp(((clientY - rect.top) / rect.height) * 100, 5, 60);
+      lastTapPoint = {
+        x: clamp(((clientX - rect.left) / rect.width) * 100, 5, 95),
+        y: clamp(((clientY - rect.top) / rect.height) * 100, 5, 60)
+      };
     }
+    return lastTapPoint;
+  }
+  function onCauldronPointerDown(e){
+    handleCauldronTap(e);
+    const rate = getStirHoldRate();
+    if(rate <= 0) return;
+    stopStirHold();
+    if(e && cauldron.setPointerCapture){
+      try { cauldron.setPointerCapture(e.pointerId); } catch(err){}
+    }
+    stirHoldTimer = setInterval(function(){
+      if(!state || state.phase !== 'brewing' || isPaused){
+        stopStirHold();
+        return;
+      }
+      handleCauldronTap(null);
+    }, 1000 / rate);
+  }
+
+  function handleCauldronTap(e){
+    if(!state || state.phase !== 'brewing' || isPaused) return;
+    unlockAndStartBgm();
+    if(e && e.preventDefault) e.preventDefault();
+
+    const pos = readTapPoint(e);
+    const xPct = pos.x;
+    const yPct = pos.y;
 
     state.clickCountRun++;
     state.totalClicksAllTime++;
 
+    let ignited = false;
     if(hasRelic('bellows')){
       const heat = getRelicStats('bellows');
       const maxStacks = Math.max(1, Math.round((heat.maxHeat || 0.5) / 0.05));
       state.bellowsHeatStacks = Math.min(maxStacks, (state.bellowsHeatStacks || 0) + 1);
       state.bellowsHeatTimer = 1.0;
-      if(state.bellowsHeatStacks >= 3) spawnCinderFlames(1);
     }
     if(hasRelic('cinderbrand')){
       const brand = getRelicStats('cinderbrand');
       if(Math.random() < (brand.burnChance || 0.08)){
         state.cinderbrandBurnTimer = 3.0;
-        spawnFloatNumber('IGNITED!', 'crit', xPct, yPct-16);
-        spawnCinderFlames(6);
-        sfxScorch();
+        ignited = true;
       }
     }
 
@@ -3573,52 +3693,68 @@
       state.wintersGraspCooldown = grasp.icd || 1.0;
     }
 
-    addMana(power);
-    spawnFloatNumber('+' + fmt(power), crit ? 'crit' : '', xPct, yPct);
-    if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
-    // Tap burst bubbles always pop up out of the liquid opening near the
-    // top of the pot, not wherever on the iron body you happened to tap —
-    // only their horizontal position follows your tap.
-    const brew = cauldronToLayerPct(clamp(xPct, 41, 59), brewMouthY());
-    spawnClickBubbles(brew.x, brew.y);
-    sfxClick(crit);
+    addMana(power, true);
 
-    if(hasTagTier('fire', 1) && state.clickCountRun % 10 === 0){
-      const burst = power * 5;
-      addMana(burst);
-      spawnFloatNumber(icon('fire','ic-fire') + ' OVERHEAT +' + fmt(burst), 'crit', xPct, yPct-20);
-      sfxQuotaMet();
-    }
-
-    cauldron.classList.remove('squish');
-    void cauldron.offsetWidth;
-    cauldron.classList.add('squish');
-
+    let scorched = false;
     getOwnedRelicIds().forEach(id => {
       if(getRelicCurseType(id) === 'scorch' && Math.random() < 0.05 && (state.timeFreezeTimer || 0) <= 0){
         state.timer = Math.max(0, state.timer - 0.8);
-        spawnFloatNumber('-0.8s', 'danger', xPct, yPct-14);
-        sfxScorch();
+        scorched = true;
       }
     });
+    let bledGold = false;
     if(crit){
       getOwnedRelicIds().forEach(id => {
         if(getRelicCurseType(id) === 'goldBleed' && state.gold > 0){
           state.gold = Math.max(0, state.gold - 1);
-          spawnFloatNumber('-1 ' + icon('coin','ic-danger'), 'danger', xPct, yPct+10);
+          bledGold = true;
         }
       });
     }
 
+    const overheat = hasTagTier('fire', 1) && state.clickCountRun % 10 === 0;
+    if(overheat) addMana(power * 5, true);
+
     if(hasTagTier('midas', 0) && Math.random() < 0.12){
       awardDropGold(1, xPct, yPct+10);
     }
-
     if(hasRelic('bifrost') && Math.random() < (getRelicStats('bifrost').goldChance || 0.1) * getSynergyMult('chaos')){
       awardDropGold(1, xPct, yPct+18);
     }
 
-    updateUI();
+    const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    const showFx = (now - lastTapFxAt) >= TAP_FX_MIN_MS;
+    const playSfx = (now - lastTapSfxAt) >= TAP_SFX_MIN_MS;
+    if(showFx){
+      lastTapFxAt = now;
+      spawnFloatNumber('+' + fmt(power), crit ? 'crit' : '', xPct, yPct);
+      if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
+      const brew = cauldronToLayerPct(clamp(xPct, 41, 59), brewMouthY());
+      spawnClickBubbles(brew.x, brew.y);
+      if(hasRelic('bellows') && (state.bellowsHeatStacks || 0) >= 3) spawnCinderFlames(1);
+      cauldron.classList.remove('squish');
+      requestAnimationFrame(function(){ cauldron.classList.add('squish'); });
+    }
+    if(playSfx){
+      lastTapSfxAt = now;
+      sfxClick(crit);
+    }
+    if(ignited){
+      spawnFloatNumber('IGNITED!', 'crit', xPct, yPct-16);
+      spawnCinderFlames(6);
+      sfxScorch();
+    }
+    if(overheat){
+      spawnFloatNumber(icon('fire','ic-fire') + ' OVERHEAT +' + fmt(power * 5), 'crit', xPct, yPct-20);
+      sfxQuotaMet();
+    }
+    if(scorched){
+      spawnFloatNumber('-0.8s', 'danger', xPct, yPct-14);
+      sfxScorch();
+    }
+    if(bledGold){
+      spawnFloatNumber('-1 ' + icon('coin','ic-danger'), 'danger', xPct, yPct+10);
+    }
   }
 
   function buyStir(){
@@ -3685,14 +3821,17 @@
   function startRun(){
     closePauseMenu();
     closeCompendium();
+    stopStirHold();
     const discovered = ((state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : []).map(id => {
       const legacy = LEGACY_CORRUPT_RELICS[id];
       return legacy ? legacy.id : id;
     }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
+    const discoveredCorrupted = normalizeDiscoveredCorrupted(state && state.discoveredCorrupted);
     const bgmVolume = clampVolume(state && state.bgmVolume, 60);
     const sfxVolume = clampVolume(state && state.sfxVolume, 80);
     state = freshState();
     state.discoveredRelics = discovered;
+    state.discoveredCorrupted = discoveredCorrupted;
     state.bgmVolume = bgmVolume;
     state.sfxVolume = sfxVolume;
     state.phase = 'brewing';
@@ -3737,6 +3876,7 @@
 
   function succeedRound(){
     if(state.phase !== 'brewing') return;
+    stopStirHold();
     closePauseMenu();
     state.phase = 'roundEnd';
     const surplus = Math.max(0, state.mana - state.target);
@@ -3764,6 +3904,7 @@
   }
 
   function failRound(){
+    stopStirHold();
     closePauseMenu();
     state.phase = 'gameover';
     ensureShardPayout();
@@ -3829,6 +3970,7 @@
         const maxed = lv >= RELIC_MAX_LEVEL;
         const price = getRelicCost(r);
         const showCorrupted = !!(offer.corrupted || isRelicCorrupted(id));
+        if(showCorrupted) noteDiscoveredCorrupted(id, offer.corrupted ? offer : getRelicRecord(id));
         const previewOverlay = offer.corrupted ? offer : (isRelicCorrupted(id) ? getRelicRecord(id) : null);
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
@@ -4189,6 +4331,7 @@
     state.relics[id] = nextRec;
     if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
     if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
+    if(nextRec.corrupted) noteDiscoveredCorrupted(id, nextRec);
     if(id === 'glacialCore' && lv === 0){
       const q = state.target || 1;
       const m = state.mana || 0;
@@ -4317,6 +4460,7 @@
 
   function openPauseMenu(){
     if(!state || state.phase !== 'brewing') return;
+    stopStirHold();
     isPaused = true;
     document.body.classList.add('game-paused');
     setPauseButtonIcon();
@@ -4342,20 +4486,30 @@
   }
 
   let compendiumHeldPause = false;
+  let grimoireTab = 'standard';
+
+  function setGrimoireTab(tab){
+    grimoireTab = tab === 'corrupted' ? 'corrupted' : 'standard';
+    if(grimoireTabStandard) grimoireTabStandard.classList.toggle('active', grimoireTab === 'standard');
+    if(grimoireTabCorrupted) grimoireTabCorrupted.classList.toggle('active', grimoireTab === 'corrupted');
+    renderCompendium();
+  }
 
   function renderCompendium(){
     if(!compendiumGrid) return;
     const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
+    const corruptKnown = RELICS.filter(r => isCorruptedDiscovered(r.id)).length;
     if(compendiumProgress){
-      compendiumProgress.textContent = discovered.length + ' / ' + RELICS.length + ' Discovered';
+      compendiumProgress.textContent = grimoireTab === 'corrupted'
+        ? (corruptKnown + ' / ' + RELICS.length + ' Corrupted Catalogued')
+        : (discovered.length + ' / ' + RELICS.length + ' Discovered');
     }
     compendiumGrid.innerHTML = '';
     RELICS.forEach(r => {
-      const known = discovered.includes(r.id);
-      const ownedCorrupt = known && isRelicCorrupted(r.id);
       const card = document.createElement('div');
+      const tile = relicTagTileClass(r);
       if(!isMetaUnlocked(r)){
-        card.className = 'compendium-card locked milestone-locked' + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
+        card.className = 'compendium-card locked milestone-locked' + (tile ? ' ' + tile : '');
         card.innerHTML = `
           <div class="cIcon">${icon('lock','ic-lock')}</div>
           <div class="cName">LOCKED</div>
@@ -4364,21 +4518,54 @@
         compendiumGrid.appendChild(card);
         return;
       }
-      card.className = 'compendium-card' + (known ? '' : ' locked') + (ownedCorrupt ? ' corrupted' : '') + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
+
+      if(grimoireTab === 'corrupted'){
+        const seen = isCorruptedDiscovered(r.id);
+        const ownedCorrupt = isRelicCorrupted(r.id);
+        const rec = ownedCorrupt ? getRelicRecord(r.id) : ((state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null);
+        card.className = 'compendium-card' + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
+        if(seen){
+          const lv = ownedCorrupt ? getRelicLevel(r.id) : 1;
+          const overlay = rec ? { corrupted:true, curseType: rec.curseType, boonMult: rec.boonMult } : { corrupted:true };
+          const stats = getRelicStats(r.id, lv, overlay);
+          const tagsHtml = (r.tags||[]).map(t => {
+            const info = TAG_INFO[t];
+            return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+          }).join('');
+          card.innerHTML = `
+            <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
+            <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span> ${ownedCorrupt ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
+            <div class="rTags">${tagsHtml}</div>
+            <div class="cDesc">${r.desc}</div>
+            ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Swollen Boon: ' + stats.summary + (stats.boonMult ? ' (x' + stats.boonMult.toFixed(2) + ')' : '') + '</div>' : ''}
+            ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' A crimson curse is bound to this offering.</div>'}
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="cIcon">${icon('lock','ic-lock')}</div>
+            <div class="cName">CORRUPTED ???</div>
+            <div class="cDesc">Encounter a Corrupted offering of this relic in the shop to catalogue its swollen blessing and curse.</div>
+          `;
+        }
+        compendiumGrid.appendChild(card);
+        return;
+      }
+
+      const known = discovered.includes(r.id);
+      card.className = 'compendium-card' + (known ? '' : ' locked') + (tile ? ' ' + tile : '');
       if(known){
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
           return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
         }).join('');
         const lv = getRelicLevel(r.id);
-        const stats = lv > 0 ? getRelicStats(r.id, lv) : null;
+        const stats = lv > 0 ? getRelicStats(r.id, lv, { corrupted:false }) : null;
         card.innerHTML = `
           <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-          <div class="cName">${getRelicDisplayName(r.id, ownedCorrupt)}${ownedCorrupt ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} ${lv > 0 ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
+          <div class="cName">${getRelicDisplayName(r.id, false)}${lv > 0 ? ' <span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
           <div class="cDesc">${r.desc}</div>
           ${stats ? '<div class="cDesc relic-lv-badge">Now: ' + stats.summary + '</div>' : ''}
-          ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : ''}
         `;
       } else {
         card.innerHTML = `
@@ -4515,7 +4702,9 @@
       }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
       getOwnedRelicIds().forEach(id => {
         if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
+        if(isRelicCorrupted(id)) noteDiscoveredCorrupted(id, getRelicRecord(id));
       });
+      state.discoveredCorrupted = normalizeDiscoveredCorrupted(state.discoveredCorrupted);
       state.bgmVolume = clampVolume(state.bgmVolume, 60);
       state.sfxVolume = clampVolume(state.sfxVolume, 80);
       if(typeof state.shardPayoutAwarded !== 'boolean') state.shardPayoutAwarded = false;
@@ -4672,7 +4861,11 @@
   /* =========================================================
      EVENT WIRING
   ========================================================= */
-  cauldron.addEventListener('pointerdown', handleCauldronTap);
+  cauldron.addEventListener('pointerdown', onCauldronPointerDown);
+  cauldron.addEventListener('pointerup', stopStirHold);
+  cauldron.addEventListener('pointerleave', stopStirHold);
+  cauldron.addEventListener('pointercancel', stopStirHold);
+  window.addEventListener('pointerup', stopStirHold);
   buyStirBtn.addEventListener('click', buyStir);
   buyBubbleBtn.addEventListener('click', buyBubble);
   fulfillBtn.addEventListener('click', cashOutNow);
@@ -4684,6 +4877,8 @@
   pauseBtn.addEventListener('click', togglePauseMenu);
   if(compendiumBtn) compendiumBtn.addEventListener('click', toggleCompendium);
   if(closeCompendiumBtn) closeCompendiumBtn.addEventListener('click', closeCompendium);
+  if(grimoireTabStandard) grimoireTabStandard.addEventListener('click', () => setGrimoireTab('standard'));
+  if(grimoireTabCorrupted) grimoireTabCorrupted.addEventListener('click', () => setGrimoireTab('corrupted'));
   resumeBtn.addEventListener('click', closePauseMenu);
   settingsBtn.addEventListener('click', toggleSettingsPanel);
   changelogBtn.addEventListener('click', toggleChangelogPanel);
@@ -4732,6 +4927,15 @@
   if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);
 
   window.addEventListener('keydown', function(e){
+    if(e.repeat) return;
+    const charmHotkeys = { '1':'stirFrenzy', '2':'timeFreeze', '3':'goldenDrop' };
+    if(charmHotkeys[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey){
+      const tag = (e.target && e.target.tagName) || '';
+      if(tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT'){
+        useConsumable(charmHotkeys[e.key]);
+        return;
+      }
+    }
     if(e.key === 'Escape'){
       if(sanctumOverlay && !sanctumOverlay.classList.contains('hidden')){
         closeSanctum();
