@@ -771,7 +771,14 @@
   }
   #compendiumOverlay{ z-index:21; }
   #sanctumOverlay{ z-index:22; }
+  #sanctumConfirmOverlay{ z-index:23; }
   .overlay.hidden{ display:none !important; }
+  .sanctum-confirm-card{ max-width:520px; }
+  .pixel-btn.danger{
+    background:var(--danger); color:#2a080c;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.35), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #5a1020;
+  }
+  .pixel-btn.danger:hover:not(:disabled){ filter:brightness(1.12); }
 
   .panelCard{
     width:90vw; max-width:860px; max-height:90vh; overflow-y:auto;
@@ -1527,7 +1534,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.20</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1553,6 +1560,7 @@
     <div id="consumableShop" class="shop-shelf"></div>
 
     <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon ic-gold"><use href="#icon-coin"></use></svg>)</button>
+    <button class="smallBtn" id="shopSanctumBtn" style="color:var(--danger); border-color:#ff5d6c;"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> RETREAT TO SANCTUM</button>
     <br>
     <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
   </div>
@@ -1573,7 +1581,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.20</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1626,7 +1634,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.20 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Opening the Sanctum mid-brew or from the shop now asks you to abandon the run. Confirming banks your Mana Shards and ends the brew; staying puts you right back to work.</li>
+          <li>After a retreat, closing the Sanctum returns you to the main menu, ready to start a new brew.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.20</div>
         <ul class="changelog-list">
           <li>Ingredient Charms now need a moment to recharge after you toss them — the button darkens with a sweeping overlay and counts down the wait.</li>
           <li>Charm pouch buttons and Supply Shelf cards wear a richer violet-gold rim.</li>
@@ -2085,6 +2100,18 @@
   </div>
 </div>
 
+<!-- SANCTUM RETREAT CONFIRM -->
+<div class="overlay hidden" id="sanctumConfirmOverlay">
+  <div class="panelCard pixel-panel sanctum-confirm-card">
+    <h1><svg class="icon ic-danger"><use href="#icon-warning"></use></svg> RETREAT TO<br>THE SANCTUM?</h1>
+    <p>Abandon this brew to bank your earned Mana Shards and visit the Alchemical Sanctum? Your current run progress will end, but lifetime stats and shards will be saved.</p>
+    <div class="modal-actions">
+      <button class="pixel-btn bigBtn danger" id="sanctumForfeitBtn">FORFEIT &amp; ENTER SANCTUM</button>
+      <button class="pixel-btn bigBtn" id="sanctumStayBtn">STAY &amp; BREW</button>
+    </div>
+  </div>
+</div>
+
 <div id="synergyTooltip" class="hidden"></div>
 
 <script>
@@ -2539,7 +2566,11 @@
   const closeSanctumBtn = $('closeSanctumBtn');
   const openSanctumBtn = $('openSanctumBtn');
   const hudSanctumBtn = $('hudSanctumBtn');
+  const shopSanctumBtn = $('shopSanctumBtn');
   const gameoverSanctumBtn = $('gameoverSanctumBtn');
+  const sanctumConfirmOverlay = $('sanctumConfirmOverlay');
+  const sanctumForfeitBtn = $('sanctumForfeitBtn');
+  const sanctumStayBtn = $('sanctumStayBtn');
   const compendiumBtn = $('compendiumBtn');
   const compendiumOverlay = $('compendiumOverlay');
   const compendiumGrid = $('compendiumGrid');
@@ -4099,6 +4130,8 @@
     state.phase = 'brewing';
     state.gold = getTalentLevel('merchantsPurse') * 5;
     state.timer = getRoundTime();
+    sanctumReturnTo = null;
+    closeSanctumConfirm(false);
     closeSanctum();
     updateCauldronVisuals();
     updateUI();
@@ -4670,8 +4703,13 @@
   /* =========================================================
      GAME OVER
   ========================================================= */
+  function getCompletedOrdersForPayout(){
+    if(!state) return 0;
+    if(state.phase === 'shop') return Math.max(0, state.round || 1);
+    return Math.max(0, (state.round || 1) - 1);
+  }
   function calcShardPayout(){
-    const completed = Math.max(0, (state && state.round ? state.round : 1) - 1);
+    const completed = getCompletedOrdersForPayout();
     const fromOrders = completed * SHARDS_PER_ORDER;
     const fromMana = Math.floor(((state && state.lifetimeMana) || 0) / SHARDS_PER_MANA);
     return fromOrders + fromMana;
@@ -4766,17 +4804,106 @@
     renderSanctum();
     if(state) updateUI();
   }
-  let sanctumHeldPause = false;
-  function openSanctum(){
-    if(!sanctumOverlay) return;
-    hideTooltip();
-    if(state && state.phase === 'brewing' && !isPaused){
-      stopStirHold();
+  let sanctumReturnTo = null;
+  let sanctumConfirmHeldPause = false;
+
+  function isSanctumConfirmOpen(){
+    return sanctumConfirmOverlay && !sanctumConfirmOverlay.classList.contains('hidden');
+  }
+  function isSanctumOpen(){
+    return sanctumOverlay && !sanctumOverlay.classList.contains('hidden');
+  }
+  function isActiveRunPhase(){
+    return state && (state.phase === 'brewing' || state.phase === 'shop');
+  }
+
+  function pauseForSanctumPrompt(){
+    stopStirHold();
+    if(!isPaused){
       isPaused = true;
+      sanctumConfirmHeldPause = true;
       document.body.classList.add('game-paused');
       setPauseButtonIcon();
-      setBgmDucked(true);
-      sanctumHeldPause = true;
+    }
+    setBgmDucked(true);
+  }
+  function resumeAfterSanctumPrompt(){
+    if(sanctumConfirmHeldPause){
+      sanctumConfirmHeldPause = false;
+      isPaused = false;
+      document.body.classList.remove('game-paused');
+      setPauseButtonIcon();
+      setBgmDucked(false);
+    } else {
+      setBgmDucked(false);
+    }
+  }
+
+  function openSanctumConfirm(){
+    if(!sanctumConfirmOverlay || !isActiveRunPhase()) return;
+    hideTooltip();
+    pauseForSanctumPrompt();
+    sanctumConfirmOverlay.classList.remove('hidden');
+  }
+  function closeSanctumConfirm(resumeRun){
+    if(!sanctumConfirmOverlay) return;
+    sanctumConfirmOverlay.classList.add('hidden');
+    if(resumeRun) resumeAfterSanctumPrompt();
+    else {
+      sanctumConfirmHeldPause = false;
+    }
+  }
+  function stayAndBrew(){
+    closeSanctumConfirm(true);
+  }
+
+  function retreatRunToMenu(){
+    stopStirHold();
+    closePauseMenu();
+    const discovered = ((state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : []).map(id => {
+      const legacy = LEGACY_CORRUPT_RELICS[id];
+      return legacy ? legacy.id : id;
+    }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
+    const discoveredCorrupted = normalizeDiscoveredCorrupted(state && state.discoveredCorrupted);
+    const bgmVolume = clampVolume(state && state.bgmVolume, 60);
+    const sfxVolume = clampVolume(state && state.sfxVolume, 80);
+    state = freshState();
+    state.discoveredRelics = discovered;
+    state.discoveredCorrupted = discoveredCorrupted;
+    state.bgmVolume = bgmVolume;
+    state.sfxVolume = sfxVolume;
+    state.phase = 'start';
+    shopOverlay.classList.add('hidden');
+    gameoverOverlay.classList.add('hidden');
+    updateCauldronVisuals();
+    updateUI();
+    syncVolumeUI();
+    saveGame();
+  }
+
+  function confirmSanctumForfeit(){
+    if(!isActiveRunPhase()){
+      stayAndBrew();
+      return;
+    }
+    closeSanctumConfirm(false);
+    ensureShardPayout();
+    retreatRunToMenu();
+    startOverlay.classList.remove('hidden');
+    openSanctum('start');
+  }
+
+  function openSanctum(returnTo){
+    if(!sanctumOverlay) return;
+    hideTooltip();
+    if(isActiveRunPhase()){
+      openSanctumConfirm();
+      return;
+    }
+    if(returnTo === 'gameover' || (state && state.phase === 'gameover')){
+      sanctumReturnTo = 'gameover';
+    } else {
+      sanctumReturnTo = 'start';
     }
     renderSanctum();
     sanctumOverlay.classList.remove('hidden');
@@ -4784,18 +4911,30 @@
   function closeSanctum(){
     if(!sanctumOverlay) return;
     sanctumOverlay.classList.add('hidden');
-    if(sanctumHeldPause){
-      sanctumHeldPause = false;
-      isPaused = false;
-      document.body.classList.remove('game-paused');
-      setPauseButtonIcon();
-      setBgmDucked(false);
+    const dest = sanctumReturnTo;
+    sanctumReturnTo = null;
+    if(dest === 'gameover'){
+      if(gameoverOverlay) gameoverOverlay.classList.remove('hidden');
+      if(startOverlay) startOverlay.classList.add('hidden');
+    } else if(dest === 'start'){
+      if(startOverlay) startOverlay.classList.remove('hidden');
+      if(gameoverOverlay) gameoverOverlay.classList.add('hidden');
     }
   }
-  function toggleSanctum(){
-    if(!sanctumOverlay) return;
-    if(sanctumOverlay.classList.contains('hidden')) openSanctum();
-    else closeSanctum();
+  function requestSanctumAccess(){
+    if(isSanctumConfirmOpen()){
+      stayAndBrew();
+      return;
+    }
+    if(isSanctumOpen()){
+      closeSanctum();
+      return;
+    }
+    if(isActiveRunPhase()){
+      openSanctumConfirm();
+      return;
+    }
+    openSanctum();
   }
 
   /* =========================================================
@@ -4956,6 +5095,10 @@
   }
 
   function togglePauseMenu(){
+    if(isSanctumConfirmOpen()){
+      stayAndBrew();
+      return;
+    }
     if(sanctumOverlay && !sanctumOverlay.classList.contains('hidden')){
       closeSanctum();
       return;
@@ -5294,10 +5437,13 @@
   document.addEventListener('pointerdown', unlockAndStartBgm, { passive:true });
   if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
   if(resetSanctumBtn) resetSanctumBtn.addEventListener('click', resetSanctum);
-  if(openSanctumBtn) openSanctumBtn.addEventListener('click', openSanctum);
-  if(hudSanctumBtn) hudSanctumBtn.addEventListener('click', toggleSanctum);
-  if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', openSanctum);
+  if(openSanctumBtn) openSanctumBtn.addEventListener('click', () => openSanctum('start'));
+  if(hudSanctumBtn) hudSanctumBtn.addEventListener('click', requestSanctumAccess);
+  if(shopSanctumBtn) shopSanctumBtn.addEventListener('click', openSanctumConfirm);
+  if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', () => openSanctum('gameover'));
   if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);
+  if(sanctumForfeitBtn) sanctumForfeitBtn.addEventListener('click', confirmSanctumForfeit);
+  if(sanctumStayBtn) sanctumStayBtn.addEventListener('click', stayAndBrew);
 
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
@@ -5311,6 +5457,10 @@
       }
     }
     if(e.key === 'Escape'){
+      if(isSanctumConfirmOpen()){
+        stayAndBrew();
+        return;
+      }
       if(sanctumOverlay && !sanctumOverlay.classList.contains('hidden')){
         closeSanctum();
         return;
