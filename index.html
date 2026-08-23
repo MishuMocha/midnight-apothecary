@@ -441,7 +441,15 @@
 
   #fulfillBtn{ width:100%; margin-top:10px; padding:12px 8px; font-size:0.65rem; display:none; }
   #fulfillBtn.show{ display:block; animation: fulfillGlow 0.8s steps(4) infinite; }
+  #fulfillBtn.show.surplus-urgent{
+    animation: fulfillUrgentPulse 0.32s steps(2) infinite;
+    color:#2a080c;
+  }
   @keyframes fulfillGlow{ 0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(244,184,96,0.6);} 50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 6px rgba(244,184,96,0.15);} }
+  @keyframes fulfillUrgentPulse{
+    0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(255,32,69,0.75); filter:brightness(1.05); }
+    50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.55), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 8px rgba(255,80,90,0.35); filter:brightness(1.28); }
+  }
 
   /* ---------- CAULDRON STAGE + RELIC RAIL ---------- */
   #stageRow {
@@ -554,6 +562,16 @@
     filter: contrast(1.06) saturate(1.08);
   }
   #cauldron.fx-crucible #cauldronImg{ filter: contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
+  #cauldron.surplus-urgent #cauldronImg{
+    animation: cauldronUrgentRim 0.32s steps(2) infinite;
+  }
+  #cauldron.fx-crucible.surplus-urgent #cauldronImg{
+    animation: cauldronUrgentRim 0.32s steps(2) infinite;
+  }
+  @keyframes cauldronUrgentRim{
+    0%,100%{ filter: contrast(1.08) saturate(1.12) drop-shadow(0 0 6px rgba(255,32,69,0.55)); }
+    50%{ filter: contrast(1.14) saturate(1.2) drop-shadow(0 0 18px rgba(255,48,80,0.95)); }
+  }
 
   /* Align the animated liquid within the cauldron rim */
   #liquidPixel {
@@ -810,7 +828,17 @@
   }
   #compendiumOverlay{ z-index:21; }
   #sanctumOverlay{ z-index:22; }
-  #sanctumConfirmOverlay{ z-index:23; }
+  #shopOverlay{ z-index:20; }
+  #sanctumConfirmOverlay{
+    z-index:40;
+    isolation:isolate;
+  }
+  body.sanctum-confirm-open #app,
+  body.sanctum-confirm-open #shopOverlay,
+  body.sanctum-confirm-open #startOverlay,
+  body.sanctum-confirm-open #pauseOverlay{
+    pointer-events:none;
+  }
   .overlay.hidden{ display:none !important; }
   .sanctum-confirm-card{ max-width:520px; }
   .pixel-btn.danger{
@@ -1584,8 +1612,8 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21.3</div>
-    <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.22</div>
+    <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
     <button class="smallBtn" id="openSanctumBtn"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL SANCTUM</button>
@@ -1631,7 +1659,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.22</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1684,7 +1712,18 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.22 (Latest)</div>
+        <ul class="changelog-list">
+          <li>After you fill an order, overcharging now auto-cashes out after 30 seconds so you cannot farm Gold and shards forever.</li>
+          <li>The cash-out button shows the auto-finish countdown, and the cauldron rim flashes a warning in the last 5 seconds.</li>
+          <li>Hold-to-stir sparks, crits, and floating numbers now follow your cursor or finger instead of staying on the first tap.</li>
+          <li>Sacrificing with the Philosopher's Stone after filling an order immediately withdraws the cash-out if you drop back below quota.</li>
+          <li>The Grimoire's Standard tab always shows clean relic baselines, and the Corrupted tab only shows catalogued curses and swollen blessings.</li>
+          <li>The Sanctum retreat prompt now sits cleanly above the shop, and Stay &amp; Brew or Escape return you to the brew with the music playing.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.3</div>
         <ul class="changelog-list">
           <li>Gold and Mana Shards now sit in their own recessed pills that grow with the total, so five-digit Gold no longer disappears under the shard count.</li>
           <li>The top bar lines up your order, synergies, and actions more cleanly on wide screens.</li>
@@ -2194,6 +2233,8 @@
   ========================================================= */
   const ROUND_BASE_TIME = 40;
   const ROUND_BASE_TARGET = 500;
+  const SURPLUS_AUTO_FINISH = 30.0;
+  const SURPLUS_WARN_AT = 25.0;
   const ROUND_TARGET_GROWTH = 2.2; // steady-state growth once the early-game ramp (see ORDER_GROWTH_STEPS) settles back down
 
   // Per-order quota growth multipliers for the early game. Orders 4-6 used to
@@ -2415,6 +2456,7 @@
       gold: 0,
       timer: ROUND_BASE_TIME,
       quotaMet: false,
+      surplusTimer: 0,
       clickLevel: 0,
       bubblerLevel: 0,
       clickCountRun: 0,
@@ -3136,7 +3178,14 @@
     const lv = clamp(level == null ? getRelicLevel(id) : level, 0, RELIC_MAX_LEVEL);
     const s = { level: lv, summary: '' };
     if(lv <= 0) return s;
-    const rec = overlay || getRelicRecord(id);
+    let rec;
+    if(overlay && overlay.corrupted === false){
+      rec = { corrupted: false };
+    } else if(overlay){
+      rec = overlay;
+    } else {
+      rec = getRelicRecord(id);
+    }
     const boon = (rec && rec.corrupted) ? clamp(Number(rec.boonMult) || 1.8, 1.75, 2) : 1;
     switch(id){
       case 'dragonfire':
@@ -3834,12 +3883,17 @@
     timerFill.classList.toggle('frozen', (state.timeFreezeTimer || 0) > 0);
     timerLabelText.textContent = Math.max(0,state.timer).toFixed(1) + 's';
 
+    const surplusUrgent = state.phase === 'brewing' && state.quotaMet && (state.surplusTimer || 0) >= SURPLUS_WARN_AT;
     if(state.phase === 'brewing' && state.quotaMet){
+      const remain = Math.max(0, SURPLUS_AUTO_FINISH - (state.surplusTimer || 0));
       fulfillBtn.classList.add('show');
-      fulfillBtn.innerHTML = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + ') &amp; END ROUND';
+      fulfillBtn.classList.toggle('surplus-urgent', surplusUrgent);
+      fulfillBtn.innerHTML = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + ') &amp; END ROUND · Auto-finish in ' + Math.ceil(remain) + 's';
     } else {
       fulfillBtn.classList.remove('show');
+      fulfillBtn.classList.remove('surplus-urgent');
     }
+    if(cauldron) cauldron.classList.toggle('surplus-urgent', surplusUrgent);
 
     refreshShardReadouts();
     stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + getClickPower().toFixed(1) + '/click';
@@ -3873,6 +3927,7 @@
       }
     } else {
       state.quotaMet = false;
+      state.surplusTimer = 0;
     }
     if(!silent) updateUI();
   }
@@ -3944,15 +3999,33 @@
   let lastTapSfxAt = 0;
   let lastTapPoint = { x: 50, y: 30 };
   let stirHoldTimer = null;
+  let stirMoveListening = false;
 
   function getStirHoldRate(){
     return [0, 5, 8, 12][getTalentLevel('continuousStirring')] || 0;
+  }
+  function onStirPointerMove(e){
+    if(!stirHoldTimer) return;
+    readTapPoint(e);
+  }
+  function bindStirMoveTracking(){
+    if(stirMoveListening) return;
+    cauldron.addEventListener('pointermove', onStirPointerMove);
+    window.addEventListener('pointermove', onStirPointerMove);
+    stirMoveListening = true;
+  }
+  function unbindStirMoveTracking(){
+    if(!stirMoveListening) return;
+    cauldron.removeEventListener('pointermove', onStirPointerMove);
+    window.removeEventListener('pointermove', onStirPointerMove);
+    stirMoveListening = false;
   }
   function stopStirHold(){
     if(stirHoldTimer){
       clearInterval(stirHoldTimer);
       stirHoldTimer = null;
     }
+    unbindStirMoveTracking();
   }
   function readTapPoint(e){
     if(!e) return lastTapPoint;
@@ -3975,6 +4048,7 @@
     if(e && cauldron.setPointerCapture){
       try { cauldron.setPointerCapture(e.pointerId); } catch(err){}
     }
+    bindStirMoveTracking();
     stirHoldTimer = setInterval(function(){
       if(!state || state.phase !== 'brewing' || isPaused){
         stopStirHold();
@@ -4154,7 +4228,18 @@
       const drain = Math.floor(state.mana * 0.5);
       if(drain > 0){
         state.mana -= drain;
-        if(state.mana < state.target) state.quotaMet = false;
+        if(state.mana < state.target){
+          state.quotaMet = false;
+          state.surplusTimer = 0;
+          if(manaFill) manaFill.classList.remove('quota-met');
+          if(manaBarRow) manaBarRow.classList.remove('quota-met');
+          if(orderPanelShell) orderPanelShell.classList.remove('quota-met');
+          if(fulfillBtn){
+            fulfillBtn.classList.remove('show');
+            fulfillBtn.classList.remove('surplus-urgent');
+          }
+          if(cauldron) cauldron.classList.remove('surplus-urgent');
+        }
         const goldGained = Math.max(1, Math.floor(drain / getSurplusGoldDivisor()));
         bumpGold(goldGained);
         spawnFloatNumber('+' + fmt(goldGained) + ' GOLD CONVERTED!', 'gold', 50, 22);
@@ -4205,6 +4290,8 @@
     sanctumReturnTo = null;
     closeSanctumConfirm(false);
     closeSanctum();
+    document.body.classList.remove('sanctum-confirm-open');
+    setBgmDucked(false);
     updateCauldronVisuals();
     updateUI();
     syncVolumeUI();
@@ -4221,6 +4308,7 @@
     state.clickCountRun = 0;
     state.mana = 0;
     state.quotaMet = false;
+    state.surplusTimer = 0;
     state.stirFrenzyTimer = 0;
     state.moltenEmberTimer = 0;
     state.timeFreezeTimer = 0;
@@ -4891,6 +4979,7 @@
 
   function pauseForSanctumPrompt(){
     stopStirHold();
+    document.body.classList.add('sanctum-confirm-open');
     if(!isPaused){
       isPaused = true;
       sanctumConfirmHeldPause = true;
@@ -4900,15 +4989,17 @@
     setBgmDucked(true);
   }
   function resumeAfterSanctumPrompt(){
-    if(sanctumConfirmHeldPause){
+    document.body.classList.remove('sanctum-confirm-open');
+    if(sanctumConfirmHeldPause || (isPaused && (!pauseOverlay || pauseOverlay.classList.contains('hidden')))){
       sanctumConfirmHeldPause = false;
       isPaused = false;
       document.body.classList.remove('game-paused');
       setPauseButtonIcon();
-      setBgmDucked(false);
     } else {
-      setBgmDucked(false);
+      sanctumConfirmHeldPause = false;
     }
+    const pauseStillOpen = pauseOverlay && !pauseOverlay.classList.contains('hidden');
+    if(!pauseStillOpen) setBgmDucked(false);
   }
 
   function openSanctumConfirm(){
@@ -4920,6 +5011,7 @@
   function closeSanctumConfirm(resumeRun){
     if(!sanctumConfirmOverlay) return;
     sanctumConfirmOverlay.classList.add('hidden');
+    document.body.classList.remove('sanctum-confirm-open');
     if(resumeRun) resumeAfterSanctumPrompt();
     else {
       sanctumConfirmHeldPause = false;
@@ -5081,20 +5173,20 @@
 
       if(grimoireTab === 'corrupted'){
         const seen = isCorruptedDiscovered(r.id);
-        const ownedCorrupt = isRelicCorrupted(r.id);
-        const rec = ownedCorrupt ? getRelicRecord(r.id) : ((state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null);
+        const catalog = (state && state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null;
         card.className = 'compendium-card' + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
         if(seen){
-          const lv = ownedCorrupt ? getRelicLevel(r.id) : 1;
-          const overlay = rec ? { corrupted:true, curseType: rec.curseType, boonMult: rec.boonMult } : { corrupted:true };
-          const stats = getRelicStats(r.id, lv, overlay);
+          const overlay = catalog
+            ? { corrupted:true, curseType: catalog.curseType, boonMult: catalog.boonMult }
+            : { corrupted:true };
+          const stats = getRelicStats(r.id, 1, overlay);
           const tagsHtml = (r.tags||[]).map(t => {
             const info = TAG_INFO[t];
             return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
           }).join('');
           card.innerHTML = `
             <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-            <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span> ${ownedCorrupt ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
+            <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span></div>
             <div class="rTags">${tagsHtml}</div>
             <div class="cDesc">${r.desc}</div>
             ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Swollen Boon: ' + stats.summary + (stats.boonMult ? ' (x' + stats.boonMult.toFixed(2) + ')' : '') + '</div>' : ''}
@@ -5118,14 +5210,13 @@
           const info = TAG_INFO[t];
           return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
         }).join('');
-        const lv = getRelicLevel(r.id);
-        const stats = lv > 0 ? getRelicStats(r.id, lv, { corrupted:false }) : null;
+        const stats = getRelicStats(r.id, 1, { corrupted:false });
         card.innerHTML = `
           <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-          <div class="cName">${getRelicDisplayName(r.id, false)}${lv > 0 ? ' <span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
+          <div class="cName">${getRelicDisplayName(r.id, false)}</div>
           <div class="rTags">${tagsHtml}</div>
           <div class="cDesc">${r.desc}</div>
-          ${stats ? '<div class="cDesc relic-lv-badge">Now: ' + stats.summary + '</div>' : ''}
+          ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Baseline: ' + stats.summary + '</div>' : ''}
         `;
       } else {
         card.innerHTML = `
@@ -5289,6 +5380,7 @@
       });
       if(typeof state.magmaGeodeTriggered !== 'boolean') state.magmaGeodeTriggered = state.mana >= (state.target || 1) * 0.5;
       if(typeof state.secondBreathUsed !== 'boolean') state.secondBreathUsed = false;
+      if(typeof state.surplusTimer !== 'number') state.surplusTimer = 0;
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
         const m = state.mana || 0;
@@ -5306,6 +5398,8 @@
       gameoverOverlay.classList.add('hidden');
       pauseOverlay.classList.add('hidden');
       if(compendiumOverlay) compendiumOverlay.classList.add('hidden');
+      closeSanctumConfirm(false);
+      document.body.classList.remove('sanctum-confirm-open');
 
       if(state.phase === 'shop'){
         shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
@@ -5411,6 +5505,17 @@
       }
 
       if(state.phase === 'brewing'){
+        if(state.mana >= state.target){
+          state.surplusTimer = (state.surplusTimer || 0) + dt;
+          if(state.surplusTimer >= SURPLUS_AUTO_FINISH){
+            succeedRound();
+          }
+        } else {
+          state.surplusTimer = 0;
+        }
+      }
+
+      if(state.phase === 'brewing'){
         if(state.timeFreezeTimer <= 0){
           let timerDt = dt;
           if(hasTagTier('frost', 1)) timerDt *= 0.8; // Frost Tier (4): Chill State
@@ -5455,6 +5560,8 @@
   cauldron.addEventListener('pointerleave', stopStirHold);
   cauldron.addEventListener('pointercancel', stopStirHold);
   window.addEventListener('pointerup', stopStirHold);
+  window.addEventListener('pointercancel', stopStirHold);
+  window.addEventListener('pointerleave', stopStirHold);
   buyStirBtn.addEventListener('click', buyStir);
   buyBubbleBtn.addEventListener('click', buyBubble);
   fulfillBtn.addEventListener('click', cashOutNow);
@@ -5517,7 +5624,17 @@
   if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', () => openSanctum('gameover'));
   if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);
   if(sanctumForfeitBtn) sanctumForfeitBtn.addEventListener('click', confirmSanctumForfeit);
-  if(sanctumStayBtn) sanctumStayBtn.addEventListener('click', stayAndBrew);
+  if(sanctumStayBtn) sanctumStayBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    stayAndBrew();
+  });
+  if(sanctumConfirmOverlay){
+    sanctumConfirmOverlay.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    sanctumConfirmOverlay.addEventListener('click', function(e){
+      if(e.target === sanctumConfirmOverlay) stayAndBrew();
+    });
+  }
 
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
