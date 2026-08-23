@@ -1019,14 +1019,52 @@
        - Bubble Clusters   (.liq-bubble, clustered) organic varied-size bubbles
        - Stardust / Glint (.fx-stardust)          twinkling 4-point pixel stars
   */
-  .fx-flame{
-    border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
-    background: radial-gradient(circle at 45% 30%, #ffe0a3 0%, #ff8a3d 55%, #d1400f 100%);
-    animation: flameRise 1s ease-out forwards;
+  .fx-flame-tongue{
+    border-radius: 0;
+    background: #ffaa14;
+    box-shadow:
+      0 -2px 0 0 #fff7b8,
+      -2px 0 0 0 #ff6200,
+      2px 0 0 0 #ff6200,
+      0 2px 0 0 #b81400;
+    animation: pixelFlameMorph 0.9s steps(4) forwards;
   }
-  @keyframes flameRise{
-    0%{ transform: translate3d(0, 0, 0) scale(0.7); opacity:0.95; }
-    100%{ transform: translate3d(var(--sway,0px), -90px, 0) scale(0.4); opacity:0; }
+  @keyframes pixelFlameMorph{
+    0%{
+      transform: translate3d(0, 0, 0) scale(0.6);
+      opacity: 0.2;
+      background: #ff5500;
+    }
+    25%{
+      opacity: 1;
+      transform: translate3d(calc(var(--sway, 0px) * 0.3), -18px, 0) scale(1.2);
+      background: #ffc42e;
+      box-shadow: 0 -3px 0 0 #ffffff, -3px 0 0 0 #ff7700, 3px 0 0 0 #ff7700, 0 3px 0 0 #d91b00;
+    }
+    60%{
+      opacity: 0.85;
+      transform: translate3d(calc(var(--sway, 0px) * 0.7), -48px, 0) scale(0.9);
+      background: #ff6a00;
+      box-shadow: 0 -2px 0 0 #ffd043, -2px 0 0 0 #d91b00, 2px 0 0 0 #d91b00, 0 2px 0 0 #7a0c02;
+    }
+    100%{
+      opacity: 0;
+      transform: translate3d(var(--sway, 0px), -78px, 0) scale(0.3);
+      background: #7a0c02;
+      box-shadow: none;
+    }
+  }
+  .fx-ember-spark{
+    border-radius: 0;
+    background: #fff8bd;
+    box-shadow: 0 0 2px #ffb41d, 0 0 5px #e8360f;
+    animation: emberDriftSteps 1.2s steps(5) forwards;
+  }
+  @keyframes emberDriftSteps{
+    0%{ transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+    40%{ transform: translate3d(calc(var(--sx, 0px) * 0.4), -32px, 0) scale(1.2); background: #ffaa14; }
+    80%{ transform: translate3d(calc(var(--sx, 0px) * 0.8), -62px, 0) scale(0.8); background: #d92407; opacity: 0.7; }
+    100%{ transform: translate3d(var(--sx, 0px), var(--sy, -85px), 0) scale(0.2); opacity: 0; }
   }
 
   .fx-smoke{
@@ -2673,7 +2711,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2.3</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2730,7 +2768,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2.3</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2810,7 +2848,19 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.3 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Fire now flickers in chunky 16-bit pixel clusters, with bright ember flecks dancing around each rising flame.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.2</div>
+        <ul class="changelog-list">
+          <li>Fire relics now throw jagged pixel flame tongues and tiny rising embers from the brew instead of soft orange droplets.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.1</div>
         <ul class="changelog-list">
           <li>The cauldron's colored glow no longer washes over the Stirring Power, Bubbler, and Ingredient Charm buttons.</li>
         </ul>
@@ -5448,14 +5498,27 @@
     const scale = particleSizeScale();
     for(let i = 0; i < n; i++){
       const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-      const size = Math.round((10 + Math.floor(Math.random() * 12)) * scale);
-      spawnEl(fxLayer, 'px-particle fx-flame', {
+      const size = 6 + Math.floor(Math.random() * 4);
+      spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
         left: p.x + '%',
         top: p.y + '%',
         width: size + 'px',
         height: size + 'px',
         '--sway': ((Math.random() - 0.5) * 90 * scale) + 'px'
-      }, 1100);
+      }, 950);
+      const flecks = 2 + Math.floor(Math.random() * 2);
+      for(let e = 0; e < flecks; e++){
+        const ep = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        const es = 2 + Math.floor(Math.random() * 3);
+        spawnEl(fxLayer, 'px-particle fx-ember-spark', {
+          left: ep.x + '%',
+          top: ep.y + '%',
+          width: es + 'px',
+          height: es + 'px',
+          '--sx': ((Math.random() - 0.5) * 80 * scale) + 'px',
+          '--sy': (-70 - Math.random() * 45) + 'px'
+        }, 1250);
+      }
     }
   }
 
@@ -5556,12 +5619,27 @@
       if(particleChance(0.55)){
         withAmbientBursts(function(){
           const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(10 * scale);
-          spawnEl(fxLayer, 'px-particle fx-flame', {
+          const size = 6 + Math.floor(Math.random() * 4);
+          spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
             left:p.x+'%', top:p.y+'%',
             width:size+'px', height:size+'px',
-            '--sway': ((Math.random()-0.5)*40*scale)+'px'
-          }, 1050);
+            '--sway': ((Math.random() - 0.5) * 45 * scale) + 'px'
+          }, 950);
+        });
+      }
+      if(particleChance(0.7)){
+        withAmbientBursts(function(){
+          const flecks = 2 + Math.floor(Math.random() * 3);
+          for(let i = 0; i < flecks; i++){
+            const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+            const size = 2 + Math.floor(Math.random() * 3);
+            spawnEl(fxLayer, 'px-particle fx-ember-spark', {
+              left:p.x+'%', top:p.y+'%',
+              width:size+'px', height:size+'px',
+              '--sx': ((Math.random() - 0.5) * 50 * scale) + 'px',
+              '--sy': (-70 - Math.random() * 40) + 'px'
+            }, 1250);
+          }
         });
       }
       if(particleChance(0.35)){
@@ -5882,14 +5960,27 @@
     const scale = particleSizeScale();
     for(let i = 0; i < n; i++){
       const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-      const size = Math.round((8 + Math.floor(Math.random() * 10)) * scale);
-      spawnEl(fxLayer, 'px-particle fx-flame', {
+      const size = 6 + Math.floor(Math.random() * 4);
+      spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
         left: p.x + '%',
         top: p.y + '%',
         width: size + 'px',
         height: size + 'px',
         '--sway': ((Math.random() - 0.5) * 70 * scale) + 'px'
-      }, 1000);
+      }, 950);
+      const flecks = 2 + Math.floor(Math.random() * 2);
+      for(let e = 0; e < flecks; e++){
+        const ep = cauldronToLayerPct(brewMouthX(), brewMouthY());
+        const es = 2 + Math.floor(Math.random() * 3);
+        spawnEl(fxLayer, 'px-particle fx-ember-spark', {
+          left: ep.x + '%',
+          top: ep.y + '%',
+          width: es + 'px',
+          height: es + 'px',
+          '--sx': ((Math.random() - 0.5) * 60 * scale) + 'px',
+          '--sy': (-65 - Math.random() * 40) + 'px'
+        }, 1250);
+      }
     }
   }
 
