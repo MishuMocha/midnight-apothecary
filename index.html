@@ -71,13 +71,144 @@
   }
 
   #bgSky{
-    position:fixed; inset:0; z-index:0;
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+    image-rendering:auto;
     background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 4px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 4px),
-      radial-gradient(ellipse at 22% 18%, rgba(130,70,210,0.30), transparent 55%),
-      radial-gradient(ellipse at 82% 85%, rgba(244,184,96,0.09), transparent 50%),
-      linear-gradient(180deg, #0d0716 0%, #170f28 50%, #09050f 100%);
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 4px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, transparent 1px, transparent 4px),
+      linear-gradient(180deg, #0a0614 0%, #140c24 46%, #0b0712 100%);
+  }
+  #bgSky *{ image-rendering:auto; }
+  #bgSky .bg-haze,
+  #bgSky .bg-moon,
+  #bgSky .bg-stars{
+    position:absolute; pointer-events:none;
+  }
+  #bgSky .bg-haze{
+    border-radius:50%;
+    filter:none;
+  }
+  #bgSky .bg-haze-a{
+    width:78vw; height:62vh; left:-16%; top:-8%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(132,72,214,0.40) 0%, rgba(86,42,160,0.16) 46%, transparent 74%);
+    animation: bgHazeA 34s ease-in-out infinite alternate;
+  }
+  #bgSky .bg-haze-b{
+    width:70vw; height:58vh; right:-18%; bottom:-12%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(244,184,96,0.16) 0%, rgba(96,52,150,0.18) 42%, transparent 74%);
+    animation: bgHazeB 42s ease-in-out infinite alternate;
+  }
+  #bgSky .bg-haze-c{
+    width:56vw; height:40vh; left:22%; top:38%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(74,120,210,0.14) 0%, transparent 70%);
+    animation: bgHazeC 38s ease-in-out infinite alternate;
+  }
+  #bgSky .bg-moon{
+    top:9%; left:2%;
+    width:40px; height:40px; border-radius:50%;
+    background:
+      radial-gradient(circle at 36% 32%, rgba(255,244,214,0.85) 0%, rgba(236,206,140,0.36) 38%, rgba(244,184,96,0.10) 58%, transparent 72%);
+    box-shadow: 0 0 24px 7px rgba(244,184,96,0.12);
+    opacity:0.5;
+    animation: bgMoonBreathe 12s ease-in-out infinite alternate;
+  }
+  #bgSky .bg-stars{
+    inset:0;
+    background-repeat:no-repeat;
+  }
+  #bgSky .bg-stars-a{
+    opacity:0.7;
+    animation: bgStarTwinkleA 7s ease-in-out infinite alternate, bgStarDriftA 90s linear infinite alternate;
+    background-image:
+      radial-gradient(2px 2px at 8% 14%, rgba(255,245,230,0.95) 0%, transparent 100%),
+      radial-gradient(2px 2px at 15% 41%, rgba(220,200,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 22% 8%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(2px 2px at 27% 63%, rgba(210,190,255,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 34% 22%, rgba(255,236,200,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 41% 77%, rgba(230,220,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 11%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(2px 2px at 53% 49%, rgba(214,198,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 61% 18%, rgba(255,244,220,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 67% 71%, rgba(200,188,255,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 73% 33%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 79% 6%, rgba(236,214,170,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 84% 58%, rgba(220,200,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 91% 24%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(2px 2px at 6% 82%, rgba(210,195,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 19% 91%, rgba(255,240,210,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 38% 94%, rgba(230,220,255,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 56% 86%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 88% 89%, rgba(214,198,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 96% 44%, rgba(255,244,220,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 12% 55%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 31% 37%, rgba(220,200,255,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 45% 29%, rgba(255,236,200,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 48%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 93% 72%, rgba(210,190,255,0.6) 0%, transparent 100%);
+  }
+  #bgSky .bg-stars-b{
+    opacity:0.85;
+    animation: bgStarTwinkleB 9s ease-in-out infinite alternate, bgStarDriftB 110s linear infinite alternate;
+    background-image:
+      radial-gradient(2.4px 2.4px at 11% 19%, rgba(255,248,230,1) 0%, transparent 100%),
+      radial-gradient(2px 2px at 25% 47%, rgba(226,210,255,0.85) 0%, transparent 100%),
+      radial-gradient(2.4px 2.4px at 36% 9%, rgba(255,255,255,0.95) 0%, transparent 100%),
+      radial-gradient(2px 2px at 44% 61%, rgba(244,184,96,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 58% 27%, rgba(220,200,255,0.8) 0%, transparent 100%),
+      radial-gradient(2.4px 2.4px at 64% 81%, rgba(255,244,214,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 76% 15%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(2px 2px at 82% 52%, rgba(210,190,255,0.7) 0%, transparent 100%),
+      radial-gradient(2.4px 2.4px at 90% 37%, rgba(255,236,200,0.9) 0%, transparent 100%),
+      radial-gradient(2px 2px at 4% 33%, rgba(230,220,255,0.65) 0%, transparent 100%),
+      radial-gradient(2px 2px at 17% 68%, rgba(255,255,255,0.75) 0%, transparent 100%),
+      radial-gradient(2px 2px at 49% 4%, rgba(244,184,96,0.55) 0%, transparent 100%),
+      radial-gradient(2px 2px at 69% 92%, rgba(220,200,255,0.65) 0%, transparent 100%),
+      radial-gradient(2.4px 2.4px at 86% 78%, rgba(255,255,255,0.85) 0%, transparent 100%),
+      radial-gradient(2px 2px at 29% 85%, rgba(236,214,170,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 52% 39%, rgba(210,190,255,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 74% 64%, rgba(255,248,230,0.75) 0%, transparent 100%);
+  }
+  @keyframes bgHazeA{
+    0%{ transform:translate(0,0) scale(1); opacity:0.72; }
+    100%{ transform:translate(7vw, 4vh) scale(1.06); opacity:1; }
+  }
+  @keyframes bgHazeB{
+    0%{ transform:translate(0,0) scale(1.04); opacity:0.85; }
+    100%{ transform:translate(-6vw, -3vh) scale(1); opacity:0.6; }
+  }
+  @keyframes bgHazeC{
+    0%{ transform:translate(-3vw, 2vh) scale(1); opacity:0.45; }
+    100%{ transform:translate(4vw, -2vh) scale(1.08); opacity:0.8; }
+  }
+  @keyframes bgMoonBreathe{
+    0%{ opacity:0.32; transform:scale(0.96); }
+    100%{ opacity:0.52; transform:scale(1.04); }
+  }
+  @keyframes bgStarTwinkleA{
+    0%{ opacity:0.4; }
+    100%{ opacity:0.85; }
+  }
+  @keyframes bgStarTwinkleB{
+    0%{ opacity:0.9; }
+    100%{ opacity:0.4; }
+  }
+  @keyframes bgStarDriftA{
+    0%{ transform:translate(0,0); }
+    100%{ transform:translate(-2vw, 1.2vh); }
+  }
+  @keyframes bgStarDriftB{
+    0%{ transform:translate(0,0); }
+    100%{ transform:translate(1.6vw, -1vh); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #bgSky .bg-haze,
+    #bgSky .bg-moon,
+    #bgSky .bg-stars{ animation:none !important; }
+    #bgSky .bg-haze-a{ opacity:0.85; }
+    #bgSky .bg-haze-b{ opacity:0.7; }
+    #bgSky .bg-stars-a{ opacity:0.5; }
+    #bgSky .bg-stars-b{ opacity:0.6; }
+    #bgSky .bg-moon{ opacity:0.4; }
   }
 
   #ambientSparkles{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; contain: layout paint style; }
@@ -1926,7 +2057,9 @@
 
   /* ---------- PAUSE STATE: FREEZE ALL AMBIENT/PARTICLE ANIMATIONS ---------- */
   body.game-paused #app *,
-  body.game-paused #ambientSparkles *{
+  body.game-paused #ambientSparkles *,
+  body.game-paused #bgSky,
+  body.game-paused #bgSky *{
     animation-play-state: paused !important;
   }
 
@@ -2397,7 +2530,14 @@
 </defs>
 </svg>
 
-<div id="bgSky"></div>
+<div id="bgSky" aria-hidden="true">
+  <div class="bg-haze bg-haze-a"></div>
+  <div class="bg-haze bg-haze-b"></div>
+  <div class="bg-haze bg-haze-c"></div>
+  <div class="bg-moon"></div>
+  <div class="bg-stars bg-stars-a"></div>
+  <div class="bg-stars bg-stars-b"></div>
+</div>
 <div id="ambientSparkles"></div>
 <div id="crtLayer"></div>
 
@@ -2486,7 +2626,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.0.2</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.0.3</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2543,7 +2683,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.0.2</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.0.3</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2623,7 +2763,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.2 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.3 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The night behind the cauldron now slowly drifts — faint stars twinkle, purple haze rolls past, and a quiet moon breathes in the corner without crowding the brew.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.2</div>
         <ul class="changelog-list">
           <li>Each new order's Mana Essence quota now rounds to a cleaner hundred — 3,325 becomes 3,300, and 7,347 becomes 7,300.</li>
         </ul>
