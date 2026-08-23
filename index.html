@@ -1534,7 +1534,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1581,7 +1581,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1634,7 +1634,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Winter's Grasp no longer refreshes a freeze that is already running, so a crit streak can't lock the deadline forever.</li>
+          <li>No freeze — relic, charm, or otherwise — can hold the deadline longer than 4 seconds.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21</div>
         <ul class="changelog-list">
           <li>Opening the Sanctum mid-brew or from the shop now asks you to abandon the run. Confirming banks your Mana Shards and ends the brew; staying puts you right back to work.</li>
           <li>After a retreat, closing the Sanctum returns you to the main menu, ready to start a new brew.</li>
@@ -2465,7 +2472,11 @@
     const lv = getTalentLevel(talent.id);
     return Math.round(talent.baseCost * Math.pow(talent.costGrowth, lv));
   }
+  const MAX_FREEZE_TIME = 4.0;
   function getFreezeBonus(){ return 0.5 * getTalentLevel('stasisMastery'); }
+  function clampFreeze(seconds){
+    return clamp(Number(seconds) || 0, 0, MAX_FREEZE_TIME);
+  }
   function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
   function getShopOfferCount(){ return 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0); }
   function getCareerBestOrder(){
@@ -3813,7 +3824,7 @@
     marks.forEach(m => {
       if(!state.glacialMilestones[m.key] && state.mana >= quota * m.pct){
         state.glacialMilestones[m.key] = true;
-        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, (getRelicStats('glacialCore').freezeSec || 2.0) + getFreezeBonus());
+        state.timeFreezeTimer = clampFreeze(Math.max(state.timeFreezeTimer || 0, (getRelicStats('glacialCore').freezeSec || 2.0) + getFreezeBonus()));
         spawnFloatNumber('FROSTBITE!', 'crit', 50, 22);
       }
     });
@@ -3952,13 +3963,10 @@
     }
     if(crit && hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
       const grasp = getRelicStats('wintersGrasp');
-      const bonus = getFreezeBonus();
-      const cap = (grasp.freezeCap || 1.0) + bonus;
-      const add = (grasp.freezeAdd || 0.5) + bonus;
-      if((state.timeFreezeTimer || 0) <= cap){
-        state.timeFreezeTimer = Math.min(cap, (state.timeFreezeTimer || 0) + add);
+      if((state.timeFreezeTimer || 0) <= 0){
+        state.timeFreezeTimer = clampFreeze((grasp.freezeAdd || 0.5) + getFreezeBonus());
+        state.wintersGraspCooldown = grasp.icd || 1.0;
       }
-      state.wintersGraspCooldown = grasp.icd || 1.0;
     }
 
     addMana(power, true);
@@ -4062,7 +4070,7 @@
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
     } else if(id === 'timeFreeze'){
-      const freeze = 3 + getFreezeBonus();
+      const freeze = clampFreeze(3 + getFreezeBonus());
       state.timeFreezeTimer = freeze;
       state.activeCharmTimeFreezeTimer = freeze;
       spawnFloatNumber('STASIS LOCK!', 'crit', 50, 22);
@@ -5306,7 +5314,7 @@
           }
         });
       }
-      if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
+      if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, Math.min(MAX_FREEZE_TIME, state.timeFreezeTimer - dt));
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
 
