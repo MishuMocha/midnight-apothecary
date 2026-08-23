@@ -159,35 +159,16 @@
     display:flex; flex-direction:column; align-items:flex-start; gap:6px;
     min-width:0; flex:1 1 auto;
   }
-  #roundLabel{ font-size:0.65rem; color:var(--amber-glow); line-height:1.4; white-space:nowrap; }
+  #roundLabel{ font-size:0.65rem; color:var(--amber-glow); line-height:1.4; white-space:nowrap; min-height:1.4em; }
   #roundLabel.boss-round{
     color:#ffe37a;
-    white-space:normal;
+    white-space:nowrap;
     text-shadow: 0 0 8px rgba(255, 70, 60, 0.75), 0 0 2px #7a120c;
     animation: bossTitlePulse 1.15s ease-in-out infinite alternate;
   }
   @keyframes bossTitlePulse{
     0%{ filter:brightness(0.92); text-shadow: 0 0 6px rgba(255, 70, 60, 0.5); }
     100%{ filter:brightness(1.18); text-shadow: 0 0 12px rgba(255, 200, 80, 0.85), 0 0 8px rgba(255, 70, 60, 0.8); }
-  }
-  #affixBanner{
-    display:none;
-    max-width:100%;
-    padding:3px 8px;
-    font-size:0.4rem;
-    line-height:1.4;
-    letter-spacing:0.4px;
-    color:var(--amber);
-    background:rgba(90, 47, 18, 0.72);
-    border:2px solid #000;
-    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
-    cursor:pointer;
-  }
-  #affixBanner.show{ display:inline-flex; align-items:center; gap:5px; }
-  #affixBanner.affix-boss{
-    color:#ffe37a;
-    background:rgba(90, 16, 18, 0.82);
-    box-shadow: inset 1px 1px 0 rgba(255,210,122,0.25), 0 0 8px rgba(255,70,60,0.45);
   }
   .top-actions{
     display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap;
@@ -501,7 +482,7 @@
     50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.55), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 8px rgba(255,80,90,0.35); filter:brightness(1.28); }
   }
 
-  /* ---------- CAULDRON STAGE + RELIC RAIL ---------- */
+  /* ---------- CAULDRON STAGE + RELIC / MODIFIER RAILS ---------- */
   #stageRow {
     position: relative;
     flex: 1;
@@ -512,6 +493,55 @@
     justify-content: space-between;
     gap: 10px;
     margin: 8px 0;
+  }
+  #modifierTray {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    flex: 0 0 64px;
+    width: 64px;
+    align-self: stretch;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 6px 3px 8px;
+    pointer-events: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--amber) #0c0614;
+  }
+  #modifierTray::-webkit-scrollbar{ width:6px; }
+  #modifierTray::-webkit-scrollbar-track{
+    background:#0c0614;
+    border:2px solid #000;
+  }
+  #modifierTray::-webkit-scrollbar-thumb{
+    background: var(--amber);
+    border:2px solid #000;
+  }
+  #affixBadge{
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--amber);
+    background: radial-gradient(circle at 50% 50%, rgba(244,184,96,0.2) 0%, var(--purple-mid) 85%);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    cursor: pointer;
+  }
+  #affixBadge .icon{ width:28px; height:28px; }
+  #affixBadge.is-boss{
+    border: 3px solid #ff4d6a;
+    background: radial-gradient(circle at 50% 50%, rgba(255,77,106,0.3) 0%, #3a0810 85%);
+    box-shadow: 0 0 12px rgba(255,77,106,0.6);
+    animation: bossBadgePulse 1.4s ease-in-out infinite;
+  }
+  @keyframes bossBadgePulse{
+    0%{ box-shadow: 0 0 8px rgba(255,77,106,0.35); filter:brightness(0.95); }
+    100%{ box-shadow: 0 0 16px rgba(255,77,106,0.85); filter:brightness(1.18); }
   }
   #cauldronStage {
     position: relative;
@@ -1610,15 +1640,20 @@
     #consumablesPanel{ padding:12px 16px; }
     #relicTray .relic-badge{ width:50px; height:50px; }
     #relicTray .relic-badge .icon{ width:30px; height:30px; }
+    #affixBadge{ width:50px; height:50px; }
+    #affixBadge .icon{ width:30px; height:30px; }
   }
   @media (max-width: 560px){
-    #relicTray{
+    #relicTray,
+    #modifierTray{
       flex: 0 0 52px;
       width: 52px;
       gap: 6px;
     }
     #relicTray .relic-badge{ width:38px; height:38px; padding:2px; }
     #relicTray .relic-badge .icon{ width:22px; height:22px; }
+    #affixBadge{ width:38px; height:38px; }
+    #affixBadge .icon{ width:22px; height:22px; }
   }
 </style>
 </head>
@@ -1822,7 +1857,6 @@
   <div id="topbar" class="pixel-panel">
     <div class="topbar-left">
       <div id="roundLabel">ORDER 1</div>
-      <div id="affixBanner" class="hidden"></div>
       <div id="keystoneHud" class="hidden"></div>
       <div id="mainSynergyRow" class="tag-row"></div>
     </div>
@@ -1858,6 +1892,9 @@
   </div>
 
   <div id="stageRow">
+    <div id="modifierTray" class="hidden">
+      <div id="affixBadge" class="hidden"></div>
+    </div>
     <div id="cauldronStage">
       <div id="cauldronAura"></div>
       <div id="cauldron">
@@ -1894,7 +1931,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1941,7 +1978,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2016,7 +2053,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Order affixes and Guild Boss mandates now sit as a hoverable badge on the left of the cauldron, instead of a bulky banner under the order title.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27</div>
         <ul class="changelog-list">
           <li>The Sanctum now has Keystone Masteries — six mutually exclusive playstyles with sharp trade-offs. Buy them with shards, then equip only one at a time.</li>
           <li>Alchemy keystones split click-storms from idle bubblers, Chronos keystones trade gold-rush overcharge for glacial time, and Commerce keystones shrink synergy requirements or transmute every charm into essence and gold.</li>
@@ -3104,6 +3147,30 @@
   function getActiveAffixDef(){
     return getAffixDef(state && state.currentAffix);
   }
+  function getAffixIconName(affix){
+    const map = {
+      frostBaron:'frost',
+      grandInquisitor:'skull',
+      midnightEclipse:'moon',
+      denseLiquid:'flask',
+      rapidBoil:'fire',
+      spectralInterference:'arcane',
+      mercurialFlow:'coin',
+    };
+    return (affix && map[affix.id]) || 'sparkle';
+  }
+  function getAffixTooltipHTML(){
+    const affix = getActiveAffixDef();
+    if(!affix) return '';
+    const boss = !!(state && state.isBossOrder);
+    const iconName = getAffixIconName(affix);
+    let html = '<div class="tooltip-title">' + icon(iconName, boss ? 'ic-danger' : 'ic-amber') + ' ' + affix.name + '</div>';
+    html += '<div class="tooltip-desc">' + affix.desc + '</div>';
+    if(boss){
+      html += '<div class="tooltip-line active">' + icon('sparkle','ic-amber') + ' Prevail: +' + BOSS_SHARD_BOUNTY + ' Mana Shards and a free corrupted relic draft.</div>';
+    }
+    return html;
+  }
   function hasAffix(id){
     return !!(state && state.currentAffix === id);
   }
@@ -3186,7 +3253,8 @@
   const $ = (id) => document.getElementById(id);
   function icon(name, cls){ return '<svg class="icon ' + (cls||'') + '"><use href="#icon-' + name + '"></use></svg>'; }
   const roundLabel = $('roundLabel');
-  const affixBanner = $('affixBanner');
+  const modifierTray = $('modifierTray');
+  const affixBadge = $('affixBadge');
   const goldValue = $('goldValue');
   const goldDisplay = $('goldDisplay');
   const relicTray = $('relicTray');
@@ -4721,21 +4789,27 @@
     const affix = getActiveAffixDef();
     const boss = !!(state && state.isBossOrder);
     if(roundLabel){
+      const n = (state && state.round) ? state.round : 1;
       roundLabel.classList.toggle('boss-round', boss);
-      roundLabel.textContent = boss ? ('GUILD BOSS: ORDER ' + state.round) : ('ORDER ' + state.round);
+      roundLabel.textContent = boss ? ('GUILD BOSS: ORDER ' + n) : ('ORDER ' + n);
     }
-    if(affixBanner){
-      if(affix && state && (state.phase === 'brewing' || state.phase === 'shop')){
-        affixBanner.classList.remove('hidden');
-        affixBanner.classList.add('show');
-        affixBanner.classList.toggle('affix-boss', boss);
-        affixBanner.innerHTML = icon(boss ? 'warning' : 'sparkle', boss ? 'ic-danger' : 'ic-amber') + ' ' + affix.name;
-        affixBanner.title = affix.desc;
-      } else {
-        affixBanner.classList.add('hidden');
-        affixBanner.classList.remove('show', 'affix-boss');
-        affixBanner.innerHTML = '';
-        affixBanner.title = '';
+    if(affixBadge){
+      const show = !!(affix && state && (state.phase === 'brewing' || state.phase === 'shop'));
+      affixBadge.classList.toggle('hidden', !show);
+      affixBadge.classList.toggle('is-boss', !!(show && boss));
+      if(modifierTray) modifierTray.classList.toggle('hidden', !show);
+      if(show){
+        const iconName = getAffixIconName(affix);
+        const sig = affix.id + ':' + (boss ? 'boss' : 'affix');
+        if(affixBadge.dataset.sig !== sig){
+          affixBadge.dataset.sig = sig;
+          affixBadge.innerHTML = icon(iconName, boss ? 'ic-danger' : 'ic-amber');
+          affixBadge.setAttribute('aria-label', affix.name);
+        }
+      } else if(affixBadge.dataset.sig){
+        affixBadge.dataset.sig = '';
+        affixBadge.innerHTML = '';
+        affixBadge.removeAttribute('aria-label');
       }
     }
     if(orderPanelShell) orderPanelShell.classList.toggle('boss-order', boss && state.phase === 'brewing');
@@ -5576,42 +5650,57 @@
     lastPointerType = e.pointerType || 'mouse';
   }, true);
 
-  function showHoverTooltip(anchorEl, html, key, preferAbove){
+  function showHoverTooltip(anchorEl, html, key, preferAbove, preferRight){
     if(lastPointerType === 'touch') return;
-    showTooltip(anchorEl, html, key, preferAbove);
+    showTooltip(anchorEl, html, key, preferAbove, preferRight);
   }
   function hideHoverTooltip(){
     if(lastPointerType === 'touch') return;
     hideTooltip();
   }
 
-  function showTooltip(anchorEl, html, key, preferAbove){
+  function showTooltip(anchorEl, html, key, preferAbove, preferRight){
     synergyTooltip.innerHTML = html;
     synergyTooltip.dataset.key = key;
     synergyTooltip.classList.remove('hidden');
     const rect = anchorEl.getBoundingClientRect();
-    synergyTooltip.style.left = rect.left + 'px';
-    synergyTooltip.style.top = (preferAbove ? rect.top - 6 : rect.bottom + 6) + 'px';
+    if(preferRight){
+      synergyTooltip.style.left = (rect.right + 8) + 'px';
+      synergyTooltip.style.top = rect.top + 'px';
+    } else {
+      synergyTooltip.style.left = rect.left + 'px';
+      synergyTooltip.style.top = (preferAbove ? rect.top - 6 : rect.bottom + 6) + 'px';
+    }
     requestAnimationFrame(() => {
       const tw = synergyTooltip.offsetWidth;
       const th = synergyTooltip.offsetHeight;
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      let left = rect.left;
-      if(left + tw > vw - 8) left = vw - tw - 8;
-      if(left < 8) left = 8;
+      let left;
       let top;
-      if(preferAbove){
-        // Charm shelf items sit right above the Buy/Reroll buttons, so
-        // default to opening upward and only fall back to below if there
-        // truly isn't room — this keeps the tooltip from ever covering
-        // the very buttons the player is trying to read about.
-        top = rect.top - th - 6;
-        if(top < 8) top = rect.bottom + 6;
+      if(preferRight){
+        left = rect.right + 8;
+        if(left + tw > vw - 8) left = Math.max(8, rect.left - tw - 8);
+        if(left < 8) left = 8;
+        top = rect.top + Math.round((rect.height - th) / 2);
+        if(top < 8) top = 8;
         if(top + th > vh - 8) top = Math.max(8, vh - th - 8);
       } else {
-        top = rect.bottom + 6;
-        if(top + th > vh - 8) top = Math.max(8, rect.top - th - 6);
+        left = rect.left;
+        if(left + tw > vw - 8) left = vw - tw - 8;
+        if(left < 8) left = 8;
+        if(preferAbove){
+          // Charm shelf items sit right above the Buy/Reroll buttons, so
+          // default to opening upward and only fall back to below if there
+          // truly isn't room — this keeps the tooltip from ever covering
+          // the very buttons the player is trying to read about.
+          top = rect.top - th - 6;
+          if(top < 8) top = rect.bottom + 6;
+          if(top + th > vh - 8) top = Math.max(8, vh - th - 8);
+        } else {
+          top = rect.bottom + 6;
+          if(top + th > vh - 8) top = Math.max(8, rect.top - th - 6);
+        }
       }
       synergyTooltip.style.left = left + 'px';
       synergyTooltip.style.top = top + 'px';
@@ -5623,11 +5712,11 @@
     synergyTooltip.dataset.key = '';
   }
 
-  function toggleTooltip(anchorEl, html, key, preferAbove){
+  function toggleTooltip(anchorEl, html, key, preferAbove, preferRight){
     if(synergyTooltip.dataset.key === key && !synergyTooltip.classList.contains('hidden')){
       hideTooltip();
     } else {
-      showTooltip(anchorEl, html, key, preferAbove);
+      showTooltip(anchorEl, html, key, preferAbove, preferRight);
     }
   }
 
@@ -6720,14 +6809,19 @@
   buyStirBtn.addEventListener('click', buyStir);
   buyBubbleBtn.addEventListener('click', buyBubble);
   fulfillBtn.addEventListener('click', cashOutNow);
-  if(affixBanner){
-    affixBanner.addEventListener('click', (e) => {
+  if(affixBadge){
+    affixBadge.addEventListener('click', (e) => {
       e.stopPropagation();
       const affix = getActiveAffixDef();
       if(!affix) return;
-      const html = '<div class="tooltip-title">' + affix.name + '</div><div class="tooltip-body">' + affix.desc + '</div>';
-      toggleTooltip(affixBanner, html, 'affix-' + affix.id);
+      toggleTooltip(affixBadge, getAffixTooltipHTML(), 'affix-' + affix.id, false, true);
     });
+    affixBadge.addEventListener('mouseenter', () => {
+      const affix = getActiveAffixDef();
+      if(!affix) return;
+      showHoverTooltip(affixBadge, getAffixTooltipHTML(), 'affix-' + affix.id, false, true);
+    });
+    affixBadge.addEventListener('mouseleave', hideHoverTooltip);
   }
   if(keystoneHud){
     keystoneHud.addEventListener('click', (e) => {
