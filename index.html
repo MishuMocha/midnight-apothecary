@@ -1038,7 +1038,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.12</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.13</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1081,7 +1081,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.12</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.13</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1127,7 +1127,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.12 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.13 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Winter's Grasp no longer locks the deadline forever when you tap very quickly — each Critical Surge still chills the clock, but rapid crits can't keep it frozen.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.12</div>
         <ul class="changelog-list">
           <li>A leftover patch of background in the cauldron's handle is gone.</li>
         </ul>
@@ -1574,6 +1580,7 @@
       consumables: consumables,
       stirFrenzyTimer: 0,
       timeFreezeTimer: 0,
+      wintersGraspCooldown: 0,
       unstableBrewClock: 0,
       discoveredRelics: [],
       glacialMilestones: { q25:false, q50:false, q75:false },
@@ -2300,8 +2307,14 @@
     if(hasRelic('moonstone') && state.clickCountRun % 5 === 0){
       power *= 3;
       crit = true;
-      if(hasRelic('wintersGrasp')){
-        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, 0.5);
+      if(hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
+        // Pulse a short freeze without refreshing longer ones (Time Freeze /
+        // Frostbite Surge). Cap grasp's own contribution so rapid crits
+        // cannot hold the deadline at 0.5s forever.
+        if((state.timeFreezeTimer || 0) <= 1.0){
+          state.timeFreezeTimer = Math.min(1.0, (state.timeFreezeTimer || 0) + 0.5);
+        }
+        state.wintersGraspCooldown = 1.0;
       }
     }
 
@@ -2438,6 +2451,7 @@
     state.quotaMet = false;
     state.stirFrenzyTimer = 0;
     state.timeFreezeTimer = 0;
+    state.wintersGraspCooldown = 0;
     state.unstableBrewClock = 0;
     state.glacialMilestones = { q25:false, q50:false, q75:false };
     if(hasRelic('starter')){
@@ -3107,6 +3121,7 @@
 
       if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
+      if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
 
       if(hasRelic('unstableBrew')){
         state.unstableBrewClock = (state.unstableBrewClock || 0) + dt;
