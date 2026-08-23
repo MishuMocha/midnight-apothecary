@@ -267,6 +267,8 @@
   #consumablesPanel{
     width:100%;
     flex-shrink:0;
+    position:relative;
+    z-index:3;
   }
 
   /* ---------- PIXEL PANEL / BUTTON BASE ---------- */
@@ -718,6 +720,7 @@
   /* ---------- CAULDRON STAGE + RELIC / MODIFIER RAILS ---------- */
   #stageRow {
     position: relative;
+    z-index: 1;
     flex: 1;
     width: 100%;
     min-height: 0;
@@ -726,6 +729,7 @@
     justify-content: space-between;
     gap: 10px;
     margin: 8px 0;
+    overflow: hidden;
   }
   #modifierTray {
     display: flex;
@@ -784,7 +788,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden;
   }
   #cauldronAura{
     position:absolute;
@@ -2669,7 +2673,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2726,7 +2730,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2806,7 +2810,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The cauldron's colored glow no longer washes over the Stirring Power, Bubbler, and Ingredient Charm buttons.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2</div>
         <ul class="changelog-list">
           <li>A fourth Midas relic joins the pedestal — the Auric Signet — with its own painted gold-ring icon.</li>
           <li>Every 6th tap, the Signet stamps bonus Gold into your purse, more at higher ranks.</li>
