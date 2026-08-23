@@ -2425,6 +2425,35 @@
   <rect x="11" y="10" width="2" height="2" fill="#ffffff"/>
 </symbol>
 
+<symbol id="icon-phantomLadle" viewBox="0 0 24 24">
+  <path fill="#1a0418" d="M4 7h6v2h1v2h2v2h2v2h3v2h2v3h-3v2h-3v-2h-2v-2H9v-2H7v-2H5V9H4V7z"/>
+  <path fill="#6a2040" d="M5 8h4v2h2v2h2v2h2v2h3v2h-2v1h-2v-2h-2v-2H9v-2H7v-2H5V8z"/>
+  <path fill="#c8c2d4" d="M16 15h2v3h-2v-3z"/>
+  <rect x="16" y="16" width="1" height="2" fill="#ffffff"/>
+  <path fill="#8a8496" d="M14 13h2v2h-1v1h-1v-3z"/>
+  <path fill="#e6004c" d="M5 8h4v2h1v2h2v1H9v-1H7V9H5V8z"/>
+  <path fill="#ff4d6a" d="M6 8h3v2h1v1H8V9H6V8z"/>
+  <rect x="6" y="8" width="2" height="1" fill="#ffb0c8"/>
+  <rect x="4" y="11" width="2" height="2" fill="#f38aff"/>
+  <rect x="10" y="6" width="2" height="2" fill="#ff7099"/>
+  <rect x="18" y="12" width="2" height="2" fill="#ffffff"/>
+</symbol>
+
+<symbol id="icon-pandemoniumDie" viewBox="0 0 24 24">
+  <path fill="#1a0410" d="M8 4h8v2h2v2h2v8h-2v2h-2v2H8v-2H6v-2H4V8h2V6h2V4z"/>
+  <path fill="#7a1028" d="M6 8h4v8H6V8z"/>
+  <path fill="#c41a44" d="M10 8h8v8h-8V8z"/>
+  <path fill="#ff5d7a" d="M8 4h8l2 4H6l2-4z"/>
+  <rect x="11" y="5" width="2" height="2" fill="#ffffff"/>
+  <rect x="7" y="10" width="2" height="2" fill="#ffd6de"/>
+  <rect x="7" y="14" width="2" height="2" fill="#ffd6de"/>
+  <rect x="12" y="10" width="2" height="2" fill="#ffffff"/>
+  <rect x="15" y="13" width="2" height="2" fill="#ffffff"/>
+  <path fill="#ffd27a" d="M14 8h1v3h1v2h-1v2h-1v-7z"/>
+  <rect x="19" y="6" width="2" height="2" fill="#ffffff"/>
+  <rect x="3" y="15" width="2" height="2" fill="#ff7099"/>
+</symbol>
+
 <symbol id="icon-catalyst" viewBox="0 0 24 24">
   <path fill="#24000f" d="M12 1h3v4h3v2h-2v3h4v4h-4v2h3v4h-4v3h-3v-3H9v-2h2v-3H7V9h4V7H9V3h3V1z"/>
   <path fill="#7a0026" d="M12 3h2v3h2v2h-1v2h3v2h-3v2h2v3h-3v2h-2v-2h-1v-2H8v-2h3V9H9V7h2V5h1V3z"/>
@@ -2626,7 +2655,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.0.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2683,7 +2712,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.0.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2763,7 +2792,15 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Two new Chaos relics join the pedestal — the Pandemonium Die and the Phantom Ladle — each with its own painted icon.</li>
+          <li>Every 8th tap, the Die hurls a Chaos Burst of bonus Mana that is not a Critical Surge.</li>
+          <li>The Ladle leaves a ghostly afterimage of each tap that returns half a second later as echoed Mana.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.3</div>
         <ul class="changelog-list">
           <li>The night behind the cauldron now slowly drifts — faint stars twinkle, purple haze rolls past, and a quiet moon breathes in the corner without crowding the brew.</li>
         </ul>
@@ -3519,6 +3556,12 @@
     { id:'catalyst', name:"Volatile Catalyst", icon:'catalyst', cost:26, tags:['chaos'],
       desc:"Mana generated per second is boosted +40% per level.",
       liquidTheme:null, unlockOrder:3 },
+    { id:'pandemoniumDie', name:"Pandemonium Die", icon:'pandemoniumDie', cost:24, tags:['chaos'],
+      desc:"Every 8th tap unleashes a Chaos Burst for 1.2x Click Power as bonus Mana (1.6x at Lv 2, 2.0x at Lv 3). The burst is not a Critical Surge.",
+      liquidTheme:null, unlockOrder:3 },
+    { id:'phantomLadle', name:"Phantom Ladle", icon:'phantomLadle', cost:26, tags:['chaos'],
+      desc:"A ghostly afterimage of each tap returns 0.5s later, echoing 35% of that tap's Mana (50% at Lv 2, 65% at Lv 3).",
+      liquidTheme:null, unlockOrder:4 },
     { id:'ashenSigil', name:"Ashen Sigil", icon:'sigil', cost:22, tags:['fire'],
       desc:"Residual embers linger in the pot, adding +25% Click Power per level to every tap.",
       liquidTheme:null },
@@ -3751,6 +3794,8 @@
       magmaGeodeTriggered: false,
       secondBreathUsed: false,
       siphonCritClock: 0,
+      echoBank: 0,
+      echoTimer: 0,
       currentAffix: null,
       isBossOrder: false,
       lastAffix: null,
@@ -4029,7 +4074,7 @@
   const PAINTED_ICONS = {
     pepper:1, bellows:1, explosion:1, feather:1, sigil:1, cinderbrand:1,
     moon:1, hourglass:1, glacialCore:1, wintersGrasp:1, rimeCaliper:1, permafrostShard:1, absoluteZero:1,
-    whisk:1, crucible:1, starter:1, arcaneConduit:1, bifrost:1, catalyst:1,
+    whisk:1, crucible:1, starter:1, arcaneConduit:1, bifrost:1, catalyst:1, phantomLadle:1, pandemoniumDie:1,
     hoardersScale:1, pawnTicket:1, gildedLedger:1, coin:1
   };
   function icon(name, cls){
@@ -4792,6 +4837,15 @@
         s.mpsPct = 0.4 * lv * boon;
         s.summary = '+' + Math.round(s.mpsPct * 100) + '% Mana/sec';
         break;
+      case 'pandemoniumDie':
+        s.burstEvery = 8;
+        s.burstMult = [0, 1.2, 1.6, 2.0][lv] * boon;
+        s.summary = 'Every 8th tap bursts for ' + s.burstMult.toFixed(1) + 'x Click Power as bonus Mana';
+        break;
+      case 'phantomLadle':
+        s.echoPct = Math.min(1.25, [0, 0.35, 0.50, 0.65][lv] * boon);
+        s.summary = Math.round(s.echoPct * 100) + '% of each tap echoes as Mana 0.5s later';
+        break;
       case 'ashenSigil':
         s.clickPct = 0.25 * lv * boon;
         s.summary = '+' + Math.round(s.clickPct * 100) + '% Click Power';
@@ -5328,6 +5382,24 @@
       left: pos.x + '%', top: pos.y + '%'
     }, 900);
     el.innerHTML = text;
+  }
+
+  function spawnChaosSparks(count){
+    if(getParticleMode() === 'off') return;
+    const n = Math.max(1, count || 3);
+    const scale = particleSizeScale();
+    for(let i = 0; i < n; i++){
+      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+      const size = Math.round((7 + Math.floor(Math.random() * 5)) * scale);
+      spawnEl(fxLayer, 'px-particle fx-violetspark', {
+        left: p.x + '%',
+        top: p.y + '%',
+        width: size + 'px',
+        height: size + 'px',
+        '--sx': ((Math.random() - 0.5) * 130 * scale) + 'px',
+        '--sy': ((Math.random() - 0.5) * 130 * scale) + 'px'
+      }, 650);
+    }
   }
 
   function spawnPhoenixBurst(){
@@ -5928,6 +6000,27 @@
 
     addMana(power, true);
 
+    if(hasRelic('phantomLadle') && power > 0){
+      const echo = getRelicStats('phantomLadle');
+      const pct = (echo.echoPct || 0) * getSynergyMult('chaos');
+      if(pct > 0){
+        state.echoBank = (state.echoBank || 0) + power * pct;
+        if(!(state.echoTimer > 0)) state.echoTimer = 0.5;
+      }
+    }
+    if(hasRelic('pandemoniumDie') && power > 0){
+      const die = getRelicStats('pandemoniumDie');
+      const every = die.burstEvery || 8;
+      if(every > 0 && state.clickCountRun % every === 0){
+        const burst = power * (die.burstMult || 1.2) * getSynergyMult('chaos');
+        if(burst > 0){
+          addMana(burst, true);
+          spawnFloatNumber('CHAOS BURST! +' + fmt(burst * getAlchemicalMasteryMult()), 'crit', xPct, yPct - 24);
+          spawnChaosSparks(4);
+        }
+      }
+    }
+
     if(hasAffix('mercurialFlow') && state.clickCountRun % 5 === 0){
       state.timer = Math.max(0, state.timer - 0.4);
       bumpGold(2);
@@ -6169,6 +6262,8 @@
     state.magmaGeodeTriggered = false;
     state.secondBreathUsed = false;
     state.siphonCritClock = 0;
+    state.echoBank = 0;
+    state.echoTimer = 0;
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * (getRelicStats('starter').quotaPct || 0.10));
       if(state.mana >= state.target){ state.quotaMet = true; }
@@ -7414,6 +7509,8 @@
       if(typeof state.bellowsHeatTimer !== 'number') state.bellowsHeatTimer = 0;
       if(typeof state.bellowsHeatStacks !== 'number') state.bellowsHeatStacks = 0;
       if(typeof state.cinderbrandBurnTimer !== 'number') state.cinderbrandBurnTimer = 0;
+      if(typeof state.echoBank !== 'number') state.echoBank = 0;
+      if(typeof state.echoTimer !== 'number') state.echoTimer = 0;
       if(typeof state.moltenEmberTimer !== 'number') state.moltenEmberTimer = 0;
       if(!Array.isArray(state.charmOffers)) state.charmOffers = [];
       state.charmOffers = state.charmOffers.filter(id => {
@@ -7561,6 +7658,19 @@
         state.bellowsHeatTimer = Math.max(0, state.bellowsHeatTimer - dt);
         if(state.bellowsHeatTimer <= 0) state.bellowsHeatStacks = 0;
       }
+      if((state.echoTimer || 0) > 0){
+        state.echoTimer = Math.max(0, state.echoTimer - dt);
+        if(state.echoTimer <= 0 && (state.echoBank || 0) > 0){
+          const echoAmt = state.echoBank;
+          state.echoBank = 0;
+          addMana(echoAmt, true);
+          if(echoAmt >= 0.5){
+            spawnFloatNumber('ECHO +' + fmt(echoAmt * getAlchemicalMasteryMult()), '', 52, 28);
+            spawnChaosSparks(2);
+          }
+        }
+      }
+
       if((state.cinderbrandBurnTimer || 0) > 0){
         const brand = getRelicStats('cinderbrand');
         const tickPct = brand.burnTickPct || 0;
