@@ -160,6 +160,35 @@
     min-width:0; flex:1 1 auto;
   }
   #roundLabel{ font-size:0.65rem; color:var(--amber-glow); line-height:1.4; white-space:nowrap; }
+  #roundLabel.boss-round{
+    color:#ffe37a;
+    white-space:normal;
+    text-shadow: 0 0 8px rgba(255, 70, 60, 0.75), 0 0 2px #7a120c;
+    animation: bossTitlePulse 1.15s ease-in-out infinite alternate;
+  }
+  @keyframes bossTitlePulse{
+    0%{ filter:brightness(0.92); text-shadow: 0 0 6px rgba(255, 70, 60, 0.5); }
+    100%{ filter:brightness(1.18); text-shadow: 0 0 12px rgba(255, 200, 80, 0.85), 0 0 8px rgba(255, 70, 60, 0.8); }
+  }
+  #affixBanner{
+    display:none;
+    max-width:100%;
+    padding:3px 8px;
+    font-size:0.4rem;
+    line-height:1.4;
+    letter-spacing:0.4px;
+    color:var(--amber);
+    background:rgba(90, 47, 18, 0.72);
+    border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    cursor:pointer;
+  }
+  #affixBanner.show{ display:inline-flex; align-items:center; gap:5px; }
+  #affixBanner.affix-boss{
+    color:#ffe37a;
+    background:rgba(90, 16, 18, 0.82);
+    box-shadow: inset 1px 1px 0 rgba(255,210,122,0.25), 0 0 8px rgba(255,70,60,0.45);
+  }
   .top-actions{
     display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap;
     gap:10px; flex-shrink:0; margin-left:auto;
@@ -332,6 +361,9 @@
     animation: manaHudGlow 0.85s ease-in-out infinite alternate;
   }
   #orderPanel{ position:relative; z-index:1; }
+  #orderPanelShell.boss-order #orderPanel{
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 16px rgba(255, 70, 60, 0.4);
+  }
   .barRow{ margin-bottom:10px; }
   .barRow:last-child{ margin-bottom:0; }
   .barLabelRow{
@@ -502,6 +534,21 @@
   }
   #cauldronStage.no-cauldron-glow #cauldronAura{ display:none; }
   #cauldronStage.no-cauldron-glow #liquidPixel{ box-shadow:none; }
+  #cauldronStage.boss-order::before{
+    content:'';
+    position:absolute;
+    inset:-10% -6%;
+    pointer-events:none;
+    z-index:0;
+    background:
+      radial-gradient(ellipse at 50% 58%, rgba(255, 70, 60, 0.3) 0%, rgba(140, 20, 18, 0.14) 46%, transparent 74%),
+      radial-gradient(ellipse at 50% 100%, rgba(255, 200, 80, 0.2) 0%, transparent 58%);
+    animation: bossAuraPulse 1.8s ease-in-out infinite alternate;
+  }
+  @keyframes bossAuraPulse{
+    0%{ opacity:0.7; }
+    100%{ opacity:1; }
+  }
   #relicTray {
     display: flex;
     flex-direction: column;
@@ -1019,6 +1066,9 @@
     border-color:#8a0e1e;
     box-shadow: 0 0 10px rgba(255,42,75,0.5), inset 0 0 0 1px rgba(255,77,106,0.2);
     background: rgba(120,10,25,0.08);
+  }
+  .relicCard.free-draft{
+    box-shadow: 0 0 12px rgba(255, 210, 122, 0.45), inset 0 0 0 1px rgba(255, 210, 122, 0.25);
   }
   .corrupted-badge{ color:#ff4d6a; font-size:0.42rem; letter-spacing:0.5px; }
   .rCurse, .tooltip-curse{
@@ -1701,6 +1751,7 @@
   <div id="topbar" class="pixel-panel">
     <div class="topbar-left">
       <div id="roundLabel">ORDER 1</div>
+      <div id="affixBanner" class="hidden"></div>
       <div id="mainSynergyRow" class="tag-row"></div>
     </div>
     <div class="top-actions">
@@ -1771,7 +1822,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.25</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.26</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1818,7 +1869,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.25</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.26</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1893,7 +1944,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.25 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.26 (Latest)</div>
+        <ul class="changelog-list">
+          <li>From Order 3 onward, each Guild order can carry a wild affix that twists the brew — doubled stirring, faster boils, silenced crits, or mercurial gold taps.</li>
+          <li>Every fifth order is a Guild Boss with its own mandate, a pulsing crimson title, and a shard bounty plus a free corrupted relic if you prevail.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.25</div>
         <ul class="changelog-list">
           <li>Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfil more orders.</li>
           <li>Sanctum talents cost more, and later nodes stay locked until you have spent enough shards in that branch.</li>
@@ -2636,6 +2694,18 @@
   ];
   const CHARM_SHELF_SLOTS = 3;
   const PHILOSOPHER_STONE_CHANCE = 0.09;
+  const BOSS_SHARD_BOUNTY = 10;
+  const AFFIXES = [
+    { id:'denseLiquid', name:'Dense Sludge', desc:'Stirring Power is doubled, but Enchanted Bubblers generate 0 Mana.' },
+    { id:'rapidBoil', name:'Rapid Boil', desc:'Deadline elapses 30% faster, but surplus Gold conversion is boosted by +50%.' },
+    { id:'spectralInterference', name:'Spectral Interference', desc:'Critical Surge chance is disabled, but passive Bubblers produce +100% Mana.' },
+    { id:'mercurialFlow', name:'Mercurial Flow', desc:'Every 5th tap drains 0.4s from the deadline, but awards +2 Gold.' },
+  ];
+  const BOSS_ORDERS = [
+    { id:'frostBaron', name:"The Frost Baron's Mandate", desc:'Deadline freeze effects are reduced by 50%; Quota is +30% higher.' },
+    { id:'grandInquisitor', name:"The Grand Inquisitor's Tithe", desc:'In-round upgrades cost 50% more Mana; tapping has a 10% chance to scatter 1 Gold from the pot.' },
+    { id:'midnightEclipse', name:'Eclipse of the Midnight Guild', desc:'Base deadline is locked to 20s, but all Ingredient Charms have 0s cooldown.' },
+  ];
 
   const META_SAVE_KEY = 'apothecary_meta_v1';
   const SHARDS_PER_MANA = 6000;
@@ -2762,6 +2832,9 @@
       cinderbrandBurnTimer: 0,
       magmaGeodeTriggered: false,
       secondBreathUsed: false,
+      currentAffix: null,
+      isBossOrder: false,
+      lastAffix: null,
     };
   }
 
@@ -2886,8 +2959,50 @@
   }
   const MAX_FREEZE_TIME = 4.0;
   function getFreezeBonus(){ return 0.5 * getTalentLevel('stasisMastery'); }
+  function getAffixDef(id){
+    if(!id) return null;
+    return AFFIXES.find(a => a.id === id) || BOSS_ORDERS.find(a => a.id === id) || null;
+  }
+  function getActiveAffixDef(){
+    return getAffixDef(state && state.currentAffix);
+  }
+  function hasAffix(id){
+    return !!(state && state.currentAffix === id);
+  }
+  function getBossDefForRound(round){
+    if(!round || round % 5 !== 0) return null;
+    return BOSS_ORDERS[(Math.floor(round / 5) - 1) % BOSS_ORDERS.length];
+  }
+  function rollOrderAffix(){
+    if(!state) return;
+    const prev = state.currentAffix;
+    state.isBossOrder = false;
+    state.currentAffix = null;
+    const boss = getBossDefForRound(state.round);
+    if(boss){
+      state.isBossOrder = true;
+      state.currentAffix = boss.id;
+      return;
+    }
+    if(state.round >= 3 && AFFIXES.length){
+      let pool = AFFIXES;
+      if(prev){
+        const filtered = AFFIXES.filter(a => a.id !== prev);
+        if(filtered.length) pool = filtered;
+      }
+      state.currentAffix = pool[Math.floor(Math.random() * pool.length)].id;
+      state.lastAffix = state.currentAffix;
+    }
+  }
+  function applyAffixOrderTarget(target){
+    let t = target;
+    if(hasAffix('frostBaron')) t = Math.floor(t * 1.3);
+    return t;
+  }
   function clampFreeze(seconds){
-    return clamp(Number(seconds) || 0, 0, MAX_FREEZE_TIME);
+    let s = Number(seconds) || 0;
+    if(hasAffix('frostBaron')) s *= 0.5;
+    return clamp(s, 0, MAX_FREEZE_TIME);
   }
   function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
   function getAlchemicalMasteryMult(){ return 1 + 0.01 * getTalentLevel('alchemicalMastery'); }
@@ -2929,6 +3044,7 @@
   const $ = (id) => document.getElementById(id);
   function icon(name, cls){ return '<svg class="icon ' + (cls||'') + '"><use href="#icon-' + name + '"></use></svg>'; }
   const roundLabel = $('roundLabel');
+  const affixBanner = $('affixBanner');
   const goldValue = $('goldValue');
   const goldDisplay = $('goldDisplay');
   const relicTray = $('relicTray');
@@ -3587,7 +3703,8 @@
           id: entry.id,
           corrupted: !!entry.corrupted,
           curseType: entry.curseType || null,
-          boonMult: typeof entry.boonMult === 'number' ? entry.boonMult : null
+          boonMult: typeof entry.boonMult === 'number' ? entry.boonMult : null,
+          free: !!entry.free
         };
       }
       return null;
@@ -3799,10 +3916,14 @@
     if(hasRelic('permafrostShard') && (state.timeFreezeTimer || 0) > 0){
       p *= getRelicStats('permafrostShard').frozenMult || 2.0;
     }
+    if(hasAffix('denseLiquid')) p *= 2;
     return p;
   }
   function getManaPerSecond(){
-    let mps = state.bubblerLevel * BUBBLER_RATE_PER_LEVEL;
+    let bubbler = state.bubblerLevel * BUBBLER_RATE_PER_LEVEL;
+    if(hasAffix('denseLiquid')) bubbler = 0;
+    else if(hasAffix('spectralInterference')) bubbler *= 2;
+    let mps = bubbler;
     const whisk = getRelicStats('whisk');
     if(whisk.whiskPct){
       let whiskClick = getBaseClickPower() * (1 + getClickBonusPct(false));
@@ -3821,13 +3942,17 @@
     let cost = Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel));
     const pawn = getRelicStats('pawnTicket');
     if(pawn.discount) cost = Math.floor(cost * (1 - pawn.discount));
-    return Math.floor(cost * getCurseCostMult());
+    cost = Math.floor(cost * getCurseCostMult());
+    if(hasAffix('grandInquisitor')) cost = Math.floor(cost * 1.5);
+    return cost;
   }
   function getBubbleCost(){
     let cost = Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel));
     const pawn = getRelicStats('pawnTicket');
     if(pawn.discount) cost = Math.floor(cost * (1 - pawn.discount));
-    return Math.floor(cost * getCurseCostMult());
+    cost = Math.floor(cost * getCurseCostMult());
+    if(hasAffix('grandInquisitor')) cost = Math.floor(cost * 1.5);
+    return cost;
   }
   function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
   function getRerollCost(){
@@ -3837,6 +3962,8 @@
     return cost;
   }
   function getRelicCost(relic){
+    const offer = relic && getShopOffer(relic.id);
+    if(offer && offer.free) return 0;
     const nextLv = getRelicLevel(relic.id) + 1;
     return Math.round(relic.cost * getRoundCostScale() * Math.max(1, nextLv) * getCurseCostMult());
   }
@@ -3856,9 +3983,11 @@
     let rate = 1;
     if(hasRelic('crucible')) rate += getRelicStats('crucible').goldRate || 0;
     if(hasTagTier('arcane', 1)) rate += 0.5; // Arcane Tier (4): Transmutation
+    if(hasAffix('rapidBoil')) rate *= 1.5;
     return rate;
   }
   function getRoundTime(){
+    if(hasAffix('midnightEclipse')) return 20;
     let t = ROUND_BASE_TIME;
     if(hasRelic('hourglass')) t += getRelicStats('hourglass').bonusTime || 0;
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
@@ -4023,6 +4152,7 @@
     return 0;
   }
   function getCharmCooldown(id){
+    if(hasAffix('midnightEclipse')) return 0;
     return (state && state.charmCooldowns && state.charmCooldowns[id]) || 0;
   }
   function normalizeCharmCooldowns(raw){
@@ -4422,8 +4552,32 @@
   /* =========================================================
      UI UPDATE
   ========================================================= */
+  function applyAffixPresentation(){
+    const affix = getActiveAffixDef();
+    const boss = !!(state && state.isBossOrder);
+    if(roundLabel){
+      roundLabel.classList.toggle('boss-round', boss);
+      roundLabel.textContent = boss ? ('GUILD BOSS: ORDER ' + state.round) : ('ORDER ' + state.round);
+    }
+    if(affixBanner){
+      if(affix && state && (state.phase === 'brewing' || state.phase === 'shop')){
+        affixBanner.classList.remove('hidden');
+        affixBanner.classList.add('show');
+        affixBanner.classList.toggle('affix-boss', boss);
+        affixBanner.innerHTML = icon(boss ? 'warning' : 'sparkle', boss ? 'ic-danger' : 'ic-amber') + ' ' + affix.name;
+        affixBanner.title = affix.desc;
+      } else {
+        affixBanner.classList.add('hidden');
+        affixBanner.classList.remove('show', 'affix-boss');
+        affixBanner.innerHTML = '';
+        affixBanner.title = '';
+      }
+    }
+    if(orderPanelShell) orderPanelShell.classList.toggle('boss-order', boss && state.phase === 'brewing');
+    if(cauldronStage) cauldronStage.classList.toggle('boss-order', boss && state.phase === 'brewing');
+  }
   function updateUI(){
-    roundLabel.textContent = 'ORDER ' + state.round;
+    applyAffixPresentation();
     goldValue.textContent = fmt(state.gold);
 
     const manaPct = clamp((state.mana/state.target)*100, 0, 100);
@@ -4669,15 +4823,16 @@
 
     let power = getClickPower();
     let crit = false;
+    const critDisabled = hasAffix('spectralInterference');
     const moon = getRelicStats('moonstone');
-    if(moon.critEvery && state.clickCountRun % moon.critEvery === 0){
+    if(!critDisabled && moon.critEvery && state.clickCountRun % moon.critEvery === 0){
       power *= (moon.critMult || 3);
       crit = true;
-    } else if(Math.random() < getTalentLevel('arcaneKeenness') * 0.01){
+    } else if(!critDisabled && Math.random() < getTalentLevel('arcaneKeenness') * 0.01){
       power *= 3;
       crit = true;
     }
-    if((state.moltenEmberTimer || 0) > 0){
+    if(!critDisabled && (state.moltenEmberTimer || 0) > 0){
       if(!crit) power *= 3;
       crit = true;
     }
@@ -4691,6 +4846,16 @@
     }
 
     addMana(power, true);
+
+    if(hasAffix('mercurialFlow') && state.clickCountRun % 5 === 0){
+      state.timer = Math.max(0, state.timer - 0.4);
+      bumpGold(2);
+      spawnFloatNumber('-0.4s  +2 ' + icon('coin','ic-gold'), 'gold', xPct, yPct + 14);
+    }
+    if(hasAffix('grandInquisitor') && state.gold > 0 && Math.random() < 0.10){
+      state.gold = Math.max(0, state.gold - 1);
+      spawnFloatNumber('-1 ' + icon('coin','ic-danger'), 'danger', xPct, yPct + 10);
+    }
 
     let scorched = false;
     getOwnedRelicIds().forEach(id => {
@@ -4785,9 +4950,9 @@
     if(!charm) return;
     if(!state.consumables || !state.consumables[id]) return;
     if(!state.charmCooldowns) state.charmCooldowns = normalizeCharmCooldowns(null);
-    if((state.charmCooldowns[id] || 0) > 0) return;
+    if(getCharmCooldown(id) > 0) return;
     state.consumables[id]--;
-    state.charmCooldowns[id] = charm.cooldown || 0;
+    state.charmCooldowns[id] = hasAffix('midnightEclipse') ? 0 : (charm.cooldown || 0);
     if(id === 'stirFrenzy'){
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
@@ -4877,7 +5042,7 @@
     restoreVisualSettings(visualPrefs);
     state.phase = 'brewing';
     state.gold = getTalentLevel('merchantsPurse') * 5;
-    state.timer = getRoundTime();
+    beginOrder();
     sanctumReturnTo = null;
     closeSanctumConfirm(false);
     closeSanctum();
@@ -4895,6 +5060,8 @@
   }
 
   function beginOrder(){
+    rollOrderAffix();
+    state.target = applyAffixOrderTarget(getOrderTarget(state.round));
     state.timer = getRoundTime();
     state.dragonfireCounter = 0;
     state.clickCountRun = 0;
@@ -4939,14 +5106,25 @@
     goldEarned += Math.floor(relicGold * getGildedProsperityMult());
     bumpGold(goldEarned);
     meta.career.bestOrder = Math.max(meta.career.bestOrder || 1, state.round || 1);
+    let bossBounty = 0;
+    if(state.isBossOrder){
+      bossBounty = BOSS_SHARD_BOUNTY;
+      meta.manaShards += bossBounty;
+      meta.career.lifetimeShards += bossBounty;
+      refreshShardReadouts();
+    }
     saveMeta();
     sfxSuccess();
 
-    shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
-    shopSummary.innerHTML = 'Surplus of ' + fmt(surplus) + ' Essence converted into ' + fmt(goldEarned) + ' ' + icon('coin','ic-gold') + ' Gold.';
+    shopTitle.textContent = state.isBossOrder
+      ? ('GUILD BOSS FELLED — ORDER ' + state.round)
+      : ('ORDER ' + state.round + ' FULFILLED!');
+    shopSummary.innerHTML = 'Surplus of ' + fmt(surplus) + ' Essence converted into ' + fmt(goldEarned) + ' ' + icon('coin','ic-gold') + ' Gold.'
+      + (bossBounty ? (' The Guild grants +' + bossBounty + ' ' + icon('sparkle','ic-mana') + ' Mana Shards and a free Corrupted Relic draft.') : '');
 
     state.rerollCount = 0;
     rollShopOffers();
+    if(state.isBossOrder) grantBossCorruptDraft();
     renderShop();
     state.phase = 'shop';
     shopOverlay.classList.remove('hidden');
@@ -4974,7 +5152,6 @@
   function proceedToNextRound(){
     shopOverlay.classList.add('hidden');
     state.round++;
-    state.target = getOrderTarget(state.round);
     beginOrder();
     saveGame();
   }
@@ -4995,6 +5172,18 @@
     });
     state.purchasedOffers = [];
     rollCharmOffers();
+  }
+  function grantBossCorruptDraft(){
+    if(!state) return;
+    if(!Array.isArray(state.shopOffers)) state.shopOffers = [];
+    const used = {};
+    state.shopOffers.forEach(o => { used[shopOfferId(o)] = true; });
+    const pool = getShopRelicPool().filter(r => !used[r.id]);
+    if(!pool.length) return;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    const offer = createCorruptedOffer(pick.id);
+    offer.free = true;
+    state.shopOffers.unshift(offer);
   }
 
   function getUnlockedCharms(){
@@ -5083,9 +5272,12 @@
           ? (lv > 1 ? 'UPGRADED' : 'PURCHASED')
           : (maxed
             ? 'MAXED'
-            : (isUpgrade
-              ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
-              : ('BUY — ' + price + ' ' + icon('coin','ic-gold'))));
+            : (offer.free
+              ? 'CLAIM — FREE'
+              : (isUpgrade
+                ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
+                : ('BUY — ' + price + ' ' + icon('coin','ic-gold')))));
+        if(offer.free) card.classList.add('free-draft');
         const levelBadge = boughtThisVisit
           ? formatRelicLevel(lv)
           : (isUpgrade ? formatRelicLevel(lv) : 'NEW');
@@ -5448,7 +5640,12 @@
     state.gold -= cost;
     state.rerollCount++;
     sfxBuy();
+    const keptFree = (state.shopOffers || []).find(o => o && o.free && !(state.purchasedOffers || []).includes(shopOfferId(o)));
     rollShopOffers();
+    if(keptFree){
+      state.shopOffers = (state.shopOffers || []).filter(o => shopOfferId(o) !== shopOfferId(keptFree));
+      state.shopOffers.unshift(keptFree);
+    }
     renderShop();
     goldValue.textContent = fmt(state.gold);
     saveGame();
@@ -6041,7 +6238,18 @@
         };
       }
 
-      state.target = getOrderTarget(state.round || 1);
+      if(typeof state.isBossOrder !== 'boolean'){
+        state.isBossOrder = !!(state.round && state.round % 5 === 0 && (state.phase === 'brewing' || state.phase === 'shop'));
+      }
+      if(!state.currentAffix && state.isBossOrder){
+        const boss = getBossDefForRound(state.round);
+        if(boss) state.currentAffix = boss.id;
+      }
+      if(state.currentAffix && !getAffixDef(state.currentAffix)){
+        state.currentAffix = null;
+        state.isBossOrder = false;
+      }
+      state.target = applyAffixOrderTarget(getOrderTarget(state.round || 1));
 
       startOverlay.classList.add('hidden');
       shopOverlay.classList.add('hidden');
@@ -6052,7 +6260,9 @@
       document.body.classList.remove('sanctum-confirm-open');
 
       if(state.phase === 'shop'){
-        shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
+        shopTitle.textContent = state.isBossOrder
+          ? ('GUILD BOSS FELLED — ORDER ' + state.round)
+          : ('ORDER ' + state.round + ' FULFILLED!');
         shopSummary.textContent = 'Surplus converted into Gold.';
         if(!state.shopOffers || state.shopOffers.length === 0){
           rollShopOffers();
@@ -6173,6 +6383,7 @@
           if(hasRelic('rimeCaliper') && state.timer <= 10.0){
             timerDt *= (1 - (getRelicStats('rimeCaliper').slowPct || 0.25));
           }
+          if(hasAffix('rapidBoil')) timerDt *= 1.3;
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
@@ -6220,6 +6431,15 @@
   buyStirBtn.addEventListener('click', buyStir);
   buyBubbleBtn.addEventListener('click', buyBubble);
   fulfillBtn.addEventListener('click', cashOutNow);
+  if(affixBanner){
+    affixBanner.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const affix = getActiveAffixDef();
+      if(!affix) return;
+      const html = '<div class="tooltip-title">' + affix.name + '</div><div class="tooltip-body">' + affix.desc + '</div>';
+      toggleTooltip(affixBanner, html, 'affix-' + affix.id);
+    });
+  }
   startBtn.addEventListener('click', startRun);
   restartBtn.addEventListener('click', startRun);
   continueBtn.addEventListener('click', proceedToNextRound);
