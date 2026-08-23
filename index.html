@@ -1143,7 +1143,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.4</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1186,7 +1186,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.4</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1232,7 +1232,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.4 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Golden Tithe and Familiar's Whisk no longer snowball off each other — unspent Gold still boosts you, but it can't explode your passive brew.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.3</div>
         <ul class="changelog-list">
           <li>Hitting the Mana quota now washes a pulsing violet glow off the bar and onto the HUD around it.</li>
         </ul>
@@ -1613,7 +1619,7 @@
     ],
     midas: [
       { count:2, label:'Midas Touch', desc:'12% chance per tap to award +1 bonus Gold' },
-      { count:4, label:'Golden Tithe', desc:'+1% Click Power & Mana/sec per 2 unspent Gold held' },
+      { count:4, label:'Golden Tithe', desc:'+1% Click Power & Mana/sec per 2 unspent Gold held (max +200%)' },
     ],
   };
 
@@ -2033,28 +2039,41 @@
     return c >= tiers[tierIndex].count;
   }
 
-  function getClickPower(){
-    let p = CLICK_BASE + state.clickLevel * CLICK_UPGRADE_INC;
+  function getBaseClickPower(){
+    return CLICK_BASE + state.clickLevel * CLICK_UPGRADE_INC;
+  }
+  function getGoldenTithePct(){
+    if(!hasTagTier('midas', 1)) return 0;
+    return clamp((state.gold / 2) * 0.01, 0, 2);
+  }
+  function getClickBonusPct(includeTithe){
     let bonusPct = 0;
     bonusPct += getRelicStats('dragonfire').clickPct || 0;
     bonusPct += getRelicStats('cursedEmber').clickPct || 0;
     bonusPct += getRelicStats('ashenSigil').clickPct || 0;
     if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
-    if(hasTagTier('midas', 1)) bonusPct += (state.gold / 2) * 0.01; // Midas Tier (4): Golden Tithe
-    p *= (1 + bonusPct);
+    if(includeTithe) bonusPct += getGoldenTithePct();
+    return bonusPct;
+  }
+  function getClickPower(){
+    let p = getBaseClickPower() * (1 + getClickBonusPct(true));
     if(state.stirFrenzyTimer > 0) p *= 3;
     return p;
   }
   function getManaPerSecond(){
     let mps = state.bubblerLevel * BUBBLER_RATE_PER_LEVEL;
     const whisk = getRelicStats('whisk');
-    if(whisk.whiskPct) mps += getClickPower() * whisk.whiskPct;
+    if(whisk.whiskPct){
+      let whiskClick = getBaseClickPower() * (1 + getClickBonusPct(false));
+      if(state.stirFrenzyTimer > 0) whiskClick *= 3;
+      mps += whiskClick * whisk.whiskPct;
+    }
     let bonusPct = 0;
     if(hasRelic('catalyst')) bonusPct += (getRelicStats('catalyst').mpsPct || 0) * getSynergyMult('chaos');
     if(hasRelic('unstableBrew')) bonusPct += (getRelicStats('unstableBrew').mpsPct || 0) * getSynergyMult('chaos');
     bonusPct += getRelicStats('arcaneConduit').mpsPct || 0;
     if(hasTagTier('arcane', 0)) bonusPct += 0.25; // Arcane Tier (2): +25% Passive Mana/sec
-    if(hasTagTier('midas', 1)) bonusPct += (state.gold / 2) * 0.01; // Midas Tier (4): Golden Tithe
+    bonusPct += getGoldenTithePct();
     mps *= (1 + bonusPct);
     return mps;
   }
