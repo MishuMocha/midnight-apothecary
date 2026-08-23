@@ -2221,6 +2221,119 @@
     #affixBadge{ width:38px; height:38px; }
     #affixBadge .icon{ width:22px; height:22px; }
   }
+
+  /* Phone layout only — desktop rules above stay as-is. */
+  @media (max-width: 768px){
+    html, body{
+      height:100%;
+      height:100dvh;
+    }
+    #app{
+      max-width:100%;
+      height:100%;
+      height:100dvh;
+      justify-content:flex-start;
+      gap:4px;
+      padding:
+        max(6px, env(safe-area-inset-top, 0px))
+        8px
+        max(8px, env(safe-area-inset-bottom, 0px));
+    }
+    #topbar{
+      gap:8px;
+      padding:6px 8px;
+      margin-top:0;
+      flex-wrap:nowrap;
+      align-items:center;
+    }
+    .topbar-left{ gap:3px; min-width:0; flex:1 1 0; }
+    #roundLabel{ font-size:0.48rem; }
+    #keystoneHud.show{ font-size:0.4rem; max-width:42vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #topbar #mainSynergyRow{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      width:100%;
+      margin-top:0;
+      scrollbar-width:none;
+    }
+    #topbar #mainSynergyRow::-webkit-scrollbar{ display:none; }
+    .top-actions{
+      flex-wrap:nowrap;
+      gap:8px;
+      margin-left:0;
+      max-width:none;
+    }
+    .top-action-btns{ gap:6px; }
+    .top-currencies{
+      gap:5px;
+      padding-left:8px;
+      margin-left:0;
+      border-left:2px dashed rgba(255,255,255,0.16);
+    }
+    #goldDisplay,
+    #shardDisplay{
+      padding:3px 6px;
+      gap:4px;
+      font-size:0.5rem;
+      min-width:0;
+      width:auto;
+    }
+    #goldValue,
+    #shardDisplay [data-shard-count]{
+      min-width:3ch;
+    }
+    .icon-btn{ padding:4px 7px; }
+    .grimoire-btn{ width:26px; height:26px; }
+
+    #orderPanelShell{ margin-top:2px; }
+    #orderPanel{ padding:6px 8px; }
+    .barRow{ margin-bottom:6px; }
+    .barLabelRow{ font-size:0.44rem; margin-bottom:3px; gap:6px; }
+    #manaLabelText,
+    #timerLabelText{ min-width:0; }
+    .barTrack{ height:12px; }
+
+    #stageRow{
+      flex:1 1 auto;
+      min-height:0;
+      margin:2px 0;
+      gap:6px;
+    }
+    #cauldron{
+      width:min(46vw, 210px, 34dvh);
+      max-width:100%;
+      height:auto;
+      aspect-ratio:1 / 1;
+    }
+
+    #upgradesPanel{ gap:6px; margin-bottom:2px; }
+    .upgradeBtn{ padding:6px 3px; gap:3px; }
+    .upgradeTitle{ font-size:0.46rem; }
+    .upgradeSub{ font-size:0.4rem; }
+    .upgradeCost{ font-size:0.42rem; }
+
+    #consumablesPanel{
+      padding:6px 8px;
+      margin-bottom:0;
+    }
+    .consumable-label{ font-size:0.4rem; margin-bottom:5px; }
+    .consumable-row{ flex-wrap:nowrap; gap:4px; }
+    .consumable-btn{
+      flex:1 1 0;
+      min-width:0;
+      padding:8px 2px 6px;
+      font-size:0.4rem;
+    }
+    .consumable-btn .cLabel{ font-size:0.36rem; }
+  }
+  @media (max-width: 768px) and (max-height: 700px){
+    #cauldron{
+      width:min(40vw, 168px, 26dvh);
+    }
+    #stageRow{ margin:0; }
+    .upgradeBtn{ padding:5px 2px; }
+    #consumablesPanel{ padding:5px 6px; }
+  }
 </style>
 </head>
 <body oncontextmenu="return false;">
@@ -2799,8 +2912,8 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.4</div>
-    <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.5</div>
+    <p>Tap the cauldron to brew Mana Essence and fulfill the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
     <button class="smallBtn" id="openSanctumBtn"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL SANCTUM</button>
@@ -2856,7 +2969,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.4</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.5</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2936,7 +3049,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.4 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>On a phone, the brew now fits on one screen — Gold, Shards, the pot, upgrades, and Ingredient Charms stay in view without scrolling.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.4</div>
         <ul class="changelog-list">
           <li>Firefox no longer freezes the whole browser while you brew.</li>
         </ul>
@@ -3117,7 +3236,7 @@
       <div class="changelog-entry">
         <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.25</div>
         <ul class="changelog-list">
-          <li>Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfil more orders.</li>
+          <li>Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfill more orders.</li>
           <li>Sanctum talents cost more, and later nodes stay locked until you have spent enough shards in that branch.</li>
           <li>Each path now has a late-game sink — Alchemical Mastery, Temporal Anchor, and Gilded Prosperity — that keeps taking shards for more essence, longer deadlines, or richer gold.</li>
         </ul>
