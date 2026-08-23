@@ -419,24 +419,9 @@
     pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
-    filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.75)) contrast(1.06) saturate(1.08);
+    filter: contrast(1.06) saturate(1.08);
   }
-  #cauldron.fx-crucible #cauldronImg{ filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.75)) contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
-
-  /* Grounding contact shadow directly beneath the feet */
-  #cauldron::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -2%;
-    width: 62%;
-    height: 10%;
-    transform: translateX(-50%);
-    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 55%, transparent 80%);
-    filter: blur(2px);
-    z-index: 0;
-    pointer-events: none;
-  }
+  #cauldron.fx-crucible #cauldronImg{ filter: contrast(1.06) saturate(1.08) drop-shadow(0 0 10px rgba(233,185,61,0.7)); }
 
   /* Align the animated liquid within the cauldron rim */
   #liquidPixel {
@@ -500,13 +485,13 @@
   .px-particle{ position:absolute; pointer-events:none; will-change: transform, opacity; }
   .click-bubble{
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffffff 0%, var(--liq-1) 50%, var(--liq-2) 90%, rgba(var(--liquid-glow), 0.8) 100%);
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.55) 0%, rgba(201,166,255,0.35) 50%, rgba(138,92,240,0.22) 90%, rgba(var(--liquid-glow), 0.18) 100%);
     animation: softBubbleFloat var(--dur, 0.85s) ease-out forwards;
   }
   @keyframes softBubbleFloat{
     0%{ transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
-    20%{ transform: translate3d(calc(var(--drift, 0px) * 0.2), -15px, 0) scale(1.05); opacity: 0.95; }
-    60%{ transform: translate3d(calc(var(--drift, 0px) * 0.7), -55px, 0) scale(1); opacity: 0.85; }
+    20%{ transform: translate3d(calc(var(--drift, 0px) * 0.2), -15px, 0) scale(1.05); opacity: 0.42; }
+    60%{ transform: translate3d(calc(var(--drift, 0px) * 0.7), -55px, 0) scale(1); opacity: 0.28; }
     100%{ transform: translate3d(var(--drift, 0px), -85px, 0) scale(1.15); opacity: 0; }
   }
 
@@ -1246,7 +1231,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.14.0</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.14.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1289,7 +1274,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.14.0</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.14.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1341,7 +1326,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.0 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Spending your last Gold on Ingredient Charms now greys out shop relics you can no longer afford.</li>
+          <li>The dark puddle of shadow under the cauldron is gone, and tap bubbles are a little more see-through.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.0</div>
         <ul class="changelog-list">
           <li>Any shop relic can now arrive Corrupted — swollen blessings with a crimson curse. Clean relics keep their upside; the old dedicated cursed relics are gone.</li>
         </ul>
@@ -3218,7 +3210,7 @@
     state.consumables[id] = (state.consumables[id] || 0) + 1;
     sfxBuy();
     goldValue.textContent = fmt(state.gold);
-    renderConsumableShop();
+    renderShop();
     saveGame();
   }
 
