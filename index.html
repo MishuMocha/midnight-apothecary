@@ -148,11 +148,8 @@
     display:flex; align-items:center; gap:6px; color:#c9a6ff;
     font-size:0.68rem;
   }
-  #hudSanctumBtn{
-    color:#c9a6ff;
-  }
-  #hudSanctumBtn:hover:not(:disabled){
-    filter:brightness(1.15) drop-shadow(0 0 6px rgba(168,110,255,0.7));
+  #sanctumHudBtn:hover {
+    filter: drop-shadow(0 0 6px rgba(201, 166, 255, 0.85));
   }
   @keyframes goldPulse{ 0%{transform:scale(1.5); color:#fff;} 100%{transform:scale(1);} }
   .icon-btn{
@@ -1477,7 +1474,9 @@
       <button id="compendiumBtn" class="grimoire-btn" title="Alchemical Grimoire">
         <img src="grimoire.svg" alt="Grimoire" draggable="false" />
       </button>
-      <button id="hudSanctumBtn" class="pixel-btn icon-btn" title="Alchemical Sanctum"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg></button>
+      <button id="sanctumHudBtn" class="grimoire-btn" title="Alchemical Sanctum">
+        <img src="sanctum.svg" alt="Alchemical Sanctum" draggable="false" />
+      </button>
       <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
       <div id="shardDisplay"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> <span data-shard-count>0</span></div>
     </div>
@@ -1534,7 +1533,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.21.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1581,7 +1580,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.21.2</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1634,7 +1633,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The top bar now has a matching Sanctum seal next to the Grimoire — tap it mid-brew to retreat, or from the menu to visit freely.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.21.1</div>
         <ul class="changelog-list">
           <li>Winter's Grasp no longer refreshes a freeze that is already running, so a crit streak can't lock the deadline forever.</li>
           <li>No freeze — relic, charm, or otherwise — can hold the deadline longer than 4 seconds.</li>
@@ -2576,7 +2581,7 @@
   const sanctumTree = $('sanctumTree');
   const closeSanctumBtn = $('closeSanctumBtn');
   const openSanctumBtn = $('openSanctumBtn');
-  const hudSanctumBtn = $('hudSanctumBtn');
+  const sanctumHudBtn = $('sanctumHudBtn');
   const shopSanctumBtn = $('shopSanctumBtn');
   const gameoverSanctumBtn = $('gameoverSanctumBtn');
   const sanctumConfirmOverlay = $('sanctumConfirmOverlay');
@@ -4904,14 +4909,16 @@
   function openSanctum(returnTo){
     if(!sanctumOverlay) return;
     hideTooltip();
-    if(isActiveRunPhase()){
+    if(state && state.phase === 'brewing' && !isPaused){
       openSanctumConfirm();
       return;
     }
     if(returnTo === 'gameover' || (state && state.phase === 'gameover')){
       sanctumReturnTo = 'gameover';
-    } else {
+    } else if(returnTo === 'start' || (state && state.phase === 'start')){
       sanctumReturnTo = 'start';
+    } else {
+      sanctumReturnTo = null;
     }
     renderSanctum();
     sanctumOverlay.classList.remove('hidden');
@@ -4938,7 +4945,7 @@
       closeSanctum();
       return;
     }
-    if(isActiveRunPhase()){
+    if(state && state.phase === 'brewing' && !isPaused){
       openSanctumConfirm();
       return;
     }
@@ -5446,7 +5453,7 @@
   if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
   if(resetSanctumBtn) resetSanctumBtn.addEventListener('click', resetSanctum);
   if(openSanctumBtn) openSanctumBtn.addEventListener('click', () => openSanctum('start'));
-  if(hudSanctumBtn) hudSanctumBtn.addEventListener('click', requestSanctumAccess);
+  if(sanctumHudBtn) sanctumHudBtn.addEventListener('click', requestSanctumAccess);
   if(shopSanctumBtn) shopSanctumBtn.addEventListener('click', openSanctumConfirm);
   if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', () => openSanctum('gameover'));
   if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);

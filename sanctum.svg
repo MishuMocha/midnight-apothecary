@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="100%" height="100%" shape-rendering="crispEdges">
+  <!-- Outer Black Outline Base -->
+  <path fill="#000000" d="
+    M9 1h6v1h-6z
+    M7 2h2v1h-2z M15 2h2v1h-2z
+    M5 3h2v2h-2z M17 3h2v2h-2z
+    M3 5h2v2h-2z M19 5h2v2h-2z
+    M2 7h1v4h-1z M21 7h1v4h-1z
+    M1 11h1v2h-1z M22 11h1v2h-1z
+    M2 13h1v4h-1z M21 13h1v4h-1z
+    M3 17h2v2h-2z M19 17h2v2h-2z
+    M5 19h2v2h-2z M17 19h2v2h-2z
+    M7 21h2v1h-2z M15 21h2v1h-2z
+    M9 22h6v1h-6z
+  "/>
+
+  <!-- Gold Pedestal / Shrine Prongs -->
+  <!-- Top Prong -->
+  <path fill="#f4b860" d="M10 2h4v1h-4z M11 3h2v1h-2z"/>
+  <path fill="#ffd27a" d="M11 2h2v1h-2z"/>
+  <!-- Bottom Prong -->
+  <path fill="#c4842a" d="M10 21h4v1h-4z"/>
+  <path fill="#f4b860" d="M11 20h2v1h-2z"/>
+  <!-- Left Side Brackets -->
+  <path fill="#f4b860" d="M2 11h2v2h-2z M4 9h1v6h-1z M5 7h1v2h-1z M5 15h1v2h-1z"/>
+  <path fill="#ffd27a" d="M3 11h1v2h-1z M4 10h1v4h-1z"/>
+  <!-- Right Side Brackets -->
+  <path fill="#c4842a" d="M20 11h2v2h-2z M19 9h1v6h-1z M18 7h1v2h-1z M18 15h1v2h-1z"/>
+  <path fill="#f4b860" d="M20 11h1v2h-1z M19 10h1v4h-1z"/>
+
+  <!-- Dark Cosmic Sanctum Background / Core Void -->
+  <path fill="#140b22" d="M6 5h12v14h-12z"/>
+  <path fill="#2a1642" d="M7 6h10v12h-10z"/>
+
+  <!-- Radiant Astral Gem (Floating Diamond Shard) -->
+  <!-- Dark Shadow Facets -->
+  <path fill="#4b2a8f" d="
+    M12 5h1v1h-1z
+    M13 6h2v1h-2z
+    M15 7h2v2h-2z
+    M17 9h1v3h-1z
+    M16 12h1v3h-1z
+    M14 15h2v2h-2z
+    M12 17h2v2h-2z
+  "/>
+  <!-- Midtone Mana Shard Body -->
+  <path fill="#8a5cf0" d="
+    M11 5h1v2h-1z
+    M9 7h2v2h-2z
+    M7 9h2v6h-2z
+    M9 15h2v2h-2z
+    M11 17h1v2h-1z
+    M12 7h3v2h-3z
+    M13 9h3v5h-3z
+    M12 14h2v3h-2z
+  "/>
+  <!-- Bright Radiant Core Highlights -->
+  <path fill="#c9a6ff" d="
+    M11 7h2v2h-2z
+    M9 9h3v5h-3z
+    M11 14h2v2h-2z
+    M13 10h2v3h-2z
+  "/>
+  <!-- White Glint Focus -->
+  <path fill="#ffffff" d="
+    M11 9h2v3h-2z
+    M10 10h3v1h-3z
+  "/>
+
+  <!-- 4-Corner Alchemical Micro-Glints -->
+  <rect x="6" y="5" width="1" height="1" fill="#ffd27a"/>
+  <rect x="17" y="5" width="1" height="1" fill="#ffd27a"/>
+  <rect x="6" y="18" width="1" height="1" fill="#ffd27a"/>
+  <rect x="17" y="18" width="1" height="1" fill="#ffd27a"/>
+</svg>
