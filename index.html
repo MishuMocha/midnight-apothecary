@@ -1506,6 +1506,85 @@
     .shop-panel .relicCard .rDesc,
     .shop-panel .relicCard .rBuy{ font-size:0.625rem; }
   }
+  @media (max-width: 768px){
+    #shopOverlay.shop-overlay{
+      padding:
+        max(6px, env(safe-area-inset-top, 0px))
+        8px
+        max(8px, env(safe-area-inset-bottom, 0px));
+      align-items:stretch;
+    }
+    #shopOverlay .shop-panel{
+      width:100%;
+      height:100%;
+      max-height:100%;
+      overflow-x:hidden;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      gap:12px;
+      padding:12px 12px 16px;
+    }
+    .shop-header{ gap:10px; }
+    .shop-header-copy h2{ font-size:0.8rem; margin-bottom:6px; }
+    .shop-header-copy p{ font-size:0.58rem; line-height:1.55; }
+    .shop-header-meta{ min-width:0; width:100%; }
+    .shop-panel .shop-gold-bar{ padding:8px 12px; }
+    .shop-panel #shopCards{
+      display:grid;
+      grid-template-columns:1fr;
+      flex:0 0 auto;
+      min-height:auto;
+      overflow:visible;
+      gap:14px;
+      padding-right:0;
+    }
+    .shop-panel .relicCard{
+      padding:16px 14px 14px;
+      gap:10px;
+    }
+    .shop-panel .relicCard .rName{
+      font-size:0.8rem;
+      line-height:1.45;
+    }
+    .shop-panel .relicCard .rName .icon{ width:32px; height:32px; }
+    .shop-panel .relicCard .rDesc{
+      font-size:0.7rem;
+      line-height:1.65;
+      color:var(--text-light);
+    }
+    .shop-panel .relicCard .rUpgrade,
+    .shop-panel .relicCard .rTierLine,
+    .shop-panel .relicCard .rBoon,
+    .shop-panel .relicCard .rCurse,
+    .shop-panel .relicCard .synergy-hint,
+    .shop-panel .relicCard .corrupted-badge{
+      font-size:0.62rem;
+      line-height:1.6;
+    }
+    .shop-panel .relicCard .rBuy{
+      font-size:0.75rem;
+      padding:14px 12px;
+    }
+    .shop-footer{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+    }
+    .shop-actions{
+      position:sticky;
+      bottom:0;
+      z-index:3;
+      background:var(--purple-panel);
+      padding:8px 0 max(6px, env(safe-area-inset-bottom, 0px));
+      box-shadow:0 -10px 18px rgba(5,3,8,0.7);
+    }
+    .shop-actions .smallBtn,
+    .shop-actions .bigBtn{
+      font-size:0.68rem;
+      padding:12px 12px;
+    }
+  }
 
   /* ---------- SHOP: TWO-TIER LAYOUT ---------- */
   .shop-tier-label{
@@ -2912,7 +2991,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfill the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2969,7 +3048,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.5</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.6</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -3049,7 +3128,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.5 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The between-round shop on a phone now scrolls as a full page, so relic cards stay large enough to read.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.5</div>
         <ul class="changelog-list">
           <li>On a phone, the brew now fits on one screen — Gold, Shards, the pot, upgrades, and Ingredient Charms stay in view without scrolling.</li>
         </ul>
