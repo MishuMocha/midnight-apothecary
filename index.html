@@ -978,8 +978,16 @@
     100%{ transform: translate3d(0,-46px,0) scale(1); opacity:0; }
   }
 
-  #fxLayer, #numbersLayer{
-    position:absolute; inset:-60% -20% -10% -20%; pointer-events:none; z-index:5; overflow:visible;
+  #cauldronFxCanvas, #numbersLayer{
+    position:absolute; inset:-60% -20% -10% -20%; pointer-events:none; overflow:visible;
+  }
+  #cauldronFxCanvas{
+    z-index:5;
+    width:140%; height:170%;
+    display:block;
+  }
+  #numbersLayer{
+    z-index:6;
     contain: layout style;
   }
 
@@ -2755,7 +2763,7 @@
       <div id="cauldron">
         <div id="liquidPixel"></div>
         <img id="cauldronImg" src="cauldron.png?v=4" alt="cauldron" draggable="false" />
-        <div id="fxLayer"></div>
+        <canvas id="cauldronFxCanvas"></canvas>
         <div id="numbersLayer"></div>
       </div>
     </div>
@@ -2786,7 +2794,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.3.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2843,7 +2851,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.3.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.2</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2923,7 +2931,25 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Arcane and Chaos particles now swirl as glowing spiral vortexes instead of simple circular sparks.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.1</div>
+        <ul class="changelog-list">
+          <li>Tapping the cauldron no longer throws a burst of sparks — relic embers still rise from the brew on their own.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4</div>
+        <ul class="changelog-list">
+          <li>The brew now throws smooth glowing sparks from the cauldron mouth — Fire embers, Frost flecks, Arcane swirls, and Midas glints rise on their own and burst when you land a Critical Surge.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.3</div>
         <ul class="changelog-list">
           <li>Sanctum stars you cannot afford no longer glow like they are for sale — they gray out until you have the shards.</li>
         </ul>
@@ -4306,7 +4332,7 @@
   const settingScanlines = $('settingScanlines');
   const settingScreenShake = $('settingScreenShake');
   const settingCauldronGlow = $('settingCauldronGlow');
-  const fxLayer = $('fxLayer');
+  const cauldronFxCanvas = $('cauldronFxCanvas');
   const numbersLayer = $('numbersLayer');
   const buyStirBtn = $('buyStirBtn');
   const buyBubbleBtn = $('buyBubbleBtn');
@@ -5513,9 +5539,9 @@
     return el;
   }
 
-  // #fxLayer / #numbersLayer use inset: -60% -20% -10% -20% of #cauldron, so
-  // a "14% from the pot top" spawn has to be remapped into that taller box
-  // or every bubble appears to pop in mid-air above the rim.
+  // #numbersLayer uses inset: -60% -20% -10% -20% of #cauldron, so a
+  // "14% from the pot top" spawn has to be remapped into that taller box
+  // or every number appears to pop in mid-air above the rim.
   function cauldronToLayerPct(xPct, yPct){
     return {
       x: ((20 + xPct) / 140) * 100,
@@ -5524,12 +5550,341 @@
   }
   function brewMouthX(){ return 41 + Math.random() * 18; }
   function brewMouthY(){ return 35 + Math.random() * 5; }
-  function midasEmitPoint(kind){
-    if(kind === 'foot'){
-      const side = Math.random() < 0.5 ? (16 + Math.random() * 18) : (66 + Math.random() * 18);
-      return cauldronToLayerPct(side, 74 + Math.random() * 14);
+
+  let fxParticles = [];
+  let fxCtx = null;
+  let fxCssW = 0;
+  let fxCssH = 0;
+  let fxDpr = 1;
+  let fxEmitClock = { fire:0, frost:0, arcane:0, chaos:0, midas:0 };
+  let fxLastSyncW = 0;
+  let fxLastSyncH = 0;
+
+  function fxCap(){
+    const mode = getParticleMode();
+    if(mode === 'off') return 0;
+    if(mode === 'high') return 280;
+    if(mode === 'low') return 70;
+    return 160;
+  }
+  function fxRate(base){
+    const mode = getParticleMode();
+    if(mode === 'off') return 0;
+    if(mode === 'high') return base * 1.85;
+    if(mode === 'low') return base * 0.42;
+    return base;
+  }
+  function syncCauldronFxCanvas(){
+    if(!cauldronFxCanvas || !cauldron) return false;
+    const cr = cauldron.getBoundingClientRect();
+    if(cr.width < 8 || cr.height < 8) return false;
+    const cssW = cr.width * 1.40;
+    const cssH = cr.height * 1.70;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if(Math.abs(cssW - fxLastSyncW) > 0.5 || Math.abs(cssH - fxLastSyncH) > 0.5){
+      cauldronFxCanvas.style.width = cssW + 'px';
+      cauldronFxCanvas.style.height = cssH + 'px';
+      fxLastSyncW = cssW;
+      fxLastSyncH = cssH;
     }
-    return cauldronToLayerPct(26 + Math.random() * 48, 28 + Math.random() * 12);
+    const pw = Math.max(1, Math.round(cssW * dpr));
+    const ph = Math.max(1, Math.round(cssH * dpr));
+    if(cauldronFxCanvas.width !== pw || cauldronFxCanvas.height !== ph){
+      cauldronFxCanvas.width = pw;
+      cauldronFxCanvas.height = ph;
+    }
+    fxCssW = cssW;
+    fxCssH = cssH;
+    fxDpr = dpr;
+    if(!fxCtx) fxCtx = cauldronFxCanvas.getContext('2d', { alpha:true });
+    return !!fxCtx;
+  }
+  function cauldronPctToCanvas(xPct, yPct){
+    return {
+      x: ((20 + xPct) / 140) * fxCssW,
+      y: ((60 + yPct) / 170) * fxCssH
+    };
+  }
+  function pushFx(p){
+    if(!p.maxLife || p.maxLife === 1) p.maxLife = p.life;
+    if(fxParticles.length >= fxCap()){
+      fxParticles.shift();
+    }
+    fxParticles.push(p);
+  }
+  function emitFire(xPct, yPct, burst){
+    const scale = particleSizeScale();
+    const p = cauldronPctToCanvas(xPct, yPct);
+    const speed = burst ? (140 + Math.random() * 180) : (36 + Math.random() * 50);
+    const ang = -Math.PI / 2 + (Math.random() - 0.5) * (burst ? 1.15 : 0.55);
+    pushFx({
+      kind:'fire',
+      x:p.x, y:p.y,
+      vx: Math.cos(ang) * speed * scale + (Math.random() - 0.5) * (burst ? 80 : 22),
+      vy: Math.sin(ang) * speed * scale,
+      life: burst ? (0.38 + Math.random() * 0.28) : (0.7 + Math.random() * 0.45),
+      maxLife: 1,
+      size: (burst ? 2.4 : 2.8) + Math.random() * (burst ? 2.8 : 2.2) * scale
+    });
+  }
+  function emitFrost(xPct, yPct, burst){
+    const scale = particleSizeScale();
+    const p = cauldronPctToCanvas(xPct, yPct);
+    const speed = burst ? (120 + Math.random() * 150) : (28 + Math.random() * 40);
+    const ang = -Math.PI / 2 + (Math.random() - 0.5) * (burst ? 1.05 : 0.5);
+    pushFx({
+      kind:'frost',
+      x:p.x, y:p.y,
+      vx: Math.cos(ang) * speed * scale,
+      vy: Math.sin(ang) * speed * scale,
+      life: burst ? (0.45 + Math.random() * 0.3) : (0.85 + Math.random() * 0.4),
+      maxLife: 1,
+      size: (3 + Math.random() * 3.2) * scale,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * (burst ? 10 : 5)
+    });
+  }
+  function emitArcane(xPct, yPct, burst, chaos){
+    const scale = particleSizeScale();
+    const p = cauldronPctToCanvas(xPct, yPct);
+    const radius = burst ? (6 + Math.random() * 10) : (4 + Math.random() * 8);
+    pushFx({
+      kind: chaos ? 'chaos' : 'arcane',
+      x:p.x, y:p.y,
+      ox:p.x, oy:p.y,
+      orbit: radius,
+      ang: Math.random() * Math.PI * 2,
+      vr: (chaos ? 8 : 5) * (Math.random() < 0.5 ? -1 : 1) * (burst ? 1.6 : 1),
+      rot: Math.random() * Math.PI * 2,
+      spin: (chaos ? 10 : 6.5) * (Math.random() < 0.5 ? -1 : 1),
+      vx: (Math.random() - 0.5) * (burst ? 90 : 18) * scale,
+      vy: (burst ? (-40 - Math.random() * 90) : (-18 - Math.random() * 28)) * scale,
+      grow: burst ? (40 + Math.random() * 70) : (12 + Math.random() * 22),
+      life: burst ? (0.4 + Math.random() * 0.32) : (0.75 + Math.random() * 0.45),
+      maxLife: 1,
+      size: (4.0 + Math.random() * 3.2) * scale
+    });
+  }
+  function emitMidas(xPct, yPct, burst){
+    const scale = particleSizeScale();
+    const p = cauldronPctToCanvas(xPct, yPct);
+    pushFx({
+      kind:'midas',
+      x:p.x, y:p.y,
+      vx: (Math.random() - 0.5) * (burst ? 110 : 36) * scale,
+      vy: (burst ? (-70 - Math.random() * 110) : (-24 - Math.random() * 40)) * scale,
+      life: burst ? (0.4 + Math.random() * 0.28) : (0.7 + Math.random() * 0.4),
+      maxLife: 1,
+      size: (3.2 + Math.random() * 3.4) * scale,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 8
+    });
+  }
+  function emitThemed(xPct, yPct, burst, count){
+    if(getParticleMode() === 'off') return;
+    const tags = (state && getTagCounts()) || {};
+    const n = Math.max(1, count || 1);
+    const kinds = [];
+    if(tags.fire) kinds.push('fire');
+    if(tags.frost) kinds.push('frost');
+    if(tags.arcane) kinds.push('arcane');
+    if(tags.chaos) kinds.push('chaos');
+    if(tags.midas || hasRelic('crucible')) kinds.push('midas');
+    if(!kinds.length) kinds.push('fire');
+    for(let i = 0; i < n; i++){
+      const kind = kinds[i % kinds.length];
+      const x = xPct + (Math.random() - 0.5) * (burst ? 8 : 4);
+      const y = yPct + (Math.random() - 0.5) * (burst ? 5 : 3);
+      if(kind === 'fire') emitFire(x, y, burst);
+      else if(kind === 'frost') emitFrost(x, y, burst);
+      else if(kind === 'arcane') emitArcane(x, y, burst, false);
+      else if(kind === 'chaos') emitArcane(x, y, burst, true);
+      else emitMidas(x, y, burst);
+    }
+  }
+  function spawnClickBurst(xPct, yPct, crit){
+    if(getParticleMode() === 'off') return;
+    let n = crit ? 16 : 8;
+    if(getParticleMode() === 'high') n = Math.round(n * 1.6);
+    if(getParticleMode() === 'low') n = Math.max(4, Math.round(n * 0.55));
+    emitThemed(xPct, yPct, true, n);
+  }
+  function drawFxStar(ctx, x, y, r, rot){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    for(let i = 0; i < 4; i++){
+      const a = i * Math.PI * 0.5;
+      ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      ctx.lineTo(Math.cos(a + 0.785) * r * 0.32, Math.sin(a + 0.785) * r * 0.32);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  function drawFxDiamond(ctx, x, y, r, rot){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.beginPath();
+    ctx.moveTo(0, -r);
+    ctx.lineTo(r * 0.45, 0);
+    ctx.lineTo(0, r);
+    ctx.lineTo(-r * 0.45, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  function drawFxSwirl(ctx, x, y, r, rot, strokeColor, coreColor, chaos){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    const arms = chaos ? 3 : 2;
+    const maxA = chaos ? 4.8 : 4.2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = Math.max(0.9, r * 0.28);
+    for(let i = 0; i < arms; i++){
+      const baseA = (i * Math.PI * 2) / arms;
+      ctx.beginPath();
+      const steps = 8;
+      for(let s = 0; s <= steps; s++){
+        const frac = s / steps;
+        const a = baseA + frac * maxA;
+        const dist = Math.pow(frac, 0.85) * r;
+        const px = Math.cos(a) * dist;
+        const py = Math.sin(a) * dist;
+        if(s === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.fillStyle = coreColor;
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(0.6, r * 0.28), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  function fireColor(t, a){
+    if(t < 0.28) return 'rgba(255,248,220,' + a + ')';
+    if(t < 0.55) return 'rgba(255,196,46,' + a + ')';
+    if(t < 0.8) return 'rgba(255,106,16,' + a + ')';
+    return 'rgba(176,18,6,' + a + ')';
+  }
+  function updateCauldronFx(dt){
+    if(!syncCauldronFxCanvas()) return;
+    if(isPaused){
+      return;
+    }
+    if(getParticleMode() === 'off'){
+      if(fxParticles.length){
+        fxParticles.length = 0;
+        fxCtx.setTransform(fxDpr, 0, 0, fxDpr, 0, 0);
+        fxCtx.clearRect(0, 0, fxCssW, fxCssH);
+      }
+      return;
+    }
+
+    if(state && state.phase === 'brewing'){
+      const tags = getTagCounts();
+      const mouthX = () => brewMouthX();
+      const mouthY = () => brewMouthY();
+      if(tags.fire){
+        fxEmitClock.fire += dt * fxRate(14);
+        while(fxEmitClock.fire >= 1){
+          fxEmitClock.fire -= 1;
+          emitFire(mouthX(), mouthY(), false);
+        }
+      }
+      if(tags.frost){
+        fxEmitClock.frost += dt * fxRate(9);
+        while(fxEmitClock.frost >= 1){
+          fxEmitClock.frost -= 1;
+          emitFrost(mouthX(), mouthY(), false);
+        }
+      }
+      if(tags.arcane){
+        fxEmitClock.arcane += dt * fxRate(10);
+        while(fxEmitClock.arcane >= 1){
+          fxEmitClock.arcane -= 1;
+          emitArcane(mouthX(), mouthY(), false, false);
+        }
+      }
+      if(tags.chaos){
+        fxEmitClock.chaos += dt * fxRate(8);
+        while(fxEmitClock.chaos >= 1){
+          fxEmitClock.chaos -= 1;
+          emitArcane(50 + (Math.random() - 0.5) * 8, mouthY(), false, true);
+        }
+      }
+      if(tags.midas || hasRelic('crucible')){
+        fxEmitClock.midas += dt * fxRate(7);
+        while(fxEmitClock.midas >= 1){
+          fxEmitClock.midas -= 1;
+          if(Math.random() < 0.45){
+            const side = Math.random() < 0.5 ? (16 + Math.random() * 18) : (66 + Math.random() * 18);
+            emitMidas(side, 74 + Math.random() * 14, false);
+          } else {
+            emitMidas(26 + Math.random() * 48, 28 + Math.random() * 12, false);
+          }
+        }
+      }
+    }
+
+    const ctx = fxCtx;
+    ctx.setTransform(fxDpr, 0, 0, fxDpr, 0, 0);
+    ctx.clearRect(0, 0, fxCssW, fxCssH);
+    ctx.globalCompositeOperation = 'lighter';
+    for(let i = fxParticles.length - 1; i >= 0; i--){
+      const p = fxParticles[i];
+      p.life -= dt;
+      if(p.life <= 0){
+        fxParticles[i] = fxParticles[fxParticles.length - 1];
+        fxParticles.pop();
+        continue;
+      }
+      const t = 1 - (p.life / p.maxLife);
+      const a = Math.max(0, Math.min(1, p.life / p.maxLife));
+      if(p.kind === 'arcane' || p.kind === 'chaos'){
+        p.ang += p.vr * dt;
+        p.orbit += p.grow * dt;
+        p.ox += p.vx * dt * 0.15;
+        p.oy += p.vy * dt;
+        p.x = p.ox + Math.cos(p.ang) * p.orbit;
+        p.y = p.oy + Math.sin(p.ang) * p.orbit * 0.72;
+        if(p.spin != null) p.rot = (p.rot || 0) + p.spin * dt;
+      } else {
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vx += (Math.random() - 0.5) * (p.kind === 'fire' ? 40 : 18) * dt;
+        if(p.kind === 'fire') p.vy += 18 * dt;
+        if(p.rot != null) p.rot += p.vr * dt;
+      }
+      const fade = a * (p.kind === 'midas' ? (0.55 + 0.45 * Math.abs(Math.sin((1 - t) * 14))) : 1);
+      const size = p.size * (p.kind === 'fire' ? (1 - t * 0.72) : (1 - t * 0.35));
+      if(p.kind === 'fire'){
+        ctx.fillStyle = fireColor(t, fade);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.4, size), 0, Math.PI * 2);
+        ctx.fill();
+      } else if(p.kind === 'frost'){
+        ctx.fillStyle = 'rgba(190,236,255,' + (fade * 0.95) + ')';
+        drawFxDiamond(ctx, p.x, p.y, Math.max(1.2, size), p.rot);
+        ctx.fillStyle = 'rgba(255,255,255,' + (fade * 0.55) + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.5, size * 0.35), 0, Math.PI * 2);
+        ctx.fill();
+      } else if(p.kind === 'arcane'){
+        drawFxSwirl(ctx, p.x, p.y, Math.max(1.5, size), p.rot || 0, 'rgba(215,140,255,' + (fade * 0.88) + ')', 'rgba(255,230,255,' + fade + ')', false);
+      } else if(p.kind === 'chaos'){
+        drawFxSwirl(ctx, p.x, p.y, Math.max(1.5, size), p.rot || 0, 'rgba(255,60,170,' + (fade * 0.90) + ')', 'rgba(255,230,120,' + fade + ')', true);
+      } else {
+        ctx.fillStyle = 'rgba(255,228,120,' + fade + ')';
+        drawFxStar(ctx, p.x, p.y, Math.max(1.4, size), p.rot || 0);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
   }
   function spawnFulfillMidasFx(){
     if(!fulfillFx || !fulfillBtn || !fulfillBtn.classList.contains('show')) return;
@@ -5556,19 +5911,9 @@
   }
 
   function spawnMidasCoinGlint(xPct, yPct){
-    if(getParticleMode() === 'off' || !fxLayer) return;
-    const scale = particleSizeScale();
-    const pos = cauldronToLayerPct(xPct, yPct);
-    const size = Math.round(12 * scale);
-    const el = spawnEl(fxLayer, 'px-particle fx-gold-coin', {
-      left: pos.x + '%',
-      top: pos.y + '%',
-      width: size + 'px',
-      height: size + 'px',
-      '--sx': ((Math.random() - 0.5) * 36 * scale) + 'px',
-      '--sy': (-40 - Math.random() * 28) + 'px'
-    }, 1100);
-    el.innerHTML = icon('coin', 'ic-gold');
+    if(getParticleMode() === 'off') return;
+    let n = getParticleMode() === 'high' ? 4 : 2;
+    for(let i = 0; i < n; i++) emitMidas(xPct + (Math.random() - 0.5) * 6, yPct + (Math.random() - 0.5) * 4, true);
   }
   function maybeSpawnMidasCoinGlint(xPct, yPct, chance){
     if(!state || getParticleMode() === 'off') return;
@@ -5588,51 +5933,15 @@
   function spawnChaosSparks(count){
     if(getParticleMode() === 'off') return;
     const n = Math.max(1, count || 3);
-    const scale = particleSizeScale();
-    for(let i = 0; i < n; i++){
-      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-      const size = Math.round((7 + Math.floor(Math.random() * 5)) * scale);
-      spawnEl(fxLayer, 'px-particle fx-violetspark', {
-        left: p.x + '%',
-        top: p.y + '%',
-        width: size + 'px',
-        height: size + 'px',
-        '--sx': ((Math.random() - 0.5) * 130 * scale) + 'px',
-        '--sy': ((Math.random() - 0.5) * 130 * scale) + 'px'
-      }, 650);
-    }
+    for(let i = 0; i < n; i++) emitArcane(brewMouthX(), brewMouthY(), true, true);
   }
 
   function spawnPhoenixBurst(){
     if(getParticleMode() === 'off') return;
-    let n = 14;
-    if(getParticleMode() === 'high') n = 26;
-    if(getParticleMode() === 'low') n = 7;
-    const scale = particleSizeScale();
-    for(let i = 0; i < n; i++){
-      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-      const size = 6 + Math.floor(Math.random() * 4);
-      spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
-        left: p.x + '%',
-        top: p.y + '%',
-        width: size + 'px',
-        height: size + 'px',
-        '--sway': ((Math.random() - 0.5) * 90 * scale) + 'px'
-      }, 950);
-      const flecks = 2 + Math.floor(Math.random() * 2);
-      for(let e = 0; e < flecks; e++){
-        const ep = cauldronToLayerPct(brewMouthX(), brewMouthY());
-        const es = 2 + Math.floor(Math.random() * 3);
-        spawnEl(fxLayer, 'px-particle fx-ember-spark', {
-          left: ep.x + '%',
-          top: ep.y + '%',
-          width: es + 'px',
-          height: es + 'px',
-          '--sx': ((Math.random() - 0.5) * 80 * scale) + 'px',
-          '--sy': (-70 - Math.random() * 45) + 'px'
-        }, 1250);
-      }
-    }
+    let n = 18;
+    if(getParticleMode() === 'high') n = 32;
+    if(getParticleMode() === 'low') n = 8;
+    for(let i = 0; i < n; i++) emitFire(brewMouthX(), brewMouthY(), true);
   }
 
   function trySecondBreath(){
@@ -5658,26 +5967,6 @@
     sfxQuotaMet();
     updateCauldronVisuals();
     return true;
-  }
-
-  function spawnClickBubbles(xPct, yPct){
-    const mode = getParticleMode();
-    if(mode === 'off') return;
-    const extra = mode === 'high' ? 2 : 0;
-    const scale = particleSizeScale();
-    for(let i = 0; i < 1 + extra; i++){
-      const size = Math.round((16 + Math.floor(Math.random()*8)) * scale);
-      const drift = (Math.random()-0.5) * 40 * scale;
-      const dur = (0.65 + Math.random()*0.25).toFixed(2);
-      spawnEl(fxLayer, 'px-particle click-bubble', {
-        left: (xPct + (i ? (Math.random()-0.5)*6 : 0)) + '%',
-        top: (yPct + (i ? (Math.random()-0.5)*4 : 0)) + '%',
-        width: size+'px',
-        height: size+'px',
-        '--drift': drift.toFixed(1)+'px',
-        '--dur': dur+'s'
-      }, Math.ceil(dur * 1000) + 100);
-    }
   }
 
   function spawnLiquidBubble(){
@@ -5722,159 +6011,8 @@
     // id — this guarantees every relic (Ashen Sigil, Phoenix Down, Arcane
     // Conduit, Winter's Grasp, etc.) shows a themed effect, not just the
     // handful of relics that were originally special-cased.
-    const tagCounts = getTagCounts();
-    const scale = particleSizeScale();
-
-    // Relic ambient particles spawn from the bubbling liquid opening, then
-    // get remapped into the oversized fxLayer so they still rise out of
-    // the brew instead of appearing in mid-air above the rim.
-    if(tagCounts.fire){
-      if(particleChance(0.55)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = 6 + Math.floor(Math.random() * 4);
-          spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
-            left:p.x+'%', top:p.y+'%',
-            width:size+'px', height:size+'px',
-            '--sway': ((Math.random() - 0.5) * 45 * scale) + 'px'
-          }, 950);
-        });
-      }
-      if(particleChance(0.7)){
-        withAmbientBursts(function(){
-          const flecks = 2 + Math.floor(Math.random() * 3);
-          for(let i = 0; i < flecks; i++){
-            const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-            const size = 2 + Math.floor(Math.random() * 3);
-            spawnEl(fxLayer, 'px-particle fx-ember-spark', {
-              left:p.x+'%', top:p.y+'%',
-              width:size+'px', height:size+'px',
-              '--sx': ((Math.random() - 0.5) * 50 * scale) + 'px',
-              '--sy': (-70 - Math.random() * 40) + 'px'
-            }, 1250);
-          }
-        });
-      }
-      if(particleChance(0.35)){
-        withAmbientBursts(function(){
-          const size = Math.round((10 + Math.floor(Math.random()*8)) * scale);
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          spawnEl(fxLayer, 'px-particle fx-smoke', {
-            left:p.x+'%', top:p.y+'%',
-            width:size+'px', height:size+'px',
-            '--sway': ((Math.random()-0.5)*30*scale)+'px'
-          }, 1650);
-        });
-      }
-    }
-
-    if(tagCounts.frost){
-      if(particleChance(0.5)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(9 * scale);
-          spawnEl(fxLayer, 'px-particle fx-frost-crystal', {
-            left:p.x+'%', top:p.y+'%',
-            width:size+'px', height:size+'px',
-            '--sx': ((Math.random() - 0.5) * 50 * scale) + 'px',
-            '--sy': (-55 - Math.random() * 35) + 'px'
-          }, 1600);
-        });
-      }
-      if(particleChance(0.4)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(10 * scale);
-          spawnEl(fxLayer, 'px-particle fx-stardust', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*80*scale)+'px',
-            '--sy': (-40-Math.random()*40)+'px'
-          }, 950);
-        });
-      }
-    }
-
-    if(tagCounts.arcane){
-      if(particleChance(0.5)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(11 * scale);
-          spawnEl(fxLayer, 'px-particle fx-arcane-swirl', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*60*scale)+'px',
-            '--sy': (-55-Math.random()*40)+'px'
-          }, 1350);
-        });
-      }
-      if(particleChance(0.35)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(10 * scale);
-          spawnEl(fxLayer, 'px-particle fx-stardust fx-stardust-arcane', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*70*scale)+'px',
-            '--sy': (-35-Math.random()*35)+'px'
-          }, 1000);
-        });
-      }
-    }
-
-    if(tagCounts.chaos){
-      if(particleChance(0.5)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(50, brewMouthY());
-          const size = Math.round(8 * scale);
-          spawnEl(fxLayer, 'px-particle fx-violetspark', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*140*scale)+'px',
-            '--sy': ((Math.random()-0.5)*140*scale)+'px'
-          }, 650);
-        });
-      }
-      if(particleChance(0.4)){
-        withAmbientBursts(function(){
-          const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-          const size = Math.round(10 * scale);
-          spawnEl(fxLayer, 'px-particle fx-rainbow', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sway': ((Math.random()-0.5)*50*scale)+'px'
-          }, 950);
-        });
-      }
-    }
-
-    if(tagCounts.midas || hasRelic('crucible')){
-      if(particleChance(0.58)){
-        withAmbientBursts(function(){
-          const p = midasEmitPoint(Math.random() < 0.45 ? 'foot' : 'rim');
-          const size = Math.round(11 * scale);
-          spawnEl(fxLayer, 'px-particle fx-gold-sparkle', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*55*scale)+'px',
-            '--sy': (-50-Math.random()*40)+'px'
-          }, 1400);
-        });
-      }
-      if(particleChance(0.48)){
-        withAmbientBursts(function(){
-          const p = midasEmitPoint(Math.random() < 0.5 ? 'foot' : 'rim');
-          const size = Math.round(10 * scale);
-          spawnEl(fxLayer, 'px-particle fx-stardust fx-stardust-midas', {
-            left:p.x+'%', top:p.y+'%', width:size+'px', height:size+'px',
-            '--sx': ((Math.random()-0.5)*60*scale)+'px',
-            '--sy': (-45-Math.random()*35)+'px'
-          }, 1200);
-        });
-      }
-      if(tagCounts.midas && particleChance(0.16)){
-        if(Math.random() < 0.4){
-          const side = Math.random() < 0.5 ? (16 + Math.random() * 18) : (66 + Math.random() * 18);
-          spawnMidasCoinGlint(side, 74 + Math.random() * 14);
-        } else {
-          spawnMidasCoinGlint(26 + Math.random() * 48, 28 + Math.random() * 12);
-        }
-      }
-    }
+    // Cauldron relic sparks now live on #cauldronFxCanvas. This interval
+    // only keeps the liquid boil bubbles bubbling.
 
     // Bubble Clusters scale with passive generation (Enchanted Bubblers),
     // giving every run some ambient brewing activity even with no relics.
@@ -6067,34 +6205,10 @@
 
   function spawnCinderFlames(count){
     if(getParticleMode() === 'off') return;
-    let n = count == null ? 2 : count;
+    let n = count == null ? 4 : count * 3;
     if(getParticleMode() === 'high') n = Math.ceil(n * 2.2);
-    if(getParticleMode() === 'low') n = Math.max(1, Math.ceil(n * 0.5));
-    const scale = particleSizeScale();
-    for(let i = 0; i < n; i++){
-      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
-      const size = 6 + Math.floor(Math.random() * 4);
-      spawnEl(fxLayer, 'px-particle fx-flame-tongue', {
-        left: p.x + '%',
-        top: p.y + '%',
-        width: size + 'px',
-        height: size + 'px',
-        '--sway': ((Math.random() - 0.5) * 70 * scale) + 'px'
-      }, 950);
-      const flecks = 2 + Math.floor(Math.random() * 2);
-      for(let e = 0; e < flecks; e++){
-        const ep = cauldronToLayerPct(brewMouthX(), brewMouthY());
-        const es = 2 + Math.floor(Math.random() * 3);
-        spawnEl(fxLayer, 'px-particle fx-ember-spark', {
-          left: ep.x + '%',
-          top: ep.y + '%',
-          width: es + 'px',
-          height: es + 'px',
-          '--sx': ((Math.random() - 0.5) * 60 * scale) + 'px',
-          '--sy': (-65 - Math.random() * 40) + 'px'
-        }, 1250);
-      }
-    }
+    if(getParticleMode() === 'low') n = Math.max(2, Math.ceil(n * 0.5));
+    for(let i = 0; i < n; i++) emitFire(brewMouthX(), brewMouthY(), true);
   }
 
   function bumpGold(amount){
@@ -6315,9 +6429,6 @@
       lastTapFxAt = now;
       spawnFloatNumber('+' + fmt(power * getAlchemicalMasteryMult()), crit ? 'crit' : '', xPct, yPct);
       if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
-      const brew = cauldronToLayerPct(clamp(xPct, 41, 59), brewMouthY());
-      spawnClickBubbles(brew.x, brew.y);
-      maybeSpawnMidasCoinGlint(xPct, yPct + 6, 0.28);
       if(hasRelic('bellows') && (state.bellowsHeatStacks || 0) >= 3) spawnCinderFlames(1);
       cauldron.classList.remove('squish');
       requestAnimationFrame(function(){ cauldron.classList.add('squish'); });
@@ -8073,6 +8184,7 @@
             if(surge > 0){
               addMana(surge, true);
               spawnFloatNumber('CRITICAL!', 'crit', 50, 18);
+              spawnClickBurst(50, brewMouthY(), true);
               triggerScreenShake();
               sfxClick(true);
             }
@@ -8171,6 +8283,7 @@
         }
       }
     }
+    updateCauldronFx(dt);
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
@@ -8200,6 +8313,7 @@
   window.addEventListener('pointercancel', stopStirHold);
   window.addEventListener('pointerleave', stopStirHold);
   window.addEventListener('resize', () => {
+    syncCauldronFxCanvas();
     if(isSanctumOpen()) drawSanctumLines();
   });
   buyStirBtn.addEventListener('click', buyStir);
