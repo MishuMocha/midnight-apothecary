@@ -1893,189 +1893,232 @@
     color:#c9a6ff; font-size:0.56rem; margin:0 0 14px;
     letter-spacing:0.5px;
   }
-  #sanctumOverlay .panelCard{ max-width:980px; }
-  .sanctum-tree{
-    display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
-    text-align:left; margin:8px 0 12px;
+  #sanctumOverlay .panelCard{
+    width:min(98vw, 1440px);
+    max-width:min(98vw, 1440px);
+    height:min(96vh, 1000px);
+    max-height:96vh;
+    padding:16px 24px 14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-between;
   }
-  .talent-path{
-    display:flex; flex-direction:column; gap:18px;
-    min-width:0;
+  #sanctumOverlay .panelCard h1{
+    font-size:1.05rem;
+    margin:0 0 8px;
+    flex-shrink:0;
   }
-  .talent-path-header{
-    text-align:center; padding:8px 6px 6px;
-    border:3px solid #000; background:rgba(0,0,0,0.35);
-    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  #sanctumOverlay .panelCard p{
+    font-size:0.62rem;
+    line-height:1.5;
+    margin:0 0 6px;
+    max-width:900px;
+    flex-shrink:0;
   }
-  .talent-path-name{ font-size:0.5rem; color:var(--amber-glow); letter-spacing:1px; line-height:1.4; }
-  .talent-path-tag{ font-size:0.38rem; color:var(--text-dim); margin-top:3px; }
-  .talent-path-invest{ margin-top:8px; }
-  .talent-path-invest-label{ font-size:0.36rem; color:var(--amber); letter-spacing:0.5px; }
-  .talent-path-bar{
+  #sanctumOverlay .sanctum-vault{
+    font-size:0.72rem;
+    margin:0 0 6px;
+    flex-shrink:0;
+  }
+  #sanctumOverlay .panelCard > .bigBtn{
+    width:min(100%, 480px);
+    margin-top:8px;
+    flex-shrink:0;
+  }
+  #sanctumConstellationView{
     position:relative;
-    height:10px; margin:6px 4px 5px;
-    background:rgba(0,0,0,0.55); border:2px solid #000;
-    box-shadow: inset 1px 1px 0 var(--px-dark);
-  }
-  .talent-path-bar-fill{
-    height:100%; width:0;
-    background: linear-gradient(90deg, #8a5cf0 0%, #e8b93d 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
-  }
-  .talent-path-bar-tick{
-    position:absolute; top:-2px; bottom:-2px;
-    width:2px; background:#ffe37a;
-    box-shadow: 0 0 4px rgba(255,210,122,0.7);
-    pointer-events:none;
-  }
-  .talent-path-invest-gates{ font-size:0.32rem; color:var(--text-dim); line-height:1.4; }
-  .talent-node{
-    position:relative;
-    display:flex; flex-direction:column; gap:8px; align-items:stretch;
-    padding:10px 8px; background:rgba(0,0,0,0.38);
+    flex:1 1 auto;
+    min-height:0;
+    width:auto;
+    max-width:min(100%, 840px, calc(96vh - 180px));
+    max-height:100%;
+    aspect-ratio:1 / 1;
+    margin:4px auto;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(232,185,61,0.10) 0%, transparent 18%),
+      radial-gradient(circle at 50% 50%, rgba(88,40,120,0.36) 0%, rgba(8,2,16,0.72) 58%, #080210 100%);
     border:3px solid #000;
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 28px rgba(88,40,140,0.28);
   }
-  .talent-path .talent-node:not(:last-child)::before{
+  #sanctumConstellationView::before{
     content:'';
-    position:absolute; left:50%; bottom:-18px; transform:translateX(-50%);
-    width:0; height:16px;
-    border-left:3px dashed rgba(201,166,255,0.28);
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.55) 0, transparent 100%),
+      radial-gradient(1px 1px at 72% 16%, rgba(255,230,160,0.45) 0, transparent 100%),
+      radial-gradient(1px 1px at 84% 68%, rgba(255,255,255,0.35) 0, transparent 100%),
+      radial-gradient(1px 1px at 28% 78%, rgba(201,166,255,0.5) 0, transparent 100%),
+      radial-gradient(1px 1px at 58% 86%, rgba(255,255,255,0.28) 0, transparent 100%),
+      radial-gradient(1px 1px at 40% 36%, rgba(255,230,160,0.28) 0, transparent 100%);
     pointer-events:none;
   }
-  .talent-path .talent-node:not(:last-child)::after{
-    content:'';
-    position:absolute; left:50%; bottom:-10px;
-    width:8px; height:8px;
-    border-right:3px dashed rgba(201,166,255,0.28);
-    border-bottom:3px dashed rgba(201,166,255,0.28);
-    transform:translate(-50%, 0) rotate(45deg);
+  #sanctumLinesSvg,
+  #sanctumNodesLayer{
+    position:absolute;
+    left:0; top:0;
+    width:100%; height:100%;
+  }
+  #sanctumLinesSvg{
+    overflow:visible;
     pointer-events:none;
   }
-  .talent-path .talent-node.unlocked:not(:last-child)::before,
-  .talent-path .talent-node.owned:not(:last-child)::before{ border-left-color:rgba(244,184,96,0.55); }
-  .talent-path .talent-node.unlocked:not(:last-child)::after,
-  .talent-path .talent-node.owned:not(:last-child)::after{ border-color:rgba(244,184,96,0.55); }
-  .talent-path .talent-node.maxed:not(:last-child)::before{ border-left-color:var(--amber); }
-  .talent-path .talent-node.maxed:not(:last-child)::after{ border-color:var(--amber); }
-  .talent-node.locked{ opacity:0.42; }
-  .talent-node.unlocked{
-    border-color:var(--amber);
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.45);
+  #sanctumNodesLayer{ z-index:1; }
+  .sanctum-spoke-label{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    text-align:center;
+    font-size:0.46rem;
+    color:var(--amber-glow);
+    letter-spacing:0.8px;
+    line-height:1.4;
+    background:rgba(12, 4, 20, 0.92);
+    border:2px solid #000;
+    padding:4px 8px;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 2px 0 #000;
+    white-space:nowrap;
+    z-index:3;
+    text-shadow:1px 1px 0 #000;
   }
-  .talent-node.owned{
-    border-color:var(--amber);
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.35);
+  .sanctum-spoke-label span{
+    display:block;
+    font-size:0.36rem;
+    color:#c9a6ff;
+    margin-top:1px;
+    letter-spacing:0.3px;
   }
-  .talent-node.maxed{
-    border-color:#ffd27a;
-    background: radial-gradient(circle at 50% 0%, rgba(255,210,122,0.22) 0%, rgba(0,0,0,0.38) 70%);
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 12px rgba(255,210,122,0.55);
-  }
-  .talent-node.prestige{
-    border-color:#e8b93d;
-    background: radial-gradient(circle at 50% 0%, rgba(232,185,61,0.18) 0%, rgba(42,16,64,0.55) 72%);
-  }
-  .talent-node.prestige .talent-name{ color:#ffe37a; }
-  .talent-lock{
-    position:absolute; top:-8px; right:-8px;
-    width:20px; height:20px;
+  .sanctum-node{
+    position:absolute;
+    width:56px; height:56px;
+    transform:translate(-50%,-50%);
+    padding:0; margin:0;
+    border:0; background:transparent;
     display:flex; align-items:center; justify-content:center;
-    background:#000; border:2px solid #8a7fa0; color:#c9b8d8;
-    pointer-events:none;
+    cursor:pointer;
+    font-family:inherit;
+    color:inherit;
+    z-index:2;
   }
-  .talent-lock .icon{ width:12px; height:12px; }
-  .talent-gem{
-    width:44px; height:44px; flex-shrink:0; align-self:center;
+  .sanctum-node.hub{
+    width:76px; height:76px;
+    cursor:default;
+  }
+  .sanctum-node.keystone{ width:68px; height:68px; }
+  .sanctum-socket{
+    width:54px; height:54px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
     background:var(--purple-mid); border:3px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
     color:var(--text-dim);
+    border-radius:50%;
+    overflow:hidden;
   }
-  .talent-node.owned .talent-gem{ background:#5a2f12; color:var(--amber-glow); }
-  .talent-node.maxed .talent-gem{ background:var(--amber); color:#2a1a08; }
-  .talent-body{ flex:1; min-width:0; text-align:center; }
-  .talent-name{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; margin-bottom:4px; }
-  .talent-desc{ font-size:0.4rem; color:var(--text-dim); line-height:1.55; }
-  .talent-req{ font-size:0.36rem; color:#c9a6ff; line-height:1.45; margin-top:5px; }
-  .talent-req.branch-lock{
-    display:inline-block;
-    margin-top:6px; padding:3px 6px;
-    border:2px solid #6a4a16; background:rgba(42,16,8,0.65);
-    color:#ffd27a; letter-spacing:0.3px;
+  .sanctum-node.hub .sanctum-socket{
+    width:68px; height:68px;
+    background: radial-gradient(circle at 40% 30%, #6a3aa0 0%, #2a1040 70%);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 14px rgba(201,166,255,0.45);
   }
-  .talent-req.branch-lock .icon{ width:10px; height:10px; vertical-align:-1px; }
-  .talent-rank{ font-size:0.4rem; color:var(--amber); margin-top:5px; }
-  .talent-buy{
-    flex-shrink:0; align-self:stretch;
-    padding:8px 8px; font-size:0.42rem; min-width:86px;
-    background:var(--amber); color:#2a1a08; border:3px solid #000;
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 0 3px 0 #000;
-    font-family:inherit; cursor:pointer;
-  }
-  .talent-buy:hover:not(:disabled){ filter:brightness(1.15); }
-  .talent-buy:disabled{ background:#5a5064; color:#8a7fa0; box-shadow:none; cursor:not-allowed; }
-  .keystone-section{ margin-top:18px; text-align:left; }
-  .keystone-section-header{
-    text-align:center; margin-bottom:10px; padding:8px 8px 6px;
-    border:3px solid #000; background:rgba(42,16,8,0.55);
+  .talent-gem{
+    width:54px; height:54px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--purple-mid); border:3px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    color:var(--text-dim);
+    border-radius:50%;
+    overflow:hidden;
   }
-  .keystone-section-title{ font-size:0.52rem; color:#ffe37a; letter-spacing:1px; }
-  .keystone-section-sub{ font-size:0.36rem; color:var(--text-dim); margin-top:4px; line-height:1.45; }
-  .keystone-grid{
-    display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+  .talent-gem img,
+  .sanctum-socket img,
+  .keystone-hex img{
+    width:100%; height:100%; object-fit:contain; image-rendering:pixelated;
   }
-  .keystone-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
-  .keystone-col-label{ font-size:0.38rem; color:var(--amber-glow); letter-spacing:0.8px; text-align:center; }
-  .keystone-node{
-    position:relative;
-    display:flex; flex-direction:column; align-items:stretch; gap:8px;
-    padding:12px 10px 10px;
-    background: rgba(18, 8, 6, 0.72);
-    border:3px solid #5a3a12;
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
+  .sanctum-rank{
+    position:absolute; left:50%; bottom:-10px;
+    transform:translateX(-50%);
+    min-width:34px;
+    padding:2px 5px;
+    font-size:0.36rem;
+    color:#ffe37a;
+    background:#000;
+    border:2px solid #3a2a18;
+    letter-spacing:0.3px;
+    pointer-events:none;
+    line-height:1.2;
   }
-  .keystone-node.locked{ opacity:0.48; }
-  .keystone-node.available{ border-color:var(--amber); }
-  .keystone-node.owned{ border-color:#c99212; }
-  .keystone-node.active{
+  .sanctum-hub-label{
+    position:absolute; left:50%; bottom:-14px;
+    transform:translateX(-50%);
+    font-size:0.34rem;
+    color:#c9a6ff;
+    letter-spacing:0.8px;
+    text-shadow:1px 1px 0 #000;
+    pointer-events:none;
+    white-space:nowrap;
+  }
+  .talent-lock{
+    position:absolute; top:-6px; right:-6px;
+    width:22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+    background:#000; border:2px solid #8a7fa0; color:#c9b8d8;
+    pointer-events:none;
+    z-index:2;
+  }
+  .talent-lock .icon{ width:14px; height:14px; }
+  .sanctum-node.locked{ opacity:0.42; }
+  .sanctum-node.available .sanctum-socket,
+  .sanctum-node.available .talent-gem{
+    border-color:var(--amber);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 10px rgba(232,185,61,0.45);
+  }
+  .sanctum-node.owned .sanctum-socket,
+  .sanctum-node.owned .talent-gem{
+    background:#5a2f12; color:var(--amber-glow);
+    border-color:var(--amber);
+  }
+  .sanctum-node.maxed .sanctum-socket,
+  .sanctum-node.maxed .talent-gem{
+    background:var(--amber); color:#2a1a08;
     border-color:#ffe37a;
-    background: radial-gradient(circle at 50% 0%, rgba(255,210,122,0.22) 0%, rgba(18,8,6,0.72) 70%);
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 16px rgba(255,210,122,0.55);
-    animation: keystoneActivePulse 1.25s ease-in-out infinite alternate;
-  }
-  @keyframes keystoneActivePulse{
-    0%{ box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 10px rgba(255,210,122,0.35); }
-    100%{ box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 20px rgba(255,210,122,0.75); }
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 0 0 14px rgba(255,210,122,0.7);
   }
   .keystone-hex-wrap{
-    width:56px; height:56px; align-self:center;
+    width:64px; height:64px;
     display:flex; align-items:center; justify-content:center;
     clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
     background:#5a3a12;
+    animation: sanctumKeyPulse 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 6px rgba(232,185,61,0.35));
   }
-  .keystone-node.locked .keystone-hex-wrap{ background:#4a4254; }
-  .keystone-node.available .keystone-hex-wrap{ background:var(--amber); }
-  .keystone-node.owned .keystone-hex-wrap{ background:#c99212; }
-  .keystone-node.active .keystone-hex-wrap{ background:#ffe37a; }
+  .sanctum-node.keystone.locked .keystone-hex-wrap{
+    background:#4a4254;
+    animation: none;
+    filter:none;
+  }
+  .sanctum-node.keystone.available .keystone-hex-wrap{ background:var(--amber); }
+  .sanctum-node.keystone.owned .keystone-hex-wrap{ background:#c99212; }
+  .sanctum-node.keystone.active-keystone .keystone-hex-wrap{
+    background:#ffe37a;
+    animation: sanctumKeyActivePulse 1.15s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 12px rgba(255,210,122,0.85));
+  }
   .keystone-hex{
-    width:46px; height:46px;
+    width:52px; height:52px;
     display:flex; align-items:center; justify-content:center;
     clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
     background: var(--purple-mid);
     color: var(--amber-glow);
   }
-  .keystone-node.active .keystone-hex{ background:#5a2f12; color:#ffe37a; }
-  .keystone-name{ font-size:0.46rem; color:#ffe37a; text-align:center; line-height:1.4; }
-  .keystone-active-tag{
-    align-self:center; font-size:0.32rem; color:#2a1a08; background:#ffe37a;
-    padding:2px 6px; border:2px solid #000; letter-spacing:0.6px;
+  .sanctum-node.keystone.active-keystone .keystone-hex{ background:#5a2f12; color:#ffe37a; }
+  @keyframes sanctumKeyPulse{
+    0%{ filter: drop-shadow(0 0 4px rgba(232,185,61,0.22)); }
+    100%{ filter: drop-shadow(0 0 10px rgba(232,185,61,0.55)); }
   }
-  .keystone-up{ font-size:0.36rem; color:#ffd27a; line-height:1.45; }
-  .keystone-down{ font-size:0.36rem; color:#ff6b7d; line-height:1.45; }
-  .keystone-actions{ display:flex; gap:6px; }
-  .keystone-actions .talent-buy{ flex:1; min-width:0; }
+  @keyframes sanctumKeyActivePulse{
+    0%{ filter: drop-shadow(0 0 8px rgba(255,210,122,0.45)); }
+    100%{ filter: drop-shadow(0 0 16px rgba(255,210,122,0.95)); }
+  }
   #keystoneHud{
     display:none;
     padding:3px 8px;
@@ -2085,9 +2128,19 @@
     cursor:pointer;
   }
   #keystoneHud.show{ display:inline-flex; align-items:center; gap:5px; }
+  #keystoneHud img{
+    width:14px; height:14px; object-fit:contain; image-rendering:pixelated;
+  }
   @media (max-width: 720px){
-    .sanctum-tree{ grid-template-columns: 1fr; }
-    .keystone-grid{ grid-template-columns: 1fr; }
+    #sanctumOverlay .panelCard{ width:min(98vw, 1440px); padding:12px 12px 10px; }
+    #sanctumConstellationView{ width:min(100%, calc(96vh - 180px)); max-width:840px; }
+    .sanctum-node{ width:50px; height:50px; }
+    .sanctum-node.hub{ width:62px; height:62px; }
+    .sanctum-node.keystone{ width:56px; height:56px; }
+    .sanctum-socket, .talent-gem{ width:44px; height:44px; }
+    .sanctum-node.hub .sanctum-socket{ width:56px; height:56px; }
+    .keystone-hex-wrap{ width:52px; height:52px; }
+    .keystone-hex{ width:42px; height:42px; }
     .top-actions{ flex-wrap:wrap; gap:12px; }
     .top-currencies{ padding-left:0; margin-left:0; border-left:none; }
   }
@@ -2711,7 +2764,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.3.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2768,7 +2821,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.3.2</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2848,7 +2901,32 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Sanctum branch names now sit on their own plaques between the Core and the first star, and the three paths no longer crowd each other.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.1</div>
+        <ul class="changelog-list">
+          <li>The Alchemical Sanctum now fills the screen, with larger stars, clearer ranks, and more room between the three branches.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3</div>
+        <ul class="changelog-list">
+          <li>The Alchemical Sanctum unfolds as a radial constellation — Alchemy, Chronos, and Commerce branch from the Apothecary Core, with Keystones flanking each outer star.</li>
+          <li>Hover a star to read its ranks, shard cost, and effect. Click a talent to allocate a point, or click a Keystone to buy it and equip or unequip — still only one Keystone at a time.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.4</div>
+        <ul class="changelog-list">
+          <li>Every talent gem and Keystone hex in the Alchemical Sanctum now wears its own painted pixel icon.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.3</div>
         <ul class="changelog-list">
           <li>Fire now flickers in chunky 16-bit pixel clusters, with bright ember flecks dancing around each rising flame.</li>
         </ul>
@@ -3521,10 +3599,12 @@
 <div class="overlay hidden" id="sanctumOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL<br>SANCTUM</h1>
-    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later tiers stay locked until you have invested enough shards in that branch. Keystone Masteries are mutually exclusive playstyles: buy them, then equip only one.</p>
+    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Three branches — Alchemy, Chronos, and Commerce — radiate from the Apothecary Core. Later stars stay locked until you have invested enough shards in that branch. Keystone Masteries flank each outer sink: buy them, then equip only one.</p>
     <div class="sanctum-vault"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> Mana Shards: <span id="sanctumShardValue" data-shard-count>0</span></div>
-    <div id="sanctumTree" class="sanctum-tree"></div>
-    <div id="keystoneSection" class="keystone-section"></div>
+    <div id="sanctumConstellationView">
+      <svg id="sanctumLinesSvg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+      <div id="sanctumNodesLayer"></div>
+    </div>
     <button class="pixel-btn bigBtn" id="closeSanctumBtn">CLOSE SANCTUM</button>
   </div>
 </div>
@@ -3743,72 +3823,72 @@
     { id:'commerce', name:'COMMERCE', tag:'Pedestal Path', icon:'coin' },
   ];
   const TALENTS = [
-    { id:'deepCauldron', name:'Deep Cauldron', icon:'urn', path:'potency', tier:1, maxLv:3,
+    { id:'deepCauldron', name:'Deep Cauldron', icon:'icons/deepCauldron.png', path:'potency', tier:1, maxLv:3,
       desc:'+10% base Click Power and Passive Mana generation per rank.',
       bonusLine: function(lv){ return '+' + (lv * 10) + '% base brew power'; },
       baseCost:35, costGrowth:1.65 },
-    { id:'arcaneKeenness', name:'Arcane Keenness', icon:'moon', path:'potency', tier:2, requires:'deepCauldron', maxLv:5,
+    { id:'arcaneKeenness', name:'Arcane Keenness', icon:'icons/arcaneKeenness.png', path:'potency', tier:2, requires:'deepCauldron', maxLv:5,
       desc:'+1% innate Critical Surge chance on every tap, even without Moonstone Dust.',
       bonusLine: function(lv){ return '+' + lv + '% innate crit chance'; },
       baseCost:50, costGrowth:1.6 },
-    { id:'continuousStirring', name:'Continuous Stirring', icon:'spoon', path:'potency', tier:3, requires:'arcaneKeenness', maxLv:3,
+    { id:'continuousStirring', name:'Continuous Stirring', icon:'icons/continuousStirring.png', path:'potency', tier:3, requires:'arcaneKeenness', maxLv:3,
       desc:'Hold down the mouse button or touch screen on the cauldron to stir continuously at 5 taps/sec (8 at Lv 2, 12 at Lv 3).',
       bonusLine: function(lv){ return lv > 0 ? ([0,5,8,12][lv] + ' taps/sec while held') : 'Tap the cauldron by hand'; },
       baseCost:150, costGrowth:1.55 },
-    { id:'alchemicalMastery', name:'Alchemical Mastery', icon:'sparkle', path:'potency', tier:4, requires:'continuousStirring', maxLv:20,
+    { id:'alchemicalMastery', name:'Alchemical Mastery', icon:'icons/alchemicalMastery.png', path:'potency', tier:4, requires:'continuousStirring', maxLv:20,
       desc:'+1% Global Mana Essence multiplier per rank.',
       bonusLine: function(lv){ return '+' + lv + '% global essence'; },
       baseCost:150, costGrowth:1.45 },
-    { id:'chronoInfusion', name:'Chrono-Infusion', icon:'hourglass', path:'chronos', tier:1, maxLv:5,
+    { id:'chronoInfusion', name:'Chrono-Infusion', icon:'icons/chronoInfusion.png', path:'chronos', tier:1, maxLv:5,
       desc:'+1.0s to every order deadline per rank.',
       bonusLine: function(lv){ return '+' + lv.toFixed(1) + 's base deadline'; },
       baseCost:20, costGrowth:1.55 },
-    { id:'stasisMastery', name:'Stasis Mastery', icon:'ice', path:'chronos', tier:2, requires:'chronoInfusion', maxLv:3,
+    { id:'stasisMastery', name:'Stasis Mastery', icon:'icons/stasisMastery.png', path:'chronos', tier:2, requires:'chronoInfusion', maxLv:3,
       desc:'Extends every Freeze duration by +0.5s per rank.',
       bonusLine: function(lv){ return '+' + (lv * 0.5).toFixed(1) + 's freeze duration'; },
       baseCost:60, costGrowth:1.55 },
-    { id:'secondBreath', name:'Second Breath', icon:'feather', path:'chronos', tier:3, requires:'stasisMastery', maxLv:3,
+    { id:'secondBreath', name:'Second Breath', icon:'icons/secondBreath.png', path:'chronos', tier:3, requires:'stasisMastery', maxLv:3,
       desc:'Once per order, a boiled-over deadline grants +1.5s per rank instead of ending the brew.',
       bonusLine: function(lv){ return lv > 0 ? 'Boil-over save +' + (lv * 1.5).toFixed(1) + 's' : 'No second breath'; },
       baseCost:180, costGrowth:1.6 },
-    { id:'temporalAnchor', name:'Temporal Anchor', icon:'hourglass', path:'chronos', tier:4, requires:'secondBreath', maxLv:20,
+    { id:'temporalAnchor', name:'Temporal Anchor', icon:'icons/temporalAnchor.png', path:'chronos', tier:4, requires:'secondBreath', maxLv:20,
       desc:'+0.5s Base Deadline to all orders per rank.',
       bonusLine: function(lv){ return '+' + (lv * 0.5).toFixed(1) + 's base deadline'; },
       baseCost:150, costGrowth:1.45 },
-    { id:'merchantsPurse', name:"Merchant's Purse", icon:'coin', path:'commerce', tier:1, maxLv:5,
+    { id:'merchantsPurse', name:"Merchant's Purse", icon:'icons/merchantsPurse.png', path:'commerce', tier:1, maxLv:5,
       desc:'Start every new brew with +5 Gold per rank.',
       bonusLine: function(lv){ return 'Start with +' + (lv * 5) + ' Gold'; },
       baseCost:25, costGrowth:1.5 },
-    { id:'expandedPedestal', name:'Expanded Pedestal', icon:'sparkle', path:'commerce', tier:2, requires:'merchantsPurse', maxLv:1,
+    { id:'expandedPedestal', name:'Expanded Pedestal', icon:'icons/expandedPedestal.png', path:'commerce', tier:2, requires:'merchantsPurse', maxLv:1,
       desc:'The Relic Pedestal permanently offers a fifth shop card.',
       bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
       baseCost:75, costGrowth:1 },
-    { id:'bargainMaster', name:'Bargain Master', icon:'refresh', path:'commerce', tier:3, requires:'expandedPedestal', maxLv:3,
+    { id:'bargainMaster', name:'Bargain Master', icon:'icons/bargainMaster.png', path:'commerce', tier:3, requires:'expandedPedestal', maxLv:3,
       desc:'Permanently discounts shop rerolls by 1 Gold per rank.',
       bonusLine: function(lv){ return lv > 0 ? '-' + lv + ' Gold shop rerolls' : 'Full reroll price'; },
       baseCost:120, costGrowth:1.5 },
-    { id:'gildedProsperity', name:'Gilded Prosperity', icon:'coin', path:'commerce', tier:4, requires:'bargainMaster', maxLv:20,
+    { id:'gildedProsperity', name:'Gilded Prosperity', icon:'icons/gildedProsperity.png', path:'commerce', tier:4, requires:'bargainMaster', maxLv:20,
       desc:'+2% Gold payout on all order completions per rank.',
       bonusLine: function(lv){ return '+' + (lv * 2) + '% gold on orders'; },
       baseCost:150, costGrowth:1.45 },
   ];
   const KEYSTONES = [
-    { id:'pyroKineticism', name:'Pyromantic Kineticism', icon:'fire', path:'potency', cost:200,
+    { id:'pyroKineticism', name:'Pyromantic Kineticism', icon:'icons/pyroKineticism.png', path:'potency', cost:200,
       upside:'Base Click Power is amplified by +150%. Critical Surges deal 5x instead of 3x.',
       drawback:'Enchanted Bubblers generate 0 passive Mana/sec.' },
-    { id:'aethericSiphon', name:'Aetheric Siphon', icon:'sparkle', path:'potency', cost:200,
+    { id:'aethericSiphon', name:'Aetheric Siphon', icon:'icons/aethericSiphon.png', path:'potency', cost:200,
       upside:'Enchanted Bubblers produce +200% Mana/sec. Passive ticks have a 10% chance to trigger an automatic Critical Surge.',
       drawback:'Cauldron clicks produce 0 direct Mana (clicks still advance tap counters, heat, and procs).' },
-    { id:'volatileOvercharge', name:'Volatile Overcharge', icon:'lightning', path:'chronos', cost:200,
+    { id:'volatileOvercharge', name:'Volatile Overcharge', icon:'icons/volatileOvercharge.png', path:'chronos', cost:200,
       upside:'Surplus Gold conversion is doubled (+100% surplus Gold rate).',
       drawback:'Auto-finish surplus timer is reduced from 30.0s to 12.0s; active deadline drains 25% faster.' },
-    { id:'glacialPreservation', name:'Glacial Preservation', icon:'ice', path:'chronos', cost:200,
+    { id:'glacialPreservation', name:'Glacial Preservation', icon:'icons/glacialPreservation.png', path:'chronos', cost:200,
       upside:'Base Order Deadlines receive +15.0s, and freeze cap is raised to 6.0s.',
       drawback:'In-shop Relics and Charms cost 35% more Gold.' },
-    { id:'alchemicalPolymath', name:'Alchemical Polymath', icon:'scroll', path:'commerce', cost:200,
+    { id:'alchemicalPolymath', name:'Alchemical Polymath', icon:'icons/alchemicalPolymath.png', path:'commerce', cost:200,
       upside:'All Synergy Tag set-piece milestone requirements are reduced by 1 (4-piece unlocks at 3, 2-piece unlocks at 1).',
       drawback:'Relic Pedestal offers 1 fewer relic per visit; shop rerolls cost +5 Gold.' },
-    { id:'philosophersTransmutation', name:"Philosopher's Transmutation", icon:'urn', path:'commerce', cost:200,
+    { id:'philosophersTransmutation', name:"Philosopher's Transmutation", icon:'icons/PhilosophersTransmutation.png', path:'commerce', cost:200,
       upside:'Consuming any Ingredient Charm grants +15% of remaining order quota as Mana and +3 Gold.',
       drawback:'Ingredient Charm cooldowns are increased by +5.0s.' },
   ];
@@ -4163,6 +4243,10 @@
     hoardersScale:1, pawnTicket:1, gildedLedger:1, auricSignet:1, coin:1
   };
   function icon(name, cls){
+    const src = String(name || '');
+    if(/\.(png|webp|gif|jpe?g)$/i.test(src) || src.indexOf('icons/') === 0){
+      return '<img src="' + src + '" class="icon ' + (cls||'') + '" draggable="false" alt="icon" />';
+    }
     const painted = PAINTED_ICONS[name] ? ' painted' : '';
     const sym = document.getElementById('icon-' + name);
     if(sym){
@@ -4240,8 +4324,9 @@
   const resetSaveBtn = $('resetSaveBtn');
   const resetSanctumBtn = $('resetSanctumBtn');
   const sanctumOverlay = $('sanctumOverlay');
-  const sanctumTree = $('sanctumTree');
-  const keystoneSection = $('keystoneSection');
+  const sanctumConstellationView = $('sanctumConstellationView');
+  const sanctumLinesSvg = $('sanctumLinesSvg');
+  const sanctumNodesLayer = $('sanctumNodesLayer');
   const keystoneHud = $('keystoneHud');
   const closeSanctumBtn = $('closeSanctumBtn');
   const openSanctumBtn = $('openSanctumBtn');
@@ -7034,123 +7119,308 @@
     `;
   }
 
-  function renderSanctum(){
-    if(!sanctumTree) return;
-    refreshShardReadouts();
-    sanctumTree.innerHTML = '';
-    TALENT_PATHS.forEach(path => {
-      const col = document.createElement('div');
-      col.className = 'talent-path';
-      const invested = getBranchShardsInvested(path.id);
-      const barMax = BRANCH_TIER3_INVEST;
-      const fillPct = Math.max(0, Math.min(100, (invested / barMax) * 100));
-      const tickPct = (BRANCH_TIER2_INVEST / barMax) * 100;
-      col.innerHTML = `
-        <div class="talent-path-header">
-          <div class="talent-path-name">${icon(path.icon)} ${path.name}</div>
-          <div class="talent-path-tag">${path.tag}</div>
-          <div class="talent-path-invest">
-            <div class="talent-path-invest-label">${invested} shards invested</div>
-            <div class="talent-path-bar">
-              <div class="talent-path-bar-fill" style="width:${fillPct}%"></div>
-              <div class="talent-path-bar-tick" style="left:${tickPct}%"></div>
-            </div>
-            <div class="talent-path-invest-gates">T2 ${Math.min(invested, BRANCH_TIER2_INVEST)}/${BRANCH_TIER2_INVEST} · Capstone ${Math.min(invested, BRANCH_TIER3_INVEST)}/${BRANCH_TIER3_INVEST}</div>
-          </div>
-        </div>
-      `;
-      TALENTS.filter(t => t.path === path.id).sort((a, b) => a.tier - b.tier).forEach(t => {
-        const lv = getTalentLevel(t.id);
-        const maxed = lv >= t.maxLv;
-        const unlocked = isTalentPrereqMet(t);
-        const cost = getTalentDisplayCost(t);
-        const canBuy = unlocked && !maxed && meta.manaShards >= cost && isFinite(getTalentCost(t));
-        const req = getTalentPrereqLabel(t);
-        const gate = getBranchInvestGate(t);
-        const branchShort = gate > 0 && getBranchShardsInvested(t.path) < gate;
-        const node = document.createElement('div');
-        let nodeState = ' locked';
-        if(unlocked && maxed) nodeState = ' unlocked maxed';
-        else if(unlocked && lv > 0) nodeState = ' unlocked owned';
-        else if(unlocked) nodeState = ' unlocked';
-        else if(lv > 0) nodeState = ' owned';
-        const tierClass = t.tier >= 4 ? ' prestige' : (t.tier >= 3 ? ' capstone' : '');
-        node.className = 'talent-node' + tierClass + nodeState;
-        node.innerHTML = `
-          ${unlocked ? '' : '<div class="talent-lock">' + icon('lock') + '</div>'}
-          <div class="talent-gem">${icon(t.icon)}</div>
-          <div class="talent-body">
-            <div class="talent-name">${t.name}</div>
-            <div class="talent-desc">${t.desc}</div>
-            ${!unlocked && branchShort ? '<div class="talent-req branch-lock">' + icon('lock') + ' ' + getTalentPathName(t.path) + ' ' + getBranchShardsInvested(t.path) + '/' + gate + '</div>' : ''}
-            ${!unlocked && req ? '<div class="talent-req">' + req + '</div>' : ''}
-            <div class="talent-rank">${maxed ? 'MAX Lv ' + lv : ('Lv ' + lv + ' / ' + t.maxLv)} · ${t.bonusLine(lv)}</div>
-          </div>
-          <button class="talent-buy" data-tid="${t.id}" ${canBuy ? '' : 'disabled'}>${maxed ? 'MAXED' : (unlocked ? ('BUY ' + cost) : 'LOCKED')}</button>
-        `;
-        col.appendChild(node);
-      });
-      sanctumTree.appendChild(col);
-    });
-    sanctumTree.querySelectorAll('.talent-buy').forEach(btn => {
-      btn.addEventListener('click', () => buyTalent(btn.getAttribute('data-tid')));
-    });
-    renderKeystones();
+  const SANCTUM_BRANCHES = [
+    { path:'potency', name:'ALCHEMY', deg:210, talents:['deepCauldron','arcaneKeenness','continuousStirring','alchemicalMastery'], keystones:['pyroKineticism','aethericSiphon'] },
+    { path:'chronos', name:'CHRONOS', deg:330, talents:['chronoInfusion','stasisMastery','secondBreath','temporalAnchor'], keystones:['volatileOvercharge','glacialPreservation'] },
+    { path:'commerce', name:'COMMERCE', deg:90, talents:['merchantsPurse','expandedPedestal','bargainMaster','gildedProsperity'], keystones:['alchemicalPolymath','philosophersTransmutation'] }
+  ];
+  const SANCTUM_TIER_R = [18, 28, 36, 44];
+  const SANCTUM_KEY_OUT = 0;
+  const SANCTUM_KEY_SPREAD = 13;
+  const SANCTUM_LABEL_R = 10;
+  const SANCTUM_LABEL_OFF = 5;
+  const SANCTUM_EDGE = 6.5;
+
+  function sanctumPolar(deg, radius){
+    const rad = deg * Math.PI / 180;
+    return { x: 50 + Math.cos(rad) * radius, y: 50 + Math.sin(rad) * radius };
   }
-  function renderKeystones(){
-    if(!keystoneSection) return;
-    keystoneSection.innerHTML = `
-      <div class="keystone-section-header">
-        <div class="keystone-section-title">${icon('sparkle','ic-amber')} KEYSTONE MASTERY</div>
-        <div class="keystone-section-sub">Mutually exclusive playstyles. Buy with shards, then equip only one. Unequip anytime from the Sanctum.</div>
-      </div>
-      <div class="keystone-grid"></div>
+  function sanctumFit(p){
+    return {
+      x: Math.max(SANCTUM_EDGE, Math.min(100 - SANCTUM_EDGE, p.x)),
+      y: Math.max(SANCTUM_EDGE, Math.min(100 - SANCTUM_EDGE, p.y))
+    };
+  }
+  function sanctumLabelPos(deg){
+    const along = sanctumPolar(deg, SANCTUM_LABEL_R);
+    const rad = (deg + 90) * Math.PI / 180;
+    return sanctumFit({
+      x: along.x + Math.cos(rad) * SANCTUM_LABEL_OFF,
+      y: along.y + Math.sin(rad) * SANCTUM_LABEL_OFF
+    });
+  }
+  function sanctumKeystonePos(deg, side){
+    const rad = deg * Math.PI / 180;
+    const spread = deg === 90 ? 14 : 12;
+    const out = sanctumPolar(deg, SANCTUM_TIER_R[3] + SANCTUM_KEY_OUT);
+    return sanctumFit({
+      x: out.x + (-Math.sin(rad)) * spread * side,
+      y: out.y + Math.cos(rad) * spread * side
+    });
+  }
+  const SANCTUM_LAYOUT = (function(){
+    const nodes = [{ id:'core', kind:'hub', x:50, y:50 }];
+    const links = [];
+    SANCTUM_BRANCHES.forEach(b => {
+      const label = sanctumLabelPos(b.deg);
+      nodes.push({ id:'label-' + b.path, kind:'label', path:b.path, name:b.name, x:label.x, y:label.y });
+      let parent = 'core';
+      b.talents.forEach((id, i) => {
+        const p = sanctumFit(sanctumPolar(b.deg, SANCTUM_TIER_R[i]));
+        nodes.push({ id:id, kind:'talent', path:b.path, x:p.x, y:p.y, parent:parent });
+        links.push({ from:parent, to:id });
+        parent = id;
+      });
+      b.keystones.forEach((id, i) => {
+        const side = i === 0 ? -1 : 1;
+        const p = sanctumKeystonePos(b.deg, side);
+        nodes.push({ id:id, kind:'keystone', path:b.path, x:p.x, y:p.y, parent:parent });
+        links.push({ from:parent, to:id });
+      });
+    });
+    return { nodes:nodes, links:links };
+  })();
+
+  function getSanctumTalentState(t){
+    const lv = getTalentLevel(t.id);
+    const maxed = lv >= t.maxLv;
+    const unlocked = isTalentPrereqMet(t);
+    const cost = getTalentDisplayCost(t);
+    let cls = 'sanctum-node talent';
+    if(maxed) cls += ' maxed';
+    else if(!unlocked) cls += ' locked';
+    else cls += ' available';
+    if(lv > 0 && !maxed) cls += ' owned';
+    return { lv:lv, maxed:maxed, unlocked:unlocked, cost:cost, cls:cls };
+  }
+  function getSanctumKeystoneState(k){
+    const owned = isKeystoneUnlocked(k.id);
+    const active = hasKeystone(k.id);
+    const canBuy = !owned && meta.manaShards >= k.cost;
+    let cls = 'sanctum-node keystone';
+    if(active) cls += ' active-keystone';
+    else if(owned) cls += ' owned';
+    else if(canBuy) cls += ' available';
+    else cls += ' locked';
+    return { owned:owned, active:active, canBuy:canBuy, cls:cls };
+  }
+  function isSanctumLinkLit(fromId, toId){
+    if(fromId === 'core') return getTalentLevel(toId) > 0;
+    if(getTalentById(fromId) && getTalentLevel(fromId) > 0) return true;
+    return !!(getKeystoneById(toId) && isKeystoneUnlocked(toId));
+  }
+  function getSanctumTalentTooltipHTML(t){
+    const st = getSanctumTalentState(t);
+    const req = !st.unlocked ? getTalentPrereqLabel(t) : '';
+    let next;
+    if(st.maxed) next = 'Fully mastered';
+    else if(st.unlocked) next = 'Next rank: ' + st.cost + ' Mana Shards';
+    else next = req || 'Locked';
+    return `
+      <div class="tooltip-title">${icon(t.icon)} ${t.name}</div>
+      <div class="tooltip-line">Rank ${st.lv} / ${t.maxLv}${st.maxed ? ' · MAXED' : ''}</div>
+      <div class="tooltip-desc">${t.desc}</div>
+      <div class="tooltip-line">${t.bonusLine(st.lv)}</div>
+      <div class="tooltip-next">${next}</div>
     `;
-    const grid = keystoneSection.querySelector('.keystone-grid');
-    TALENT_PATHS.forEach(path => {
-      const col = document.createElement('div');
-      col.className = 'keystone-col';
-      col.innerHTML = '<div class="keystone-col-label">' + path.name + '</div>';
-      KEYSTONES.filter(k => k.path === path.id).forEach(k => {
-        const owned = isKeystoneUnlocked(k.id);
-        const active = hasKeystone(k.id);
-        const canBuy = !owned && meta.manaShards >= k.cost;
-        let stateCls = ' locked';
-        if(active) stateCls = ' active';
-        else if(owned) stateCls = ' owned';
-        else if(canBuy) stateCls = ' available';
-        const node = document.createElement('div');
-        node.className = 'keystone-node' + stateCls;
-        let action = '';
-        if(active){
-          action = '<button class="talent-buy" data-kact="unequip" data-kid="' + k.id + '">UNEQUIP</button>';
-        } else if(owned){
-          action = '<button class="talent-buy" data-kact="equip" data-kid="' + k.id + '">EQUIP</button>';
-        } else {
-          action = '<button class="talent-buy" data-kact="buy" data-kid="' + k.id + '"' + (canBuy ? '' : ' disabled') + '>BUY ' + k.cost + '</button>';
-        }
-        node.innerHTML = `
-          ${owned || canBuy ? '' : '<div class="talent-lock">' + icon('lock') + '</div>'}
-          <div class="keystone-hex-wrap"><div class="keystone-hex">${icon(k.icon)}</div></div>
-          <div class="keystone-name">${k.name}</div>
-          ${active ? '<div class="keystone-active-tag">[ACTIVE]</div>' : ''}
-          <div class="keystone-up">▲ ${k.upside}</div>
-          <div class="keystone-down">▼ ${k.drawback}</div>
-          <div class="keystone-actions">${action}</div>
-        `;
-        col.appendChild(node);
-      });
-      grid.appendChild(col);
+  }
+  function getSanctumKeystoneTooltipHTML(k){
+    const st = getSanctumKeystoneState(k);
+    let status = 'Not purchased · ' + k.cost + ' Mana Shards';
+    let next = st.canBuy ? 'Click to buy' : (st.owned ? '' : 'Need ' + k.cost + ' Mana Shards');
+    if(st.active){
+      status = 'Owned · ACTIVE';
+      next = 'Click to unequip';
+    } else if(st.owned){
+      status = 'Owned · Unequipped';
+      next = 'Click to equip (unequips the other Keystone)';
+    }
+    return `
+      <div class="tooltip-title">${icon(k.icon)} ${k.name}</div>
+      <div class="tooltip-line">${status}</div>
+      <div class="tooltip-desc">▲ ${k.upside}</div>
+      <div class="tooltip-line" style="color:#ff6b7d">▼ ${k.drawback}</div>
+      <div class="tooltip-next">${next}</div>
+    `;
+  }
+  function getSanctumHubTooltipHTML(){
+    return `
+      <div class="tooltip-title">${icon('sparkle','ic-mana')} Apothecary Core</div>
+      <div class="tooltip-desc">The heart of the Sanctum. Alchemy, Chronos, and Commerce radiate from here — later stars unlock as you invest shards in each branch.</div>
+      <div class="tooltip-next">Equip only one Keystone at a time.</div>
+    `;
+  }
+  function getSanctumNodeTooltipHTML(el){
+    if(!el) return '';
+    if(el.classList.contains('hub')) return getSanctumHubTooltipHTML();
+    const tid = el.getAttribute('data-tid');
+    const kid = el.getAttribute('data-kid');
+    if(tid){
+      const t = getTalentById(tid);
+      return t ? getSanctumTalentTooltipHTML(t) : '';
+    }
+    if(kid){
+      const k = getKeystoneById(kid);
+      return k ? getSanctumKeystoneTooltipHTML(k) : '';
+    }
+    return '';
+  }
+  function refreshOpenSanctumTooltip(){
+    if(!synergyTooltip || synergyTooltip.classList.contains('hidden')) return;
+    const key = synergyTooltip.dataset.key || '';
+    if(key.indexOf('sanctum-') !== 0 || !sanctumNodesLayer) return;
+    const id = key.slice('sanctum-'.length);
+    const el = sanctumNodesLayer.querySelector('[data-tid="' + id + '"], [data-kid="' + id + '"], [data-nid="' + id + '"]');
+    if(!el) return;
+    const html = getSanctumNodeTooltipHTML(el);
+    if(html) synergyTooltip.innerHTML = html;
+  }
+  function placeSanctumEl(el, x, y){
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+    el.dataset.x = String(x);
+    el.dataset.y = String(y);
+  }
+  function buildSanctumConstellation(){
+    if(!sanctumNodesLayer || !sanctumLinesSvg) return;
+    sanctumLinesSvg.innerHTML = '<defs><filter id="sanctumLineGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+    sanctumNodesLayer.innerHTML = '';
+    SANCTUM_LAYOUT.nodes.forEach(n => {
+      if(n.kind === 'label'){
+        const lab = document.createElement('div');
+        lab.className = 'sanctum-spoke-label';
+        lab.dataset.path = n.path;
+        placeSanctumEl(lab, n.x, n.y);
+        lab.innerHTML = n.name + '<span data-invest></span>';
+        sanctumNodesLayer.appendChild(lab);
+        return;
+      }
+      const el = document.createElement(n.kind === 'hub' ? 'div' : 'button');
+      if(n.kind !== 'hub') el.type = 'button';
+      el.className = n.kind === 'hub' ? 'sanctum-node hub' : ('sanctum-node ' + n.kind);
+      placeSanctumEl(el, n.x, n.y);
+      if(n.kind === 'hub'){
+        el.dataset.nid = 'core';
+        el.setAttribute('aria-label', 'Apothecary Core');
+        el.innerHTML = '<span class="sanctum-socket">' + icon('sparkle','ic-mana') + '</span><span class="sanctum-hub-label">CORE</span>';
+      } else if(n.kind === 'talent'){
+        const t = getTalentById(n.id);
+        if(!t) return;
+        el.dataset.tid = n.id;
+        el.setAttribute('aria-label', t.name);
+        el.innerHTML = '<span class="talent-lock hidden">' + icon('lock') + '</span><span class="sanctum-socket talent-gem">' + icon(t.icon) + '</span><span class="sanctum-rank">0/' + t.maxLv + '</span>';
+      } else {
+        const k = getKeystoneById(n.id);
+        if(!k) return;
+        el.dataset.kid = n.id;
+        el.setAttribute('aria-label', k.name);
+        el.innerHTML = '<span class="talent-lock hidden">' + icon('lock') + '</span><span class="keystone-hex-wrap"><span class="keystone-hex">' + icon(k.icon) + '</span></span>';
+      }
+      sanctumNodesLayer.appendChild(el);
     });
-    keystoneSection.querySelectorAll('[data-kact]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const act = btn.getAttribute('data-kact');
-        const id = btn.getAttribute('data-kid');
-        if(act === 'buy') buyKeystone(id);
-        else if(act === 'equip') equipKeystone(id);
-        else if(act === 'unequip') unequipKeystone();
-      });
+    bindSanctumConstellationEvents();
+  }
+  function bindSanctumConstellationEvents(){
+    if(!sanctumNodesLayer || sanctumNodesLayer.dataset.bound === '1') return;
+    sanctumNodesLayer.dataset.bound = '1';
+    sanctumNodesLayer.addEventListener('click', (e) => {
+      const node = e.target.closest('.sanctum-node');
+      if(!node || node.classList.contains('hub')) return;
+      const tid = node.getAttribute('data-tid');
+      const kid = node.getAttribute('data-kid');
+      if(tid){
+        buyTalent(tid);
+        return;
+      }
+      if(!kid) return;
+      if(!isKeystoneUnlocked(kid)) buyKeystone(kid);
+      else if(hasKeystone(kid)) unequipKeystone();
+      else equipKeystone(kid);
     });
+    sanctumNodesLayer.addEventListener('mouseover', (e) => {
+      const node = e.target.closest('.sanctum-node');
+      if(!node) return;
+      const html = getSanctumNodeTooltipHTML(node);
+      if(!html) return;
+      const id = node.getAttribute('data-tid') || node.getAttribute('data-kid') || node.getAttribute('data-nid') || 'node';
+      showHoverTooltip(node, html, 'sanctum-' + id, true);
+    });
+    sanctumNodesLayer.addEventListener('mouseout', (e) => {
+      const node = e.target.closest('.sanctum-node');
+      if(!node) return;
+      if(e.relatedTarget && node.contains(e.relatedTarget)) return;
+      hideHoverTooltip();
+    });
+  }
+  function drawSanctumLines(){
+    if(!sanctumLinesSvg) return;
+    const ns = 'http://www.w3.org/2000/svg';
+    const old = sanctumLinesSvg.querySelectorAll('line');
+    old.forEach(el => el.remove());
+    const pos = {};
+    SANCTUM_LAYOUT.nodes.forEach(n => {
+      if(n.kind !== 'label') pos[n.id] = n;
+    });
+    SANCTUM_LAYOUT.links.forEach(link => {
+      const a = pos[link.from];
+      const b = pos[link.to];
+      if(!a || !b) return;
+      const lit = isSanctumLinkLit(link.from, link.to);
+      const line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', a.x.toFixed(2));
+      line.setAttribute('y1', a.y.toFixed(2));
+      line.setAttribute('x2', b.x.toFixed(2));
+      line.setAttribute('y2', b.y.toFixed(2));
+      if(lit){
+        line.setAttribute('stroke', '#e8b93d');
+        line.setAttribute('stroke-width', '1.4');
+        line.setAttribute('filter', 'url(#sanctumLineGlow)');
+        line.setAttribute('class', 'sanctum-link lit');
+      } else {
+        line.setAttribute('stroke', 'rgba(255,255,255,0.15)');
+        line.setAttribute('stroke-width', '0.7');
+        line.setAttribute('stroke-dasharray', '1.6 1.6');
+        line.setAttribute('class', 'sanctum-link locked');
+      }
+      sanctumLinesSvg.appendChild(line);
+    });
+  }
+  function updateSanctumConstellation(){
+    if(!sanctumNodesLayer) return;
+    SANCTUM_BRANCHES.forEach(b => {
+      const invested = getBranchShardsInvested(b.path);
+      const lab = sanctumNodesLayer.querySelector('.sanctum-spoke-label[data-path="' + b.path + '"] [data-invest]');
+      if(lab) lab.textContent = invested + ' / ' + BRANCH_TIER3_INVEST;
+    });
+    sanctumNodesLayer.querySelectorAll('.sanctum-node.talent').forEach(el => {
+      const t = getTalentById(el.getAttribute('data-tid'));
+      if(!t) return;
+      const st = getSanctumTalentState(t);
+      el.className = st.cls;
+      const rank = el.querySelector('.sanctum-rank');
+      if(rank) rank.textContent = st.lv + '/' + t.maxLv;
+      const lock = el.querySelector('.talent-lock');
+      if(lock) lock.classList.toggle('hidden', st.unlocked);
+    });
+    sanctumNodesLayer.querySelectorAll('.sanctum-node.keystone').forEach(el => {
+      const k = getKeystoneById(el.getAttribute('data-kid'));
+      if(!k) return;
+      const st = getSanctumKeystoneState(k);
+      el.className = st.cls;
+      const lock = el.querySelector('.talent-lock');
+      if(lock) lock.classList.toggle('hidden', st.owned || st.canBuy);
+    });
+    drawSanctumLines();
+    refreshOpenSanctumTooltip();
+  }
+  function renderSanctum(){
+    if(!sanctumNodesLayer || !sanctumLinesSvg) return;
+    refreshShardReadouts();
+    if(sanctumNodesLayer.dataset.built !== '1'){
+      buildSanctumConstellation();
+      sanctumNodesLayer.dataset.built = '1';
+    }
+    updateSanctumConstellation();
   }
   function refreshKeystoneSurfaces(){
     renderSanctum();
@@ -7304,8 +7574,9 @@
     } else {
       sanctumReturnTo = null;
     }
-    renderSanctum();
     sanctumOverlay.classList.remove('hidden');
+    renderSanctum();
+    requestAnimationFrame(() => renderSanctum());
   }
   function closeSanctum(){
     if(!sanctumOverlay) return;
@@ -7897,6 +8168,9 @@
   window.addEventListener('pointerup', stopStirHold);
   window.addEventListener('pointercancel', stopStirHold);
   window.addEventListener('pointerleave', stopStirHold);
+  window.addEventListener('resize', () => {
+    if(isSanctumOpen()) drawSanctumLines();
+  });
   buyStirBtn.addEventListener('click', buyStir);
   buyBubbleBtn.addEventListener('click', buyBubble);
   fulfillBtn.addEventListener('click', cashOutNow);
