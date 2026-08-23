@@ -30,7 +30,8 @@
     --relic-bronze-lo:#3f2a18;
   }
 
-  *{ box-sizing:border-box; touch-action:manipulation; image-rendering:pixelated; }
+  *{ box-sizing:border-box; touch-action:manipulation; }
+  img{ image-rendering:pixelated; }
 
   /* ---------- INLINE SVG ICON SYSTEM ---------- */
   .icon{
@@ -987,6 +988,8 @@
     display:block;
     image-rendering:auto;
     contain:layout style;
+    isolation:isolate;
+    transform:translateZ(0);
   }
   #numbersLayer{
     z-index:6;
@@ -2796,7 +2799,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.4</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2853,7 +2856,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.4</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2933,7 +2936,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.4 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Firefox no longer freezes the whole browser while you brew.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.3</div>
         <ul class="changelog-list">
           <li>The brew stays smoother on Firefox.</li>
         </ul>
@@ -3688,6 +3697,7 @@
 <script>
 (function(){
   "use strict";
+  const IS_GECKO = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent || '');
 
   /* =========================================================
      CONSTANTS
@@ -5576,6 +5586,7 @@
   let fxLastSyncW = 0;
   let fxLastSyncH = 0;
   let fxNeedsSync = true;
+  let fxDrawAcc = 0;
 
   function fxCap(){
     const mode = getParticleMode();
@@ -5593,14 +5604,14 @@
   }
   function syncCauldronFxCanvas(force){
     if(!cauldronFxCanvas || !cauldron) return false;
-    if(!fxCtx) fxCtx = cauldronFxCanvas.getContext('2d', { alpha:true, desynchronized:true });
+    if(!fxCtx) fxCtx = cauldronFxCanvas.getContext('2d', { alpha:true });
     if(!force && !fxNeedsSync && fxCssW > 0) return true;
     const w = cauldron.offsetWidth;
     const h = cauldron.offsetHeight;
     if(w < 8 || h < 8) return false;
     const cssW = w * 1.40;
     const cssH = h * 1.70;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = IS_GECKO ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     if(Math.abs(cssW - fxLastSyncW) > 2 || Math.abs(cssH - fxLastSyncH) > 2){
       cauldronFxCanvas.style.width = cssW + 'px';
       cauldronFxCanvas.style.height = cssH + 'px';
@@ -5768,7 +5779,7 @@
     for(let i = 0; i < arms; i++){
       const baseA = (i * Math.PI * 2) / arms;
       ctx.beginPath();
-      const steps = 8;
+      const steps = IS_GECKO ? 5 : 8;
       for(let s = 0; s <= steps; s++){
         const frac = s / steps;
         const a = baseA + frac * maxA;
@@ -5856,10 +5867,6 @@
       }
     }
 
-    const ctx = fxCtx;
-    ctx.setTransform(fxDpr, 0, 0, fxDpr, 0, 0);
-    ctx.clearRect(0, 0, fxCssW, fxCssH);
-    ctx.globalCompositeOperation = 'lighter';
     for(let i = fxParticles.length - 1; i >= 0; i--){
       const p = fxParticles[i];
       p.life -= dt;
@@ -5868,8 +5875,6 @@
         fxParticles.pop();
         continue;
       }
-      const t = 1 - (p.life / p.maxLife);
-      const a = Math.max(0, Math.min(1, p.life / p.maxLife));
       if(p.kind === 'arcane' || p.kind === 'chaos'){
         p.ang += p.vr * dt;
         p.orbit += p.grow * dt;
@@ -5885,6 +5890,22 @@
         if(p.kind === 'fire') p.vy += 18 * dt;
         if(p.rot != null) p.rot += p.vr * dt;
       }
+    }
+
+    if(IS_GECKO){
+      fxDrawAcc += dt;
+      if(fxDrawAcc < 1 / 30 && fxParticles.length) return;
+      fxDrawAcc = 0;
+    }
+
+    const ctx = fxCtx;
+    ctx.setTransform(fxDpr, 0, 0, fxDpr, 0, 0);
+    ctx.clearRect(0, 0, fxCssW, fxCssH);
+    if(!IS_GECKO) ctx.globalCompositeOperation = 'lighter';
+    for(let i = 0; i < fxParticles.length; i++){
+      const p = fxParticles[i];
+      const t = 1 - (p.life / p.maxLife);
+      const a = Math.max(0, Math.min(1, p.life / p.maxLife));
       const fade = a * (p.kind === 'midas' ? (0.55 + 0.45 * Math.abs(Math.sin((1 - t) * 14))) : 1);
       const size = p.size * (p.kind === 'fire' ? (1 - t * 0.72) : (1 - t * 0.35));
       if(p.kind === 'fire'){
@@ -5908,7 +5929,7 @@
         drawFxStar(ctx, p.x, p.y, Math.max(1.4, size), p.rot || 0);
       }
     }
-    ctx.globalCompositeOperation = 'source-over';
+    if(!IS_GECKO) ctx.globalCompositeOperation = 'source-over';
   }
   function spawnFulfillMidasFx(){
     if(!fulfillFx || !fulfillBtn || !fulfillBtn.classList.contains('show')) return;
@@ -8211,6 +8232,7 @@
      MAIN LOOP
   ========================================================= */
   let lastTime = null;
+  let uiClock = 0;
   function loop(ts){
     if(lastTime === null) lastTime = ts;
     const dt = Math.min(0.1, (ts - lastTime) / 1000);
@@ -8321,6 +8343,12 @@
             state.timer = 0;
             updateUI();
             if(state.quotaMet){ succeedRound(); } else { failRound(); }
+          }
+        } else if(IS_GECKO){
+          uiClock += dt;
+          if(uiClock >= 0.05){
+            uiClock = 0;
+            updateUI();
           }
         } else {
           updateUI();
