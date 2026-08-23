@@ -25,6 +25,9 @@
     --liq-3:#4b2a8f;
     --px-light: rgba(255,255,255,0.16);
     --px-dark: rgba(0,0,0,0.6);
+    --relic-bronze:#8f6a45;
+    --relic-bronze-hi:#c4ae8a;
+    --relic-bronze-lo:#3f2a18;
   }
 
   *{ box-sizing:border-box; touch-action:manipulation; image-rendering:pixelated; }
@@ -185,8 +188,8 @@
   }
   .relic-badge .icon{ width:26px; height:26px; }
   .relic-badge.lv-1{
-    border:3px solid #c4843c;
-    box-shadow: inset 1px 1px 0 #e8b07a, inset -1px -1px 0 #6a3a12;
+    border:3px solid var(--relic-bronze);
+    box-shadow: inset 1px 1px 0 var(--relic-bronze-hi), inset -1px -1px 0 var(--relic-bronze-lo);
   }
   .relic-badge.lv-2{
     border:3px solid #e8eef6;
@@ -434,8 +437,8 @@
     padding:4px;
   }
   #relicTray .relic-badge.lv-1{
-    border:3px solid #c4843c;
-    box-shadow: inset 1px 1px 0 #e8b07a, inset -1px -1px 0 #6a3a12;
+    border:3px solid var(--relic-bronze);
+    box-shadow: inset 1px 1px 0 var(--relic-bronze-hi), inset -1px -1px 0 var(--relic-bronze-lo);
   }
   #relicTray .relic-badge.lv-2{
     border:3px solid #e8eef6;
@@ -446,7 +449,7 @@
     animation: relicGoldPulse 1.25s ease-in-out infinite;
   }
   #relicTray .relic-badge.corrupted.lv-1{
-    border:3px solid #c4843c;
+    border:3px solid var(--relic-bronze);
     box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
   }
   #relicTray .relic-badge.corrupted.lv-2{
@@ -821,7 +824,7 @@
     filter: drop-shadow(0 0 3px rgba(255,42,75,0.85));
   }
   .relic-badge.corrupted.lv-1{
-    border:3px solid #c4843c;
+    border:3px solid var(--relic-bronze);
     box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
   }
   .relic-badge.corrupted.lv-2{
@@ -1366,7 +1369,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.3</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.4</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1412,7 +1415,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.3</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.4</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1465,7 +1468,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.3 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.4 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Rank 1 relic frames are a softer brown-bronze now, so they read less like cheap gold.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.3</div>
         <ul class="changelog-list">
           <li>Silver and gold relic frames now actually pulse and twinkle instead of sitting still.</li>
         </ul>
