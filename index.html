@@ -184,13 +184,62 @@
     overflow:visible;
   }
   .relic-badge .icon{ width:26px; height:26px; }
-  .relic-badge .relic-lv{
-    position:absolute; right:-3px; bottom:-3px;
-    min-width:14px; height:14px; padding:0 3px;
-    font-size:0.42rem; line-height:14px; text-align:center;
-    background:#12080c; color:#ffe27a;
-    border:2px solid #000;
-    box-shadow: 0 0 0 1px var(--amber), inset 0 0 0 1px rgba(255,210,122,0.35);
+  .relic-badge.lv-1{
+    border:3px solid #c4843c;
+    box-shadow: inset 1px 1px 0 #e8b07a, inset -1px -1px 0 #6a3a12;
+  }
+  .relic-badge.lv-2{
+    border:3px solid #e8eef6;
+    animation: relicSilverPulse 1.5s ease-in-out infinite;
+  }
+  .relic-badge.lv-3{
+    border:3px solid #ffd24a;
+    animation: relicGoldPulse 1.25s ease-in-out infinite;
+  }
+  .relic-badge.lv-2::before,
+  .relic-badge.lv-2::after,
+  .relic-badge.lv-3::before,
+  .relic-badge.lv-3::after{
+    content:"";
+    position:absolute;
+    width:7px; height:7px;
+    pointer-events:none;
+    z-index:2;
+    clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+  }
+  .relic-badge.lv-2::before,
+  .relic-badge.lv-2::after{
+    background:#f4f8ff;
+    filter: drop-shadow(0 0 2px rgba(230,240,255,0.95));
+  }
+  .relic-badge.lv-3::before,
+  .relic-badge.lv-3::after{
+    background:#ffe27a;
+    filter: drop-shadow(0 0 3px rgba(255,210,90,1));
+  }
+  .relic-badge.lv-2::before,
+  .relic-badge.lv-3::before{
+    top:1px; right:1px;
+    animation: relicSparkTwinkle 1.4s ease-in-out infinite;
+  }
+  .relic-badge.lv-2::after,
+  .relic-badge.lv-3::after{
+    bottom:2px; left:2px;
+    animation: relicSparkTwinkle 1.7s ease-in-out infinite 0.45s;
+  }
+  @keyframes relicSilverPulse{
+    0%,100%{ box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #7a8490, 0 0 5px rgba(210,220,235,0.35); }
+    50%{ box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #7a8490, 0 0 12px rgba(236,244,255,0.95), 0 0 20px rgba(180,200,230,0.45); }
+  }
+  @keyframes relicGoldPulse{
+    0%,100%{ box-shadow: inset 1px 1px 0 #fff3c0, inset -1px -1px 0 #8a5a10, 0 0 6px rgba(255,200,70,0.4); }
+    50%{ box-shadow: inset 1px 1px 0 #fff3c0, inset -1px -1px 0 #8a5a10, 0 0 14px rgba(255,220,90,1), 0 0 24px rgba(255,180,40,0.55); }
+  }
+  @keyframes relicSparkTwinkle{
+    0%,100%{ opacity:0.15; transform:scale(0.55) rotate(0deg); }
+    35%{ opacity:1; transform:scale(1.15) rotate(20deg); }
+    55%{ opacity:0.25; transform:scale(0.7) rotate(40deg); }
+    75%{ opacity:0.95; transform:scale(1.05) rotate(10deg); }
   }
   .relic-lv-badge{
     font-size:0.42rem; color:var(--amber); letter-spacing:0.4px;
@@ -359,8 +408,8 @@
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
-    flex: 0 0 56px;
-    width: 56px;
+    flex: 0 0 64px;
+    width: 64px;
     align-self: stretch;
     max-height: 100%;
     margin-left: auto;
@@ -384,11 +433,31 @@
     width:48px; height:48px;
     padding:4px;
   }
-  #relicTray .relic-badge .icon{ width:28px; height:28px; }
-  #relicTray .relic-badge .relic-lv{
-    min-width:16px; height:16px; padding:0 3px;
-    font-size:0.4rem; line-height:16px;
+  #relicTray .relic-badge.lv-1{
+    border:3px solid #c4843c;
+    box-shadow: inset 1px 1px 0 #e8b07a, inset -1px -1px 0 #6a3a12;
   }
+  #relicTray .relic-badge.lv-2{
+    border:3px solid #e8eef6;
+    animation: relicSilverPulse 1.5s ease-in-out infinite;
+  }
+  #relicTray .relic-badge.lv-3{
+    border:3px solid #ffd24a;
+    animation: relicGoldPulse 1.25s ease-in-out infinite;
+  }
+  #relicTray .relic-badge.corrupted.lv-1{
+    border:3px solid #c4843c;
+    box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
+  }
+  #relicTray .relic-badge.corrupted.lv-2{
+    border:3px solid #e8eef6;
+    animation: relicCorruptSilverPulse 1.5s ease-in-out infinite;
+  }
+  #relicTray .relic-badge.corrupted.lv-3{
+    border:3px solid #ffd24a;
+    animation: relicCorruptGoldPulse 1.25s ease-in-out infinite;
+  }
+  #relicTray .relic-badge .icon{ width:28px; height:28px; }
   #relicTray:empty {
     display: none;
   }
@@ -751,6 +820,26 @@
     color:#ff6b7d;
     filter: drop-shadow(0 0 3px rgba(255,42,75,0.85));
   }
+  .relic-badge.corrupted.lv-1{
+    border:3px solid #c4843c;
+    box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
+  }
+  .relic-badge.corrupted.lv-2{
+    border:3px solid #e8eef6;
+    animation: relicCorruptSilverPulse 1.5s ease-in-out infinite;
+  }
+  .relic-badge.corrupted.lv-3{
+    border:3px solid #ffd24a;
+    animation: relicCorruptGoldPulse 1.25s ease-in-out infinite;
+  }
+  @keyframes relicCorruptSilverPulse{
+    0%,100%{ box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 6px rgba(255,42,75,0.4), 0 0 8px rgba(210,220,235,0.35); }
+    50%{ box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 10px rgba(255,42,75,0.55), 0 0 16px rgba(230,240,255,0.7); }
+  }
+  @keyframes relicCorruptGoldPulse{
+    0%,100%{ box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 6px rgba(255,42,75,0.4), 0 0 8px rgba(255,200,70,0.4); }
+    50%{ box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 10px rgba(255,42,75,0.55), 0 0 18px rgba(255,220,90,0.8); }
+  }
 
   .compendium-progress{
     font-size:0.5rem; color:var(--amber); margin:-4px 0 10px;
@@ -1016,8 +1105,8 @@
   }
   @media (max-width: 560px){
     #relicTray{
-      flex: 0 0 46px;
-      width: 46px;
+      flex: 0 0 52px;
+      width: 52px;
       gap: 6px;
     }
     #relicTray .relic-badge{ width:38px; height:38px; padding:2px; }
@@ -1277,7 +1366,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.0</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.3</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1323,7 +1412,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.0</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.3</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1376,7 +1465,25 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.0 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.3 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Silver and gold relic frames now actually pulse and twinkle instead of sitting still.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.2</div>
+        <ul class="changelog-list">
+          <li>Silver and gold relic frames now pulse with a soft glow and tiny sparkles so upgraded ranks stand out from bronze.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.1</div>
+        <ul class="changelog-list">
+          <li>Relic icons now wear a metal frame instead of a number badge: bronze at rank 1, silver at rank 2, and gold at rank 3.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.0</div>
         <ul class="changelog-list">
           <li>Boiling over now yields Mana Shards you can spend in the Alchemical Sanctum on permanent talents that last between brews.</li>
           <li>Sanctum talents stretch every deadline, start you with extra Gold, add innate Critical Surges, deepen the cauldron's brew power, or unlock a fifth Relic Pedestal slot.</li>
@@ -2560,6 +2667,11 @@
     if(compact) return (lv >= RELIC_MAX_LEVEL ? '★' : '') + lv;
     return lv >= RELIC_MAX_LEVEL ? ('Lv ' + lv + ' [MAX]') : ('★ Lv ' + lv);
   }
+  function relicBadgeClassName(id){
+    const lv = getRelicLevel(id);
+    const rank = lv >= 3 ? ' lv-3' : lv >= 2 ? ' lv-2' : ' lv-1';
+    return 'relic-badge' + rank + (isRelicCorrupted(id) ? ' corrupted' : '');
+  }
   function getRelicStats(id, level, overlay){
     const lv = clamp(level == null ? getRelicLevel(id) : level, 0, RELIC_MAX_LEVEL);
     const s = { level: lv, summary: '' };
@@ -2821,15 +2933,27 @@
     }
   }
 
+  let relicTraySignature = null;
+  function getRelicTraySignature(){
+    return getOwnedRelicIds().map(id => (
+      id + ':' + getRelicLevel(id) + ':' + (isRelicCorrupted(id) ? '1' : '0')
+    )).join('|');
+  }
   function renderRelicTray(){
+    if(!relicTray) return;
+    // Rebuilding the rail every UI tick (updateUI runs each brewing frame)
+    // was resetting silver/gold glow and sparkle animations to their first
+    // frame, so upgraded relics looked completely static.
+    const sig = getRelicTraySignature();
+    if(sig === relicTraySignature) return;
+    relicTraySignature = sig;
     relicTray.innerHTML = '';
     getOwnedRelicIds().forEach(id => {
       const r = RELICS.find(x => x.id === id);
       if(!r) return;
-      const lv = getRelicLevel(id);
       const el = document.createElement('div');
-      el.className = 'relic-badge' + (isRelicCorrupted(id) ? ' corrupted' : '');
-      el.innerHTML = icon(r.icon) + '<span class="relic-lv">' + formatRelicLevel(lv, true) + '</span>';
+      el.className = relicBadgeClassName(id);
+      el.innerHTML = icon(r.icon);
       el.style.cursor = 'pointer';
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2857,11 +2981,10 @@
       ownedIds.forEach(id => {
         const r = RELICS.find(x => x.id === id);
         if(!r) return;
-        const lv = getRelicLevel(id);
         const el = document.createElement('div');
-        el.className = 'relic-badge' + (isRelicCorrupted(id) ? ' corrupted' : '');
+        el.className = relicBadgeClassName(id);
         el.style.cursor = 'pointer';
-        el.innerHTML = icon(r.icon) + '<span class="relic-lv">' + formatRelicLevel(lv, true) + '</span>';
+        el.innerHTML = icon(r.icon);
         el.addEventListener('click', (e) => {
           e.stopPropagation();
           toggleTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id);
