@@ -843,6 +843,54 @@
   .subpanel-close:hover{ color: #fff; filter:brightness(1.25); }
   .subpanel-close:active{ transform:translate(1px,2px); box-shadow:0 0 0 #000; }
   .setting-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; font-size:0.55rem; }
+  .setting-row.setting-volume{ flex-direction:column; align-items:stretch; gap:8px; margin-bottom:12px; }
+  .volume-control{ display:flex; align-items:center; gap:10px; }
+  .volume-readout{
+    min-width:3.4em; color:var(--amber); font-size:0.48rem; text-align:right;
+    text-shadow: 1px 1px 0 #000;
+  }
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none;
+    flex:1; width:100%; height:18px; margin:0;
+    background:transparent; cursor:pointer;
+  }
+  input[type="range"]:focus{ outline:none; }
+  input[type="range"]:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+  }
+  input[type="range"]::-webkit-slider-runnable-track{
+    height:10px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 4px),
+      #0c0614;
+    border:3px solid #000;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.75), inset -1px -1px 0 rgba(244,184,96,0.12);
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:16px; height:18px; margin-top:-7px;
+    background: linear-gradient(180deg, var(--amber-glow) 0%, var(--amber) 55%, #c4842a 100%);
+    border:3px solid #000;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5), inset -1px -1px 0 rgba(0,0,0,0.4), 0 2px 0 #000;
+    border-radius:0;
+  }
+  input[type="range"]::-moz-range-track{
+    height:10px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 4px),
+      #0c0614;
+    border:3px solid #000;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.75), inset -1px -1px 0 rgba(244,184,96,0.12);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:16px; height:18px;
+    background: linear-gradient(180deg, var(--amber-glow) 0%, var(--amber) 55%, #c4842a 100%);
+    border:3px solid #000;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5), inset -1px -1px 0 rgba(0,0,0,0.4), 0 2px 0 #000;
+    border-radius:0;
+  }
+  input[type="range"]::-moz-focus-outer{ border:0; }
   .changelog-entry{ margin-bottom: 8px; }
   .changelog-entry:last-child{ margin-bottom: 0; }
   .changelog-ver{
@@ -1143,7 +1191,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.6</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.13.0</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1186,7 +1234,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.6</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.13.0</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1212,13 +1260,19 @@
         <span><svg class="icon"><use href="#icon-gear"></use></svg> AUDIO &amp; SAVE SETTINGS</span>
         <button class="subpanel-close" id="closeSettingsBtn">✕ CLOSE</button>
       </div>
-      <div class="setting-row">
-        <span>SOUND EFFECTS</span>
-        <button class="pixel-btn icon-btn" id="sfxToggleBtn">SFX: ON</button>
+      <div class="setting-row setting-volume">
+        <span>MUSIC VOLUME</span>
+        <div class="volume-control">
+          <input type="range" id="bgmVolumeSlider" min="0" max="100" value="60" />
+          <span class="volume-readout" id="bgmVolumeValue">60%</span>
+        </div>
       </div>
-      <div class="setting-row">
-        <span>AUDIO SYNTH</span>
-        <span id="sfxStatusText" style="color:var(--success);">ACTIVE</span>
+      <div class="setting-row setting-volume">
+        <span>SFX VOLUME</span>
+        <div class="volume-control">
+          <input type="range" id="sfxVolumeSlider" min="0" max="100" value="80" />
+          <span class="volume-readout" id="sfxVolumeValue">80%</span>
+        </div>
       </div>
       <div class="setting-row" style="margin-top:14px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:10px;">
         <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;"><svg class="icon"><use href="#icon-trash"></use></svg> RESET PROGRESS / NEW RUN</button>
@@ -1232,7 +1286,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.6 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.13.0 (Latest)</div>
+        <ul class="changelog-list">
+          <li>A cozy 16-bit apothecary theme now hums in the background, and Pause Settings lets you fade Music and SFX separately.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.6</div>
         <ul class="changelog-list">
           <li>The first few orders now pay out more Gold, so a normal opening brew is enough to pick up a relic from the shop.</li>
         </ul>
@@ -1752,6 +1812,8 @@
       unstableBrewClock: 0,
       discoveredRelics: [],
       glacialMilestones: { q25:false, q50:false, q75:false },
+      bgmVolume: 60,
+      sfxVolume: 80,
     };
   }
 
@@ -1807,8 +1869,10 @@
   const changelogSubpanel = $('changelogSubpanel');
   const closeSettingsBtn = $('closeSettingsBtn');
   const closeChangelogBtn = $('closeChangelogBtn');
-  const sfxToggleBtn = $('sfxToggleBtn');
-  const sfxStatusText = $('sfxStatusText');
+  const bgmVolumeSlider = $('bgmVolumeSlider');
+  const sfxVolumeSlider = $('sfxVolumeSlider');
+  const bgmVolumeValue = $('bgmVolumeValue');
+  const sfxVolumeValue = $('sfxVolumeValue');
   const consumableButtons = $('consumableButtons');
   const consumableShop = $('consumableShop');
   const synergySummary = $('synergySummary');
@@ -1821,24 +1885,118 @@
   const compendiumProgress = $('compendiumProgress');
   const closeCompendiumBtn = $('closeCompendiumBtn');
 
-  let sfxMuted = false;
   let isPaused = false;
 
   /* =========================================================
      AUDIO (Web Audio API synth, no external files)
   ========================================================= */
   let actx = null;
+  let sfxGainNode = null;
+  let bgmGainNode = null;
+  let bgmPlaying = false;
+  let bgmDucked = false;
+  let bgmStep = 0;
+  let bgmNextTime = 0;
+  let bgmClock = null;
+
+  const BGM_BPM = 72;
+  const BGM_STEPS_PER_LOOP = 128;
+  const BGM_MASTER = 0.55;
+  const BGM_DUCK = 0.16;
+  const BGM_CHORDS = [
+    { pad:[146.83, 174.61, 220.00], bass:73.42, arp:[293.66, 349.23, 440.00, 349.23] },
+    { pad:[130.81, 164.81, 196.00], bass:65.41, arp:[261.63, 329.63, 392.00, 329.63] },
+    { pad:[116.54, 146.83, 174.61], bass:58.27, arp:[233.08, 293.66, 349.23, 293.66] },
+    { pad:[110.00, 130.81, 164.81], bass:55.00, arp:[220.00, 261.63, 329.63, 261.63] },
+  ];
+
+  function clampVolume(n, fallback){
+    const v = Math.round(Number(n));
+    return Number.isFinite(v) ? clamp(v, 0, 100) : fallback;
+  }
+  function getSfxVolume(){
+    return clampVolume(state && state.sfxVolume, 80) / 100;
+  }
+  function getBgmVolume(){
+    return clampVolume(state && state.bgmVolume, 60) / 100;
+  }
+  function getBgmGainTarget(){
+    return getBgmVolume() * BGM_MASTER * (bgmDucked ? BGM_DUCK : 1);
+  }
+
   function ensureAudio(){
     if(!actx){
       try{ actx = new (window.AudioContext || window.webkitAudioContext)(); }
       catch(e){ actx = null; }
-    } else if(actx.state === 'suspended'){
+    }
+    if(actx && actx.state === 'suspended'){
       actx.resume();
+    }
+    if(!actx) return;
+    if(!sfxGainNode){
+      sfxGainNode = actx.createGain();
+      sfxGainNode.gain.value = getSfxVolume();
+      sfxGainNode.connect(actx.destination);
+    }
+    if(!bgmGainNode){
+      bgmGainNode = actx.createGain();
+      bgmGainNode.gain.value = 0.0001;
+      bgmGainNode.connect(actx.destination);
     }
   }
 
+  function applySfxGain(){
+    if(!sfxGainNode || !actx) return;
+    const t = actx.currentTime;
+    sfxGainNode.gain.cancelScheduledValues(t);
+    sfxGainNode.gain.setValueAtTime(sfxGainNode.gain.value, t);
+    sfxGainNode.gain.linearRampToValueAtTime(Math.max(0.0001, getSfxVolume()), t + 0.05);
+  }
+  function applyBgmGain(seconds){
+    if(!bgmGainNode || !actx) return;
+    const t = actx.currentTime;
+    const dur = typeof seconds === 'number' ? seconds : 0.08;
+    bgmGainNode.gain.cancelScheduledValues(t);
+    bgmGainNode.gain.setValueAtTime(Math.max(0.0001, bgmGainNode.gain.value), t);
+    bgmGainNode.gain.linearRampToValueAtTime(Math.max(0.0001, getBgmGainTarget()), t + dur);
+  }
+  function setBgmDucked(ducked){
+    bgmDucked = !!ducked;
+    applyBgmGain(0.45);
+  }
+
+  function syncVolumeUI(){
+    const bgm = clampVolume(state && state.bgmVolume, 60);
+    const sfx = clampVolume(state && state.sfxVolume, 80);
+    if(state){
+      state.bgmVolume = bgm;
+      state.sfxVolume = sfx;
+    }
+    if(bgmVolumeSlider) bgmVolumeSlider.value = String(bgm);
+    if(sfxVolumeSlider) sfxVolumeSlider.value = String(sfx);
+    if(bgmVolumeValue) bgmVolumeValue.textContent = bgm + '%';
+    if(sfxVolumeValue) sfxVolumeValue.textContent = sfx + '%';
+  }
+  function setBgmVolume(value){
+    if(!state) return;
+    state.bgmVolume = clampVolume(value, 60);
+    if(bgmVolumeValue) bgmVolumeValue.textContent = state.bgmVolume + '%';
+    unlockAndStartBgm();
+    applyBgmGain(0.06);
+    saveGame();
+  }
+  function setSfxVolume(value){
+    if(!state) return;
+    state.sfxVolume = clampVolume(value, 80);
+    if(sfxVolumeValue) sfxVolumeValue.textContent = state.sfxVolume + '%';
+    ensureAudio();
+    applySfxGain();
+    saveGame();
+  }
+
   function playTone(freq, dur, type, vol, delay, glideTo){
-    if(!actx || sfxMuted) return;
+    ensureAudio();
+    if(!actx || !sfxGainNode || getSfxVolume() <= 0) return;
     const t0 = actx.currentTime + (delay||0);
     const osc = actx.createOscillator();
     const gain = actx.createGain();
@@ -1848,7 +2006,7 @@
     gain.gain.setValueAtTime(0.0001, t0);
     gain.gain.exponentialRampToValueAtTime(vol||0.18, t0 + 0.012);
     gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    osc.connect(gain); gain.connect(actx.destination);
+    osc.connect(gain); gain.connect(sfxGainNode);
     osc.start(t0); osc.stop(t0 + dur + 0.02);
   }
 
@@ -1886,6 +2044,138 @@
   function sfxRupture(){
     playTone(150, 0.22, 'sawtooth', 0.14, 0, 70);
     playTone(90, 0.2, 'square', 0.1, 0.05);
+  }
+
+  function bgmStepDur(){ return 60 / BGM_BPM / 4; }
+
+  function playFmPadVoice(freq, start, dur, vol){
+    const car = actx.createOscillator();
+    const mod = actx.createOscillator();
+    const modGain = actx.createGain();
+    const filter = actx.createBiquadFilter();
+    const env = actx.createGain();
+    car.type = 'sine';
+    mod.type = 'sine';
+    car.frequency.setValueAtTime(freq, start);
+    mod.frequency.setValueAtTime(freq * 2, start);
+    modGain.gain.setValueAtTime(freq * 0.42, start);
+    modGain.gain.exponentialRampToValueAtTime(freq * 0.18, start + dur);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(720, start);
+    filter.frequency.linearRampToValueAtTime(1100, start + dur * 0.45);
+    filter.frequency.linearRampToValueAtTime(680, start + dur);
+    filter.Q.value = 0.55;
+    env.gain.setValueAtTime(0.0001, start);
+    env.gain.exponentialRampToValueAtTime(vol, start + 0.38);
+    env.gain.setValueAtTime(vol, start + dur - 0.42);
+    env.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    mod.connect(modGain);
+    modGain.connect(car.frequency);
+    car.connect(filter);
+    filter.connect(env);
+    env.connect(bgmGainNode);
+    car.start(start); car.stop(start + dur + 0.04);
+    mod.start(start); mod.stop(start + dur + 0.04);
+  }
+  function playBgmPad(freqs, start, dur){
+    freqs.forEach((f, i) => {
+      const detune = 1 + (i - 1) * 0.003;
+      playFmPadVoice(f * detune, start, dur, 0.034);
+    });
+  }
+  function playBgmBell(freq, start, vol){
+    const osc = actx.createOscillator();
+    const partial = actx.createOscillator();
+    const filter = actx.createBiquadFilter();
+    const env = actx.createGain();
+    const env2 = actx.createGain();
+    osc.type = 'triangle';
+    partial.type = 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    partial.frequency.setValueAtTime(freq * 2.76, start);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1650, start);
+    filter.Q.value = 0.8;
+    env.gain.setValueAtTime(0.0001, start);
+    env.gain.exponentialRampToValueAtTime(vol, start + 0.014);
+    env.gain.exponentialRampToValueAtTime(0.0001, start + 0.52);
+    env2.gain.setValueAtTime(0.0001, start);
+    env2.gain.exponentialRampToValueAtTime(vol * 0.28, start + 0.01);
+    env2.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(bgmGainNode);
+    partial.connect(env2);
+    env2.connect(bgmGainNode);
+    osc.start(start); osc.stop(start + 0.56);
+    partial.start(start); partial.stop(start + 0.32);
+  }
+  function playBgmBass(freq, start, dur){
+    const osc = actx.createOscillator();
+    const body = actx.createOscillator();
+    const filter = actx.createBiquadFilter();
+    const env = actx.createGain();
+    osc.type = 'sine';
+    body.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, start);
+    body.frequency.setValueAtTime(freq, start);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(420, start);
+    filter.Q.value = 0.6;
+    env.gain.setValueAtTime(0.0001, start);
+    env.gain.exponentialRampToValueAtTime(0.07, start + 0.05);
+    env.gain.setValueAtTime(0.055, start + dur * 0.65);
+    env.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    osc.connect(env);
+    body.connect(filter);
+    filter.connect(env);
+    env.connect(bgmGainNode);
+    osc.start(start); osc.stop(start + dur + 0.03);
+    body.start(start); body.stop(start + dur + 0.03);
+  }
+  function scheduleBgmStep(step, time){
+    const bar = Math.floor(step / 16) % 8;
+    const chord = BGM_CHORDS[Math.floor(bar / 2) % BGM_CHORDS.length];
+    const beat = step % 16;
+    const sixteenth = bgmStepDur();
+    if(beat === 0){
+      playBgmPad(chord.pad, time, sixteenth * 17);
+    }
+    if(beat % 2 === 0){
+      const idx = (beat / 2) % chord.arp.length;
+      let freq = chord.arp[idx];
+      if(bar % 2 === 1 && beat === 10) freq *= 1.5;
+      playBgmBell(freq, time, beat === 0 ? 0.042 : 0.032);
+    }
+    if(beat === 0 || beat === 8){
+      playBgmBass(chord.bass * (beat === 8 ? 1.5 : 1), time, sixteenth * 7.2);
+    }
+    if((bar === 3 || bar === 7) && beat === 12){
+      playBgmBell(chord.arp[2] * 2, time, 0.022);
+    }
+  }
+  function pumpBgm(){
+    if(!actx || !bgmGainNode || !bgmPlaying) return;
+    const horizon = actx.currentTime + 0.85;
+    while(bgmNextTime < horizon){
+      scheduleBgmStep(bgmStep, bgmNextTime);
+      bgmStep = (bgmStep + 1) % BGM_STEPS_PER_LOOP;
+      bgmNextTime += bgmStepDur();
+    }
+  }
+  function startBgm(){
+    ensureAudio();
+    if(!actx || !bgmGainNode || bgmPlaying) return;
+    bgmPlaying = true;
+    bgmStep = 0;
+    bgmNextTime = actx.currentTime + 0.1;
+    applyBgmGain(1.6);
+    pumpBgm();
+    if(!bgmClock) bgmClock = setInterval(pumpBgm, 100);
+  }
+  function unlockAndStartBgm(){
+    ensureAudio();
+    startBgm();
   }
 
   /* =========================================================
@@ -2650,7 +2940,7 @@
 
   function handleCauldronTap(e){
     if(state.phase !== 'brewing' || isPaused) return;
-    ensureAudio();
+    unlockAndStartBgm();
     e.preventDefault();
 
     const rect = getStageRect();
@@ -2799,12 +3089,18 @@
     closePauseMenu();
     closeCompendium();
     const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics.slice() : [];
+    const bgmVolume = clampVolume(state && state.bgmVolume, 60);
+    const sfxVolume = clampVolume(state && state.sfxVolume, 80);
     state = freshState();
     state.discoveredRelics = discovered;
+    state.bgmVolume = bgmVolume;
+    state.sfxVolume = sfxVolume;
     state.phase = 'brewing';
     state.timer = getRoundTime();
     updateCauldronVisuals();
     updateUI();
+    syncVolumeUI();
+    unlockAndStartBgm();
     startOverlay.classList.add('hidden');
     shopOverlay.classList.add('hidden');
     gameoverOverlay.classList.add('hidden');
@@ -3298,12 +3594,14 @@
     settingsBtn.classList.remove('active');
     changelogBtn.classList.remove('active');
     pauseOverlay.classList.remove('hidden');
+    setBgmDucked(true);
   }
 
   function closePauseMenu(){
     isPaused = false;
     document.body.classList.remove('game-paused');
     setPauseButtonIcon();
+    setBgmDucked(false);
     settingsSubpanel.classList.add('hidden');
     changelogSubpanel.classList.add('hidden');
     settingsBtn.classList.remove('active');
@@ -3387,16 +3685,6 @@
     }
   }
 
-  function toggleSfx(){
-    sfxMuted = !sfxMuted;
-    sfxToggleBtn.textContent = sfxMuted ? 'SFX: MUTED' : 'SFX: ON';
-    sfxToggleBtn.style.background = sfxMuted ? 'var(--purple-mid)' : 'var(--amber)';
-    sfxToggleBtn.style.color = sfxMuted ? 'var(--text-light)' : '#2a1a08';
-    sfxStatusText.textContent = sfxMuted ? 'MUTED' : 'ACTIVE';
-    sfxStatusText.style.color = sfxMuted ? 'var(--danger)' : 'var(--success)';
-    if(!sfxMuted) sfxBuy();
-  }
-
   function toggleSettingsPanel(){
     const willShow = settingsSubpanel.classList.contains('hidden');
     if(willShow){
@@ -3477,6 +3765,8 @@
       getOwnedRelicIds().forEach(id => {
         if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
       });
+      state.bgmVolume = clampVolume(state.bgmVolume, 60);
+      state.sfxVolume = clampVolume(state.sfxVolume, 80);
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
         const m = state.mana || 0;
@@ -3515,6 +3805,7 @@
 
       updateCauldronVisuals();
       updateUI();
+      syncVolumeUI();
       return true;
     } catch(e){
       console.error('Failed to load save:', e);
@@ -3642,7 +3933,15 @@
     changelogSubpanel.classList.add('hidden');
     changelogBtn.classList.remove('active');
   });
-  sfxToggleBtn.addEventListener('click', toggleSfx);
+  if(bgmVolumeSlider){
+    bgmVolumeSlider.addEventListener('input', () => setBgmVolume(bgmVolumeSlider.value));
+  }
+  if(sfxVolumeSlider){
+    sfxVolumeSlider.addEventListener('input', () => {
+      setSfxVolume(sfxVolumeSlider.value);
+    });
+  }
+  document.addEventListener('pointerdown', unlockAndStartBgm, { passive:true });
   if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
 
   window.addEventListener('keydown', function(e){
@@ -3676,6 +3975,7 @@
     state = freshState();
     updateCauldronVisuals();
     updateUI();
+    syncVolumeUI();
   }
 
 })();
