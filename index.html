@@ -1143,7 +1143,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.4</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.5</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1186,7 +1186,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.4</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.5</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1232,7 +1232,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.4 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.5 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Each shop card can only be bought once per visit — reroll or finish another order if you want to upgrade that relic again.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.4</div>
         <ul class="changelog-list">
           <li>Golden Tithe and Familiar's Whisk no longer snowball off each other — unspent Gold still boosts you, but it can't explode your passive brew.</li>
         </ul>
@@ -1728,6 +1734,7 @@
       liquidTheme: 'default',
       rerollCount: 0,
       shopOffers: [],
+      purchasedOffers: [],
       consumables: consumables,
       stirFrenzyTimer: 0,
       timeFreezeTimer: 0,
@@ -2870,6 +2877,7 @@
     const pool = getShopRelicPool();
     const shuffled = pool.slice().sort(() => Math.random() - 0.5);
     state.shopOffers = shuffled.slice(0, 4).map(r => r.id);
+    state.purchasedOffers = [];
   }
 
   function renderShop(){
@@ -2889,7 +2897,8 @@
         const r = RELICS.find(x => x.id === id);
         if(!r) return;
         const lv = getRelicLevel(id);
-        const isUpgrade = lv > 0;
+        const boughtThisVisit = Array.isArray(state.purchasedOffers) && state.purchasedOffers.includes(id);
+        const isUpgrade = lv > 0 && !boughtThisVisit;
         const nextLv = lv + 1;
         const maxed = lv >= RELIC_MAX_LEVEL;
         const price = getRelicCost(r);
@@ -2897,32 +2906,39 @@
           const info = TAG_INFO[t];
           return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
         }).join('');
-        const hintsHtml = isUpgrade ? '' : (r.tags||[]).map(t => {
+        const hintsHtml = (isUpgrade || boughtThisVisit) ? '' : (r.tags||[]).map(t => {
           const hint = getSynergyHint(t, tagCounts[t] || 0);
           return hint ? `<div class="synergy-hint">${hint}</div>` : '';
         }).join('');
         const tierStatusHtml = getRelicTierStatusHTML(r, 'rTierLine');
-        const nowStats = isUpgrade ? getRelicStats(id, lv) : null;
-        const nextStats = !maxed ? getRelicStats(id, nextLv) : null;
-        const preview = isUpgrade
-          ? `<div class="rUpgrade">${formatRelicLevel(lv)} now: ${nowStats.summary}<br>${maxed ? 'MAXED' : ('Next ' + formatRelicLevel(nextLv) + ': ' + nextStats.summary)}</div>`
-          : (nextStats ? `<div class="rUpgrade">Lv 1: ${nextStats.summary}</div>` : '');
-        const card = document.createElement('div');
-        card.className = 'relicCard' + (maxed ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (r.corrupted ? ' corrupted' : '');
-        card.setAttribute('data-id', r.id);
-        const buyLabel = maxed
-          ? 'MAXED'
+        const nowStats = lv > 0 ? getRelicStats(id, lv) : null;
+        const nextStats = !maxed && !boughtThisVisit ? getRelicStats(id, nextLv) : null;
+        const preview = boughtThisVisit && nowStats
+          ? `<div class="rUpgrade">${formatRelicLevel(lv)}: ${nowStats.summary}</div>`
           : (isUpgrade
-            ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
-            : ('BUY — ' + price + ' ' + icon('coin','ic-gold')));
+            ? `<div class="rUpgrade">${formatRelicLevel(lv)} now: ${nowStats.summary}<br>${maxed ? 'MAXED' : ('Next ' + formatRelicLevel(nextLv) + ': ' + nextStats.summary)}</div>`
+            : (nextStats ? `<div class="rUpgrade">Lv 1: ${nextStats.summary}</div>` : ''));
+        const card = document.createElement('div');
+        card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (r.corrupted ? ' corrupted' : '');
+        card.setAttribute('data-id', r.id);
+        const buyLabel = boughtThisVisit
+          ? (lv > 1 ? 'UPGRADED' : 'PURCHASED')
+          : (maxed
+            ? 'MAXED'
+            : (isUpgrade
+              ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
+              : ('BUY — ' + price + ' ' + icon('coin','ic-gold'))));
+        const levelBadge = boughtThisVisit
+          ? formatRelicLevel(lv)
+          : (isUpgrade ? formatRelicLevel(lv) : 'NEW');
         card.innerHTML = `
-          <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${isUpgrade ? formatRelicLevel(lv) : 'NEW'}</span></div>
+          <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
           ${preview}
           ${tierStatusHtml ? '<div class="rTierStatus">' + tierStatusHtml + '</div>' : ''}
-          <button class="rBuy" data-id="${r.id}" ${maxed || state.gold < price ? 'disabled' : ''}>
+          <button class="rBuy" data-id="${r.id}" ${maxed || boughtThisVisit || state.gold < price ? 'disabled' : ''}>
             ${buyLabel}
           </button>
         `;
@@ -3191,6 +3207,8 @@
   function buyRelic(id){
     const r = RELICS.find(x => x.id === id);
     if(!r) return;
+    if(!Array.isArray(state.purchasedOffers)) state.purchasedOffers = [];
+    if(state.purchasedOffers.includes(id)) return;
     const lv = getRelicLevel(id);
     if(lv >= RELIC_MAX_LEVEL) return;
     const price = getRelicCost(r);
@@ -3210,6 +3228,7 @@
       };
     }
     if(r.liquidTheme) state.liquidTheme = r.liquidTheme;
+    state.purchasedOffers.push(id);
     updateCauldronVisuals();
     sfxBuy();
     goldValue.textContent = fmt(state.gold);
@@ -3436,6 +3455,7 @@
       if(Array.isArray(state.shopOffers)){
         state.shopOffers = state.shopOffers.filter(id => getRelicLevel(id) < RELIC_MAX_LEVEL);
       }
+      if(!Array.isArray(state.purchasedOffers)) state.purchasedOffers = [];
       if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
       getOwnedRelicIds().forEach(id => {
         if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
