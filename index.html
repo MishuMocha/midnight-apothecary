@@ -1210,13 +1210,11 @@
     line-height:1.25; font-size:0.42rem;
   }
   .consumable-btn .cCooldown{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
+    display:none; position:absolute; inset:0;
     background: conic-gradient(rgba(8, 2, 16, 0.78) var(--cd-pct, 0%), transparent 0);
-    color:#e8d6ff; font-size:0.42rem; letter-spacing:0.3px;
-    pointer-events:none; text-shadow:1px 1px 0 #000;
+    pointer-events:none;
   }
-  .consumable-btn .cCooldown:empty{ display:none; }
+  .consumable-btn.on-cooldown .cCooldown{ display:block; }
 
   /* ---------- OVERLAYS / MODALS ---------- */
   .hidden{ display:none !important; }
@@ -2146,6 +2144,22 @@
   <circle cx="12" cy="15" r="1" fill="#fff7b8"/>
 </symbol>
 
+<symbol id="icon-auricSignet" viewBox="0 0 24 24">
+  <path fill="#1a1104" d="M6 3h12v3h2v7h-2v2H6v-2H4V6h2V3z"/>
+  <path fill="#5c4308" d="M7 4h10v2h1v6h-1v1H7v-1H6V6h1V4z"/>
+  <path fill="#8a610e" d="M8 5h8v1h1v5h-1v1H8v-1H7V6h1V5z"/>
+  <path fill="#ffd043" d="M9 6h6v1h1v4h-1v1H9v-1H8V7h1V6z"/>
+  <path fill="#ffe27a" d="M10 6h4v1h1v1h-5V6z"/>
+  <path fill="#8a610e" d="M10 8h1v1h2V8h1v1h1v1h-1v2h-4v-2H9V9h1V8z"/>
+  <rect x="10" y="12" width="4" height="1" fill="#5c4308"/>
+  <path fill="#5c4308" d="M7 14h10v2H7z"/>
+  <path fill="#ffd043" d="M8 15h8v3H8z"/>
+  <path fill="#8a610e" d="M9 17h6v2H9z"/>
+  <rect x="10" y="18" width="4" height="1" fill="#5c4308"/>
+  <rect x="7" y="4" width="2" height="1" fill="#fff7b8"/>
+  <rect x="16" y="16" width="2" height="2" fill="#ffe27a"/>
+</symbol>
+
 <symbol id="icon-sparkle" viewBox="0 0 24 24">
   <path fill="currentColor" d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>
   <path fill="currentColor" opacity="0.8" d="M19 15l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/>
@@ -2655,7 +2669,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2712,7 +2726,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.2</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2792,7 +2806,15 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>A fourth Midas relic joins the pedestal — the Auric Signet — with its own painted gold-ring icon.</li>
+          <li>Every 6th tap, the Signet stamps bonus Gold into your purse, more at higher ranks.</li>
+          <li>Ingredient Charms no longer flash a ticking number while they recharge — the dark sweep on the button is enough.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.1</div>
         <ul class="changelog-list">
           <li>Two new Chaos relics join the pedestal — the Pandemonium Die and the Phantom Ladle — each with its own painted icon.</li>
           <li>Every 8th tap, the Die hurls a Chaos Burst of bonus Mana that is not a Critical Surge.</li>
@@ -3604,6 +3626,9 @@
     { id:'gildedLedger', name:"Gilded Ledger", icon:'gildedLedger', cost:28, tags:['midas'],
       desc:"Fulfilling an order grants a +12 Gold bounty per level.",
       liquidTheme:null, unlockOrder:5 },
+    { id:'auricSignet', name:"Auric Signet", icon:'auricSignet', cost:24, tags:['midas'],
+      desc:"Every 6th tap stamps +1 Gold into your purse (+2 at Lv 2, +3 at Lv 3).",
+      liquidTheme:null, unlockOrder:4 },
   ];
 
   const CORRUPTION_CHANCE = 0.12;
@@ -4075,7 +4100,7 @@
     pepper:1, bellows:1, explosion:1, feather:1, sigil:1, cinderbrand:1,
     moon:1, hourglass:1, glacialCore:1, wintersGrasp:1, rimeCaliper:1, permafrostShard:1, absoluteZero:1,
     whisk:1, crucible:1, starter:1, arcaneConduit:1, bifrost:1, catalyst:1, phantomLadle:1, pandemoniumDie:1,
-    hoardersScale:1, pawnTicket:1, gildedLedger:1, coin:1
+    hoardersScale:1, pawnTicket:1, gildedLedger:1, auricSignet:1, coin:1
   };
   function icon(name, cls){
     const painted = PAINTED_ICONS[name] ? ' painted' : '';
@@ -4892,6 +4917,11 @@
         s.bounty = Math.round(12 * lv * boon);
         s.summary = '+' + s.bounty + ' Gold bounty on fulfill';
         break;
+      case 'auricSignet':
+        s.stampEvery = 6;
+        s.stampGold = Math.max(1, Math.round([0, 1, 2, 3][lv] * boon));
+        s.summary = 'Every 6th tap stamps +' + s.stampGold + ' Gold';
+        break;
       case 'bellows':
         s.maxHeat = [0, 0.50, 0.75, 1.00][lv] * boon;
         s.summary = '+5% Click Power per quick tap (cap +' + Math.round(s.maxHeat * 100) + '%)';
@@ -5253,7 +5283,7 @@
     // invoked from updateUI(), which runs on every animation frame while
     // brewing — was destroying/recreating the buttons out from under the
     // player's click, which made the charms appear completely unresponsive.
-    if(consumableButtons.dataset.charmHud !== 'cd2' || consumableButtons.children.length !== CONSUMABLES.length){
+    if(consumableButtons.dataset.charmHud !== 'cd3' || consumableButtons.children.length !== CONSUMABLES.length){
       consumableButtons.innerHTML = '';
       CONSUMABLES.forEach(c => {
         const btn = document.createElement('button');
@@ -5275,7 +5305,7 @@
         btn.addEventListener('mouseleave', hideHoverTooltip);
         consumableButtons.appendChild(btn);
       });
-      consumableButtons.dataset.charmHud = 'cd2';
+      consumableButtons.dataset.charmHud = 'cd3';
     }
     CONSUMABLES.forEach(c => {
       const btn = consumableButtons.querySelector('[data-cid="' + c.id + '"]');
@@ -5292,8 +5322,6 @@
       if(countEl) countEl.textContent = count;
       const timerEl = btn.querySelector('.cBuffTimer');
       if(timerEl) timerEl.textContent = buffTime > 0 ? buffTime.toFixed(1) + 's' : '';
-      const cdEl = btn.querySelector('.cCooldown');
-      if(cdEl) cdEl.textContent = cd > 0 ? cd.toFixed(1) + 's' : '';
     });
   }
 
@@ -6056,6 +6084,14 @@
     }
     if(hasRelic('bifrost') && Math.random() < (getRelicStats('bifrost').goldChance || 0.1) * getSynergyMult('chaos')){
       awardDropGold(1, xPct, yPct+18);
+    }
+    if(hasRelic('auricSignet')){
+      const stamp = getRelicStats('auricSignet');
+      const every = stamp.stampEvery || 6;
+      if(every > 0 && state.clickCountRun % every === 0){
+        const gold = Math.max(1, Math.round(stamp.stampGold || 1));
+        awardDropGold(gold, xPct, yPct + 26);
+      }
     }
 
     const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
