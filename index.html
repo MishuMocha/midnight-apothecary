@@ -1143,7 +1143,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.12.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1186,7 +1186,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.5</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.12.6</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1232,7 +1232,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.5 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The first few orders now pay out more Gold, so a normal opening brew is enough to pick up a relic from the shop.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.12.5</div>
         <ul class="changelog-list">
           <li>Each shop card can only be bought once per visit — reroll or finish another order if you want to upgrade that relic again.</li>
         </ul>
@@ -1596,6 +1602,9 @@
 
   const BASE_COMPLETION_GOLD = 16;
   const SURPLUS_GOLD_DIVISOR = 120;
+  // Extra gold on the opening orders so the first shop isn't a dead end.
+  // Fades out by Order 4 so the later economy stays the same.
+  const EARLY_COMPLETION_GOLD = { 1: 16, 2: 8, 3: 4 };
   const RELIC_COST_SCALE_PER_ROUND = 0.5;
   const RELIC_MAX_LEVEL = 3;
   const SYNERGY_BONUS_PER_EXTRA = 0.25;
@@ -2135,18 +2144,26 @@
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
     return t;
   }
+  function getEarlyCompletionGold(){
+    return EARLY_COMPLETION_GOLD[state.round] || 0;
+  }
   function getSurplusGoldDivisor(){
     // Quotas grow exponentially with round, but a flat surplus-to-gold ratio
     // means gold income explodes right alongside them (e.g. ~840 gold by
     // Round 8), letting players buy out the entire shop in one visit. Scaling
     // the divisor by the square root of quota growth keeps gold income
     // rising much more slowly than the quota itself, so late relics/charms
-    // still require real budgeting. Rounds 1-4 are untouched (ratio ~= 1).
+    // still require real budgeting. Opening orders convert surplus more
+    // generously so brewing past quota on the first visits actually pays.
     const ratio = Math.max(1, (state.target || ROUND_BASE_TARGET) / ROUND_BASE_TARGET);
-    return SURPLUS_GOLD_DIVISOR * Math.sqrt(ratio);
+    let div = SURPLUS_GOLD_DIVISOR * Math.sqrt(ratio);
+    if(state.round === 1) div *= 0.5;
+    else if(state.round === 2) div *= 0.7;
+    else if(state.round === 3) div *= 0.85;
+    return div;
   }
   function getSurplusGold(surplus){
-    return BASE_COMPLETION_GOLD + Math.max(0, Math.floor((surplus / getSurplusGoldDivisor()) * getGoldRate()));
+    return BASE_COMPLETION_GOLD + getEarlyCompletionGold() + Math.max(0, Math.floor((surplus / getSurplusGoldDivisor()) * getGoldRate()));
   }
   function getSurplusGoldPreview(){
     const surplus = Math.max(0, state.mana - state.target);
