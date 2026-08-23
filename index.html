@@ -478,16 +478,90 @@
     100%{ filter: brightness(1.35) drop-shadow(0 0 12px #ff2045); }
   }
 
-  #fulfillBtn{ width:100%; margin-top:10px; padding:12px 8px; font-size:0.65rem; display:none; }
-  #fulfillBtn.show{ display:block; animation: fulfillGlow 0.8s steps(4) infinite; }
-  #fulfillBtn.show.surplus-urgent{
-    animation: fulfillUrgentPulse 0.32s steps(2) infinite;
-    color:#2a080c;
+  #fulfillBtn{
+    position:relative;
+    width:100%;
+    margin-top:12px;
+    padding:14px 16px 12px;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:#2a1406;
+    font-size:0.875rem;
+    line-height:1.35;
+    letter-spacing:0.4px;
+    text-shadow: 0 1px 0 rgba(255,236,186,0.72);
+    background:
+      linear-gradient(180deg, #ffe9a4 0%, #f4b860 38%, #d08a28 72%, #8a5414 100%);
+    border: 3px solid #1a0c04;
+    box-shadow:
+      inset 2px 2px 0 rgba(255,248,210,0.72),
+      inset -2px -3px 0 rgba(90,40,8,0.55),
+      0 5px 0 #3f2208,
+      0 0 10px rgba(255, 196, 80, 0.3);
   }
-  @keyframes fulfillGlow{ 0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(244,184,96,0.6);} 50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.45), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 6px rgba(244,184,96,0.15);} }
+  #fulfillBtn{ overflow:hidden; }
+  #fulfillFx{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  #fulfillFx .fx-gold-sparkle,
+  #fulfillFx .fx-stardust-midas{
+    filter: drop-shadow(0 0 4px rgba(255, 208, 67, 0.95));
+  }
+  #fulfillCopy{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  #fulfillBtn .fulfill-main{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    font-size:0.875rem;
+  }
+  #fulfillBtn .fulfill-gold{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:#3d1d06;
+    padding:4px 8px 3px;
+    background: rgba(42, 16, 4, 0.16);
+    border: 2px solid rgba(42,16,4,0.38);
+    box-shadow: inset 1px 1px 0 rgba(255,236,186,0.4);
+  }
+  #fulfillBtn .fulfill-gold .icon{ width:1.2em; height:1.2em; }
+  #fulfillBtn .fulfill-sub{
+    font-size:0.625rem;
+    color:#4a2610;
+    letter-spacing:0.6px;
+    text-shadow: none;
+  }
+  #fulfillBtn.show{ display:flex; animation: fulfillGlow 1s steps(4) infinite; }
+  #fulfillBtn.show.surplus-urgent{
+    animation: fulfillUrgentPulse 0.36s steps(2) infinite;
+    color:#2a080c;
+    background: linear-gradient(180deg, #ffd27a 0%, #ff8a3d 40%, #c94418 78%, #7a1808 100%);
+  }
+  #fulfillBtn.show.surplus-urgent .fulfill-sub{ color:#4a120c; }
+  @keyframes fulfillGlow{
+    0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,248,210,0.72), inset -2px -3px 0 rgba(90,40,8,0.55), 0 5px 0 #3f2208, 0 0 0 3px rgba(244,184,96,0.55), 0 0 12px rgba(255,196,80,0.35); }
+    50%{ box-shadow: inset 2px 2px 0 rgba(255,248,210,0.72), inset -2px -3px 0 rgba(90,40,8,0.55), 0 5px 0 #3f2208, 0 0 0 7px rgba(244,184,96,0.12), 0 0 6px rgba(255,196,80,0.18); }
+  }
   @keyframes fulfillUrgentPulse{
-    0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 3px rgba(255,32,69,0.75); filter:brightness(1.05); }
-    50%{ box-shadow: inset 2px 2px 0 rgba(255,255,255,0.55), inset -2px -2px 0 rgba(0,0,0,0.35), 0 4px 0 #000, 0 0 0 8px rgba(255,80,90,0.35); filter:brightness(1.28); }
+    0%,100%{ box-shadow: inset 2px 2px 0 rgba(255,220,180,0.55), inset -2px -3px 0 rgba(80,10,8,0.5), 0 5px 0 #3a0c08, 0 0 0 3px rgba(255,32,69,0.7), 0 0 12px rgba(255,70,60,0.4); }
+    50%{ box-shadow: inset 2px 2px 0 rgba(255,236,200,0.7), inset -2px -3px 0 rgba(80,10,8,0.5), 0 5px 0 #3a0c08, 0 0 0 8px rgba(255,80,90,0.28), 0 0 16px rgba(255,90,70,0.55); }
   }
 
   /* ---------- CAULDRON STAGE + RELIC / MODIFIER RAILS ---------- */
@@ -2318,7 +2392,13 @@
       <div class="barLabelRow"><span>ORDER DEADLINE</span><span id="timerLabelText">40.0s</span></div>
       <div class="barTrack"><div class="barFill" id="timerFill"></div></div>
     </div>
-    <button class="pixel-btn" id="fulfillBtn">CASH OUT &amp; END ROUND</button>
+    <button class="pixel-btn" id="fulfillBtn">
+      <span class="fulfill-fx" id="fulfillFx" aria-hidden="true"></span>
+      <span class="fulfill-copy" id="fulfillCopy">
+        <span class="fulfill-main">CASH OUT</span>
+        <span class="fulfill-sub">END ROUND</span>
+      </span>
+    </button>
   </div>
   </div>
 
@@ -2362,7 +2442,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.6</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.8</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2419,7 +2499,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.6</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.8</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2494,7 +2574,19 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.6 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.8 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Cash Out plaque now sheds the same gold sparks and Midas coins that drift off a Midas cauldron, instead of tiny white specks.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.7</div>
+        <ul class="changelog-list">
+          <li>The Cash Out button is now a gilded plaque with larger text — payout and auto-finish sit on their own lines so they're easier to read.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.6</div>
         <ul class="changelog-list">
           <li>The between-round shop now fills the screen — relic cards sit in a wider grid with larger text, and the supply shelf sits beside the continue buttons.</li>
         </ul>
@@ -3749,6 +3841,8 @@
   const manaLabelText = $('manaLabelText');
   const timerLabelText = $('timerLabelText');
   const fulfillBtn = $('fulfillBtn');
+  const fulfillCopy = $('fulfillCopy');
+  const fulfillFx = $('fulfillFx');
   const appEl = $('app');
   const crtLayer = $('crtLayer');
   const cauldronStage = $('cauldronStage');
@@ -4959,6 +5053,30 @@
     }
     return cauldronToLayerPct(26 + Math.random() * 48, 28 + Math.random() * 12);
   }
+  function spawnFulfillMidasFx(){
+    if(!fulfillFx || !fulfillBtn || !fulfillBtn.classList.contains('show')) return;
+    if(getParticleMode() === 'off') return;
+    const scale = particleSizeScale();
+    const place = (cls, size, life) => spawnEl(fulfillFx, 'px-particle ' + cls, {
+      left: (8 + Math.random() * 84) + '%',
+      top: (58 + Math.random() * 36) + '%',
+      width: size + 'px',
+      height: size + 'px',
+      '--sx': ((Math.random() - 0.5) * 48 * scale) + 'px',
+      '--sy': (-22 - Math.random() * 28) + 'px'
+    }, life);
+    if(particleChance(0.78)){
+      place('fx-gold-sparkle', Math.round(11 * scale), 1400);
+    }
+    if(particleChance(0.62)){
+      place('fx-stardust fx-stardust-midas', Math.round(10 * scale), 1200);
+    }
+    if(particleChance(0.24)){
+      const coin = place('fx-gold-coin', Math.round(13 * scale), 1100);
+      coin.innerHTML = icon('coin', 'ic-gold');
+    }
+  }
+
   function spawnMidasCoinGlint(xPct, yPct){
     if(getParticleMode() === 'off' || !fxLayer) return;
     const scale = particleSizeScale();
@@ -5344,10 +5462,13 @@
       const remain = Math.max(0, getSurplusAutoFinish() - (state.surplusTimer || 0));
       fulfillBtn.classList.add('show');
       fulfillBtn.classList.toggle('surplus-urgent', surplusUrgent);
-      fulfillBtn.innerHTML = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + ') &amp; END ROUND · Auto-finish in ' + Math.ceil(remain) + 's';
+      if(fulfillCopy){
+        fulfillCopy.innerHTML = '<span class="fulfill-main">CASH OUT <span class="fulfill-gold">+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + '</span></span><span class="fulfill-sub">END ROUND · Auto-finish in ' + Math.ceil(remain) + 's</span>';
+      }
     } else {
       fulfillBtn.classList.remove('show');
       fulfillBtn.classList.remove('surplus-urgent');
+      if(fulfillFx) fulfillFx.innerHTML = '';
     }
     if(cauldron) cauldron.classList.toggle('surplus-urgent', surplusUrgent);
 
@@ -7271,7 +7392,10 @@
   requestAnimationFrame(loop);
 
   setInterval(function(){
-    if(!isPaused) spawnAmbientFx();
+    if(!isPaused){
+      spawnAmbientFx();
+      spawnFulfillMidasFx();
+    }
   }, 320);
   setInterval(function(){
     if(!isPaused) spawnAmbientSparkles();
