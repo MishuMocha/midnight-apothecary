@@ -987,9 +987,29 @@
   .grimoire-tab.corrupted-tab.active{
     color:#ff6b7d; border-color:#ff2a4b;
   }
+  .compendium-catalog{
+    display:flex; flex-direction:column; gap:16px; margin:4px 0 8px;
+  }
+  .compendium-tag-section{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .compendium-tag-header{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.48rem; letter-spacing:1px; color:var(--amber-glow);
+    padding:7px 10px; border:2px solid #000;
+    background:rgba(0,0,0,0.28);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .compendium-tag-header .icon{ width:16px; height:16px; }
+  .compendium-tag-header.tag-fire{ color:#ffb27a; }
+  .compendium-tag-header.tag-frost{ color:#8fd0f5; }
+  .compendium-tag-header.tag-arcane{ color:#c186ff; }
+  .compendium-tag-header.tag-chaos{ color:#ff6b7d; }
+  .compendium-tag-header.tag-midas{ color:#ffd243; }
+  .compendium-tag-count{
+    margin-left:auto; letter-spacing:0.4px; color:var(--text-dim); font-size:0.4rem;
+  }
   .compendium-grid{
     display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
-    gap:12px; margin:4px 0 8px; text-align:left;
+    gap:12px; text-align:left;
   }
   .compendium-card{
     padding:10px; background:rgba(255,255,255,0.04); border:2px solid #000;
@@ -1612,7 +1632,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.22</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.23.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1659,7 +1679,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.22</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.23.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1712,7 +1732,23 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.22 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.23.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Alchemical Grimoire now groups relics by synergy tag — Fire, Frost, Arcane, Chaos, and Midas — on both the Standard and Corrupted pages.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.23</div>
+        <ul class="changelog-list">
+          <li>Three new Frost relics join the Relic Pedestal: Rime-Bound Caliper, Permafrost Shard, and Absolute Zero.</li>
+          <li>Rime-Bound Caliper slows a boiling-over deadline once fewer than 10 seconds remain, and it gets stingier as you rank it up.</li>
+          <li>Permafrost Shard multiplies your stir while the clock is frozen, from 2x at rank one up to 3x at rank three.</li>
+          <li>Absolute Zero snaps a short freeze onto the deadline whenever you toss any Ingredient Charm.</li>
+          <li>All three count toward your Frost set, so Chill State is easier to lock in.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.22</div>
         <ul class="changelog-list">
           <li>After you fill an order, overcharging now auto-cashes out after 30 seconds so you cannot farm Gold and shards forever.</li>
           <li>The cash-out button shows the auto-finish countdown, and the cauldron rim flashes a warning in the last 5 seconds.</li>
@@ -2194,7 +2230,7 @@
       <button type="button" class="grimoire-tab corrupted-tab" id="grimoireTabCorrupted">CORRUPTED RELICS</button>
     </div>
     <div class="compendium-progress" id="compendiumProgress">0 / 0 Discovered</div>
-    <div id="compendiumGrid" class="compendium-grid"></div>
+    <div id="compendiumGrid" class="compendium-catalog"></div>
     <button class="pixel-btn bigBtn" id="closeCompendiumBtn">CLOSE GRIMOIRE</button>
   </div>
 </div>
@@ -2340,6 +2376,15 @@
     { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
       desc:"Every Critical Surge also freezes the deadline for 0.5 seconds. Higher levels raise the freeze cap and shorten the cooldown.",
       liquidTheme:null, unlockOrder:4 },
+    { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'hourglass', cost:22, tags:['frost'],
+      desc:"Slows deadline drain speed by 25% at Lv 1 (35% at Lv 2, 45% at Lv 3) whenever less than 10.0s remain on the clock.",
+      liquidTheme:null, unlockOrder:3 },
+    { id:'permafrostShard', name:"Permafrost Shard", icon:'ice', cost:26, tags:['frost'],
+      desc:"Whenever the deadline is frozen, active Click Power is multiplied by 2.0x at Lv 1 (2.5x at Lv 2, 3.0x at Lv 3).",
+      liquidTheme:null, unlockOrder:4 },
+    { id:'absoluteZero', name:"Absolute Zero", icon:'frost', cost:30, tags:['frost'],
+      desc:"Consuming any Ingredient Charm instantly triggers a 1.5s deadline freeze (2.0s at Lv 2, 2.5s at Lv 3).",
+      liquidTheme:null, unlockOrder:5 },
     { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcane', cost:30, tags:['arcane'],
       desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
       liquidTheme:null, unlockLifetimeShards:50 },
@@ -3239,6 +3284,18 @@
         s.icd = 1.0 - 0.15 * (lv - 1);
         s.summary = 'Crits freeze +' + s.freezeAdd.toFixed(2) + 's (cap ' + s.freezeCap.toFixed(2) + 's, ' + s.icd.toFixed(2) + 's cooldown)';
         break;
+      case 'rimeCaliper':
+        s.slowPct = [0, 0.25, 0.35, 0.45][lv] * boon;
+        s.summary = Math.round(s.slowPct * 100) + '% slower deadline drain when under 10.0s';
+        break;
+      case 'permafrostShard':
+        s.frozenMult = [0, 2.0, 2.5, 3.0][lv] * boon;
+        s.summary = s.frozenMult.toFixed(1) + 'x Click Power while deadline is frozen';
+        break;
+      case 'absoluteZero':
+        s.charmFreezeSec = [0, 1.5, 2.0, 2.5][lv] * boon;
+        s.summary = '+' + s.charmFreezeSec.toFixed(1) + 's freeze when using any Ingredient Charm';
+        break;
       case 'arcaneConduit':
         s.mpsPct = 0.15 * lv * boon;
         s.summary = '+' + Math.round(s.mpsPct * 100) + '% Passive Mana/sec';
@@ -3333,6 +3390,9 @@
   function getClickPower(){
     let p = getBaseClickPower() * getDeepCauldronMult() * (1 + getClickBonusPct(true));
     if(state.stirFrenzyTimer > 0) p *= 3;
+    if(hasRelic('permafrostShard') && (state.timeFreezeTimer || 0) > 0){
+      p *= getRelicStats('permafrostShard').frozenMult || 2.0;
+    }
     return p;
   }
   function getManaPerSecond(){
@@ -4247,6 +4307,11 @@
         spawnFloatNumber('NO MANA TO CONVERT', 'danger', 50, 22);
       }
     }
+    if(hasRelic('absoluteZero')){
+      const extraFreeze = clampFreeze((getRelicStats('absoluteZero').charmFreezeSec || 1.5) + getFreezeBonus());
+      state.timeFreezeTimer = Math.max(state.timeFreezeTimer || 0, extraFreeze);
+      spawnFloatNumber('ABSOLUTE ZERO!', 'crit', 50, 26);
+    }
     sfxBuy();
     updateUI();
     saveGame();
@@ -5147,6 +5212,76 @@
     renderCompendium();
   }
 
+  function createCompendiumCard(r){
+    const card = document.createElement('div');
+    const tile = relicTagTileClass(r);
+    const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
+    if(!isMetaUnlocked(r)){
+      card.className = 'compendium-card locked milestone-locked' + (tile ? ' ' + tile : '');
+      card.innerHTML = `
+        <div class="cIcon">${icon('lock','ic-lock')}</div>
+        <div class="cName">LOCKED</div>
+        <div class="cDesc">${getUnlockHint(r)}</div>
+      `;
+      return card;
+    }
+
+    if(grimoireTab === 'corrupted'){
+      const seen = isCorruptedDiscovered(r.id);
+      const catalog = (state && state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null;
+      card.className = 'compendium-card' + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
+      if(seen){
+        const overlay = catalog
+          ? { corrupted:true, curseType: catalog.curseType, boonMult: catalog.boonMult }
+          : { corrupted:true };
+        const stats = getRelicStats(r.id, 1, overlay);
+        const tagsHtml = (r.tags||[]).map(t => {
+          const info = TAG_INFO[t];
+          return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+        }).join('');
+        card.innerHTML = `
+          <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
+          <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span></div>
+          <div class="rTags">${tagsHtml}</div>
+          <div class="cDesc">${r.desc}</div>
+          ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Swollen Boon: ' + stats.summary + (stats.boonMult ? ' (x' + stats.boonMult.toFixed(2) + ')' : '') + '</div>' : ''}
+          ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' A crimson curse is bound to this offering.</div>'}
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="cIcon">${icon('lock','ic-lock')}</div>
+          <div class="cName">CORRUPTED ???</div>
+          <div class="cDesc">Encounter a Corrupted offering of this relic in the shop to catalogue its swollen blessing and curse.</div>
+        `;
+      }
+      return card;
+    }
+
+    const known = discovered.includes(r.id);
+    card.className = 'compendium-card' + (known ? '' : ' locked') + (tile ? ' ' + tile : '');
+    if(known){
+      const tagsHtml = (r.tags||[]).map(t => {
+        const info = TAG_INFO[t];
+        return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
+      }).join('');
+      const stats = getRelicStats(r.id, 1, { corrupted:false });
+      card.innerHTML = `
+        <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
+        <div class="cName">${getRelicDisplayName(r.id, false)}</div>
+        <div class="rTags">${tagsHtml}</div>
+        <div class="cDesc">${r.desc}</div>
+        ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Baseline: ' + stats.summary + '</div>' : ''}
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
+        <div class="cName">???</div>
+        <div class="cDesc">Discover this relic in the shop to reveal its alchemical secrets.</div>
+      `;
+    }
+    return card;
+  }
+
   function renderCompendium(){
     if(!compendiumGrid) return;
     const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
@@ -5156,76 +5291,35 @@
         ? (corruptKnown + ' / ' + RELICS.length + ' Corrupted Catalogued')
         : (discovered.length + ' / ' + RELICS.length + ' Discovered');
     }
-    compendiumGrid.innerHTML = '';
+    const groups = {};
+    const tagOrder = Object.keys(TAG_INFO);
+    tagOrder.forEach(tag => { groups[tag] = []; });
+    groups.other = [];
     RELICS.forEach(r => {
-      const card = document.createElement('div');
-      const tile = relicTagTileClass(r);
-      if(!isMetaUnlocked(r)){
-        card.className = 'compendium-card locked milestone-locked' + (tile ? ' ' + tile : '');
-        card.innerHTML = `
-          <div class="cIcon">${icon('lock','ic-lock')}</div>
-          <div class="cName">LOCKED</div>
-          <div class="cDesc">${getUnlockHint(r)}</div>
-        `;
-        compendiumGrid.appendChild(card);
-        return;
-      }
-
-      if(grimoireTab === 'corrupted'){
-        const seen = isCorruptedDiscovered(r.id);
-        const catalog = (state && state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null;
-        card.className = 'compendium-card' + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
-        if(seen){
-          const overlay = catalog
-            ? { corrupted:true, curseType: catalog.curseType, boonMult: catalog.boonMult }
-            : { corrupted:true };
-          const stats = getRelicStats(r.id, 1, overlay);
-          const tagsHtml = (r.tags||[]).map(t => {
-            const info = TAG_INFO[t];
-            return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
-          }).join('');
-          card.innerHTML = `
-            <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-            <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span></div>
-            <div class="rTags">${tagsHtml}</div>
-            <div class="cDesc">${r.desc}</div>
-            ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Swollen Boon: ' + stats.summary + (stats.boonMult ? ' (x' + stats.boonMult.toFixed(2) + ')' : '') + '</div>' : ''}
-            ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' A crimson curse is bound to this offering.</div>'}
-          `;
-        } else {
-          card.innerHTML = `
-            <div class="cIcon">${icon('lock','ic-lock')}</div>
-            <div class="cName">CORRUPTED ???</div>
-            <div class="cDesc">Encounter a Corrupted offering of this relic in the shop to catalogue its swollen blessing and curse.</div>
-          `;
-        }
-        compendiumGrid.appendChild(card);
-        return;
-      }
-
-      const known = discovered.includes(r.id);
-      card.className = 'compendium-card' + (known ? '' : ' locked') + (tile ? ' ' + tile : '');
-      if(known){
-        const tagsHtml = (r.tags||[]).map(t => {
-          const info = TAG_INFO[t];
-          return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
-        }).join('');
-        const stats = getRelicStats(r.id, 1, { corrupted:false });
-        card.innerHTML = `
-          <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-          <div class="cName">${getRelicDisplayName(r.id, false)}</div>
-          <div class="rTags">${tagsHtml}</div>
-          <div class="cDesc">${r.desc}</div>
-          ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Baseline: ' + stats.summary + '</div>' : ''}
-        `;
-      } else {
-        card.innerHTML = `
-          <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-          <div class="cName">???</div>
-          <div class="cDesc">Discover this relic in the shop to reveal its alchemical secrets.</div>
-        `;
-      }
-      compendiumGrid.appendChild(card);
+      const tag = getRelicPrimaryTag(r);
+      if(tag && groups[tag]) groups[tag].push(r);
+      else groups.other.push(r);
+    });
+    const sectionOrder = groups.other.length ? tagOrder.concat('other') : tagOrder;
+    compendiumGrid.innerHTML = '';
+    sectionOrder.forEach(tag => {
+      const list = groups[tag];
+      if(!list || !list.length) return;
+      const info = TAG_INFO[tag];
+      const revealed = list.filter(r => grimoireTab === 'corrupted' ? isCorruptedDiscovered(r.id) : discovered.includes(r.id)).length;
+      const section = document.createElement('section');
+      section.className = 'compendium-tag-section';
+      const header = document.createElement('div');
+      header.className = 'compendium-tag-header' + (info ? ' tag-' + tag : '');
+      header.innerHTML = (info
+        ? icon(info.icon, 'ic-' + tag) + ' ' + info.label.toUpperCase()
+        : 'OTHER') + '<span class="compendium-tag-count">' + revealed + ' / ' + list.length + '</span>';
+      const grid = document.createElement('div');
+      grid.className = 'compendium-grid';
+      list.forEach(r => grid.appendChild(createCompendiumCard(r)));
+      section.appendChild(header);
+      section.appendChild(grid);
+      compendiumGrid.appendChild(section);
     });
   }
 
@@ -5519,6 +5613,9 @@
         if(state.timeFreezeTimer <= 0){
           let timerDt = dt;
           if(hasTagTier('frost', 1)) timerDt *= 0.8; // Frost Tier (4): Chill State
+          if(hasRelic('rimeCaliper') && state.timer <= 10.0){
+            timerDt *= (1 - (getRelicStats('rimeCaliper').slowPct || 0.25));
+          }
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
