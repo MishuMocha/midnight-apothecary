@@ -144,6 +144,16 @@
     font-size:0.68rem;
   }
   #goldDisplay.pulse{ animation: goldPulse 0.4s steps(3); }
+  #shardDisplay{
+    display:flex; align-items:center; gap:6px; color:#c9a6ff;
+    font-size:0.68rem;
+  }
+  #hudSanctumBtn{
+    color:#c9a6ff;
+  }
+  #hudSanctumBtn:hover:not(:disabled){
+    filter:brightness(1.15) drop-shadow(0 0 6px rgba(168,110,255,0.7));
+  }
   @keyframes goldPulse{ 0%{transform:scale(1.5); color:#fff;} 100%{transform:scale(1);} }
   .icon-btn{
     padding:6px 10px; font-size:0.55rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
@@ -1121,24 +1131,75 @@
     color:#c9a6ff; font-size:0.56rem; margin:0 0 14px;
     letter-spacing:0.5px;
   }
+  #sanctumOverlay .panelCard{ max-width:980px; }
   .sanctum-tree{
-    display:flex; flex-direction:column; gap:10px;
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
     text-align:left; margin:8px 0 12px;
   }
+  .talent-path{
+    display:flex; flex-direction:column; gap:18px;
+    min-width:0;
+  }
+  .talent-path-header{
+    text-align:center; padding:8px 6px 6px;
+    border:3px solid #000; background:rgba(0,0,0,0.35);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .talent-path-name{ font-size:0.5rem; color:var(--amber-glow); letter-spacing:1px; line-height:1.4; }
+  .talent-path-tag{ font-size:0.38rem; color:var(--text-dim); margin-top:3px; }
   .talent-node{
-    display:flex; gap:10px; align-items:flex-start;
-    padding:10px; background:rgba(0,0,0,0.38);
+    position:relative;
+    display:flex; flex-direction:column; gap:8px; align-items:stretch;
+    padding:10px 8px; background:rgba(0,0,0,0.38);
     border:3px solid #000;
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
   }
+  .talent-node:not(.capstone)::before{
+    content:'';
+    position:absolute; left:50%; bottom:-18px; transform:translateX(-50%);
+    width:0; height:16px;
+    border-left:3px dashed rgba(201,166,255,0.28);
+    pointer-events:none;
+  }
+  .talent-node:not(.capstone)::after{
+    content:'';
+    position:absolute; left:50%; bottom:-10px;
+    width:8px; height:8px;
+    border-right:3px dashed rgba(201,166,255,0.28);
+    border-bottom:3px dashed rgba(201,166,255,0.28);
+    transform:translate(-50%, 0) rotate(45deg);
+    pointer-events:none;
+  }
+  .talent-node.unlocked:not(.capstone)::before,
+  .talent-node.owned:not(.capstone)::before{ border-left-color:rgba(244,184,96,0.55); }
+  .talent-node.unlocked:not(.capstone)::after,
+  .talent-node.owned:not(.capstone)::after{ border-color:rgba(244,184,96,0.55); }
+  .talent-node.maxed:not(.capstone)::before{ border-left-color:var(--amber); }
+  .talent-node.maxed:not(.capstone)::after{ border-color:var(--amber); }
+  .talent-node.locked{ opacity:0.42; }
+  .talent-node.unlocked{
+    border-color:var(--amber);
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.45);
+  }
   .talent-node.owned{
+    border-color:var(--amber);
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.35);
   }
   .talent-node.maxed{
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 8px rgba(244,184,96,0.35);
+    border-color:#ffd27a;
+    background: radial-gradient(circle at 50% 0%, rgba(255,210,122,0.22) 0%, rgba(0,0,0,0.38) 70%);
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 12px rgba(255,210,122,0.55);
   }
+  .talent-lock{
+    position:absolute; top:-8px; right:-8px;
+    width:20px; height:20px;
+    display:flex; align-items:center; justify-content:center;
+    background:#000; border:2px solid #8a7fa0; color:#c9b8d8;
+    pointer-events:none;
+  }
+  .talent-lock .icon{ width:12px; height:12px; }
   .talent-gem{
-    width:44px; height:44px; flex-shrink:0;
+    width:44px; height:44px; flex-shrink:0; align-self:center;
     display:flex; align-items:center; justify-content:center;
     background:var(--purple-mid); border:3px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
@@ -1146,12 +1207,13 @@
   }
   .talent-node.owned .talent-gem{ background:#5a2f12; color:var(--amber-glow); }
   .talent-node.maxed .talent-gem{ background:var(--amber); color:#2a1a08; }
-  .talent-body{ flex:1; min-width:0; }
-  .talent-name{ font-size:0.52rem; color:var(--amber-glow); line-height:1.45; margin-bottom:4px; }
-  .talent-desc{ font-size:0.42rem; color:var(--text-dim); line-height:1.55; }
-  .talent-rank{ font-size:0.42rem; color:var(--amber); margin-top:5px; }
+  .talent-body{ flex:1; min-width:0; text-align:center; }
+  .talent-name{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; margin-bottom:4px; }
+  .talent-desc{ font-size:0.4rem; color:var(--text-dim); line-height:1.55; }
+  .talent-req{ font-size:0.36rem; color:#c9a6ff; line-height:1.45; margin-top:5px; }
+  .talent-rank{ font-size:0.4rem; color:var(--amber); margin-top:5px; }
   .talent-buy{
-    flex-shrink:0; align-self:center;
+    flex-shrink:0; align-self:stretch;
     padding:8px 8px; font-size:0.42rem; min-width:86px;
     background:var(--amber); color:#2a1a08; border:3px solid #000;
     box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 0 3px 0 #000;
@@ -1159,6 +1221,9 @@
   }
   .talent-buy:hover:not(:disabled){ filter:brightness(1.15); }
   .talent-buy:disabled{ background:#5a5064; color:#8a7fa0; box-shadow:none; cursor:not-allowed; }
+  @media (max-width: 720px){
+    .sanctum-tree{ grid-template-columns: 1fr; }
+  }
 
   ::-webkit-scrollbar{ width:8px; }
   ::-webkit-scrollbar-thumb{ background: var(--purple-mid); border:2px solid #000; }
@@ -1395,7 +1460,9 @@
       <button id="compendiumBtn" class="grimoire-btn" title="Alchemical Grimoire">
         <img src="grimoire.svg" alt="Grimoire" draggable="false" />
       </button>
+      <button id="hudSanctumBtn" class="pixel-btn icon-btn" title="Alchemical Sanctum"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg></button>
       <div id="goldDisplay"><svg class="icon ic-gold"><use href="#icon-coin"></use></svg> <span id="goldValue">0</span></div>
+      <div id="shardDisplay"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> <span data-shard-count>0</span></div>
     </div>
     <div id="mainSynergyRow" class="tag-row"></div>
   </div>
@@ -1450,7 +1517,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.18</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.19</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1496,7 +1563,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.18</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.19</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1549,7 +1616,15 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.18 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.19 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Your Mana Shard count now sits beside Gold on the top bar, and a Sanctum button lets you spend shards mid-brew — the deadline freezes until you close it.</li>
+          <li>The Alchemical Sanctum is now a branching tree: Alchemy, Chronos, and Commerce. Later nodes stay locked until you put a rank in the talent above them.</li>
+          <li>New talents: Stasis Mastery lengthens every freeze, Second Breath saves a boiled-over order once, and Bargain Master cheapens shop rerolls.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.18</div>
         <ul class="changelog-list">
           <li>The Alchemist's Supply Shelf now stocks three random Ingredient Charms each visit — rerolling the shop restocks those slots too.</li>
           <li>Stir Frenzy, Time Freeze, and Golden Droplet have been renamed Berserker's Fang, Stasis Crystal, and Midas Tear.</li>
@@ -1985,7 +2060,7 @@
 <div class="overlay hidden" id="sanctumOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL<br>SANCTUM</h1>
-    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. These persist after every new brew.</p>
+    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later nodes stay locked until you invest in the one above.</p>
     <div class="sanctum-vault"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> Mana Shards: <span id="sanctumShardValue" data-shard-count>0</span></div>
     <div id="sanctumTree" class="sanctum-tree"></div>
     <button class="pixel-btn bigBtn" id="closeSanctumBtn">CLOSE SANCTUM</button>
@@ -2155,31 +2230,48 @@
   const META_SAVE_KEY = 'apothecary_meta_v1';
   const SHARDS_PER_ORDER = 5;
   const SHARDS_PER_MANA = 2000;
+  const TALENT_PATHS = [
+    { id:'potency', name:'ALCHEMY', tag:'Potency Path', icon:'urn' },
+    { id:'chronos', name:'CHRONOS', tag:'Time Path', icon:'hourglass' },
+    { id:'commerce', name:'COMMERCE', tag:'Pedestal Path', icon:'coin' },
+  ];
   const TALENTS = [
-    { id:'chronoInfusion', name:'Chrono-Infusion', icon:'hourglass', maxLv:5,
-      desc:'+1.0s to every order deadline per rank.',
-      bonusLine: function(lv){ return '+' + lv.toFixed(1) + 's base deadline'; },
-      baseCost:8, costGrowth:1.55 },
-    { id:'merchantsPurse', name:"Merchant's Purse", icon:'coin', maxLv:5,
-      desc:'Start every new brew with +5 Gold per rank.',
-      bonusLine: function(lv){ return 'Start with +' + (lv * 5) + ' Gold'; },
-      baseCost:10, costGrowth:1.5 },
-    { id:'arcaneKeenness', name:'Arcane Keenness', icon:'moon', maxLv:5,
-      desc:'+1% innate Critical Surge chance on every tap, even without Moonstone Dust.',
-      bonusLine: function(lv){ return '+' + lv + '% innate crit chance'; },
-      baseCost:12, costGrowth:1.6 },
-    { id:'deepCauldron', name:'Deep Cauldron', icon:'urn', maxLv:3,
+    { id:'deepCauldron', name:'Deep Cauldron', icon:'urn', path:'potency', tier:1, maxLv:3,
       desc:'+10% base Click Power and Passive Mana generation per rank.',
       bonusLine: function(lv){ return '+' + (lv * 10) + '% base brew power'; },
       baseCost:16, costGrowth:1.65 },
-    { id:'expandedPedestal', name:'Expanded Pedestal', icon:'sparkle', maxLv:1,
-      desc:'The Relic Pedestal permanently offers a fifth shop card.',
-      bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
-      baseCost:40, costGrowth:1 },
-    { id:'continuousStirring', name:'Continuous Stirring', icon:'spoon', maxLv:3,
+    { id:'arcaneKeenness', name:'Arcane Keenness', icon:'moon', path:'potency', tier:2, requires:'deepCauldron', maxLv:5,
+      desc:'+1% innate Critical Surge chance on every tap, even without Moonstone Dust.',
+      bonusLine: function(lv){ return '+' + lv + '% innate crit chance'; },
+      baseCost:12, costGrowth:1.6 },
+    { id:'continuousStirring', name:'Continuous Stirring', icon:'spoon', path:'potency', tier:3, requires:'arcaneKeenness', maxLv:3,
       desc:'Hold down the mouse button or touch screen on the cauldron to stir continuously at 5 taps/sec (8 at Lv 2, 12 at Lv 3).',
       bonusLine: function(lv){ return lv > 0 ? ([0,5,8,12][lv] + ' taps/sec while held') : 'Tap the cauldron by hand'; },
       baseCost:20, costGrowth:1.55 },
+    { id:'chronoInfusion', name:'Chrono-Infusion', icon:'hourglass', path:'chronos', tier:1, maxLv:5,
+      desc:'+1.0s to every order deadline per rank.',
+      bonusLine: function(lv){ return '+' + lv.toFixed(1) + 's base deadline'; },
+      baseCost:8, costGrowth:1.55 },
+    { id:'stasisMastery', name:'Stasis Mastery', icon:'ice', path:'chronos', tier:2, requires:'chronoInfusion', maxLv:3,
+      desc:'Extends every Freeze duration by +0.5s per rank.',
+      bonusLine: function(lv){ return '+' + (lv * 0.5).toFixed(1) + 's freeze duration'; },
+      baseCost:14, costGrowth:1.55 },
+    { id:'secondBreath', name:'Second Breath', icon:'feather', path:'chronos', tier:3, requires:'stasisMastery', maxLv:3,
+      desc:'Once per order, a boiled-over deadline grants +1.5s per rank instead of ending the brew.',
+      bonusLine: function(lv){ return lv > 0 ? 'Boil-over save +' + (lv * 1.5).toFixed(1) + 's' : 'No second breath'; },
+      baseCost:22, costGrowth:1.6 },
+    { id:'merchantsPurse', name:"Merchant's Purse", icon:'coin', path:'commerce', tier:1, maxLv:5,
+      desc:'Start every new brew with +5 Gold per rank.',
+      bonusLine: function(lv){ return 'Start with +' + (lv * 5) + ' Gold'; },
+      baseCost:10, costGrowth:1.5 },
+    { id:'expandedPedestal', name:'Expanded Pedestal', icon:'sparkle', path:'commerce', tier:2, requires:'merchantsPurse', maxLv:1,
+      desc:'The Relic Pedestal permanently offers a fifth shop card.',
+      bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
+      baseCost:40, costGrowth:1 },
+    { id:'bargainMaster', name:'Bargain Master', icon:'refresh', path:'commerce', tier:3, requires:'expandedPedestal', maxLv:3,
+      desc:'Permanently discounts shop rerolls by 1 Gold per rank.',
+      bonusLine: function(lv){ return lv > 0 ? '-' + lv + ' Gold shop rerolls' : 'Full reroll price'; },
+      baseCost:18, costGrowth:1.5 },
   ];
 
   const LIQUID_THEMES = {
@@ -2238,6 +2330,7 @@
       bellowsHeatStacks: 0,
       cinderbrandBurnTimer: 0,
       magmaGeodeTriggered: false,
+      secondBreathUsed: false,
     };
   }
 
@@ -2289,10 +2382,43 @@
   function getTalentLevel(id){
     return (meta && meta.talents && meta.talents[id]) || 0;
   }
+  function getTalentById(id){
+    return TALENTS.find(t => t.id === id) || null;
+  }
+  function isTalentPrereqMet(talent){
+    if(!talent) return false;
+    if(talent.requires){
+      const need = talent.minRank || 1;
+      if(getTalentLevel(talent.requires) < need) return false;
+    }
+    if(talent.minTier){
+      const hasTier = TALENTS.some(t => t.path === talent.path && t.tier === talent.minTier && getTalentLevel(t.id) >= 1);
+      if(!hasTier) return false;
+    }
+    return true;
+  }
+  function getTalentPrereqLabel(talent){
+    if(!talent) return '';
+    if(talent.requires){
+      const parent = getTalentById(talent.requires);
+      const need = talent.minRank || 1;
+      return 'Requires Rank ' + need + ' ' + (parent ? parent.name : talent.requires);
+    }
+    if(talent.minTier) return 'Requires a Tier ' + talent.minTier + ' talent on this path';
+    return '';
+  }
   function getTalentCost(talent){
+    if(!talent) return 0;
+    if(!isTalentPrereqMet(talent)) return Infinity;
+    const lv = getTalentLevel(talent.id);
+    if(lv >= talent.maxLv) return Infinity;
+    return Math.round(talent.baseCost * Math.pow(talent.costGrowth, lv));
+  }
+  function getTalentDisplayCost(talent){
     const lv = getTalentLevel(talent.id);
     return Math.round(talent.baseCost * Math.pow(talent.costGrowth, lv));
   }
+  function getFreezeBonus(){ return 0.5 * getTalentLevel('stasisMastery'); }
   function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
   function getShopOfferCount(){ return 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0); }
   function getCareerBestOrder(){
@@ -2392,6 +2518,7 @@
   const sanctumTree = $('sanctumTree');
   const closeSanctumBtn = $('closeSanctumBtn');
   const openSanctumBtn = $('openSanctumBtn');
+  const hudSanctumBtn = $('hudSanctumBtn');
   const gameoverSanctumBtn = $('gameoverSanctumBtn');
   const compendiumBtn = $('compendiumBtn');
   const compendiumOverlay = $('compendiumOverlay');
@@ -3064,7 +3191,9 @@
   function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
   function getRerollCost(){
     let cost = Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale());
-    return Math.round(cost * getCurseCostMult());
+    cost = Math.round(cost * getCurseCostMult());
+    cost = Math.max(1, cost - getTalentLevel('bargainMaster'));
+    return cost;
   }
   function getRelicCost(relic){
     const nextLv = getRelicLevel(relic.id) + 1;
@@ -3341,6 +3470,18 @@
     }
   }
 
+  function trySecondBreath(){
+    if(!state || state.secondBreathUsed) return false;
+    const lv = getTalentLevel('secondBreath');
+    if(lv <= 0) return false;
+    const extra = lv * 1.5;
+    state.secondBreathUsed = true;
+    state.timer = extra;
+    spawnFloatNumber('SECOND BREATH! +' + extra.toFixed(1) + 's', 'crit', 50, 22);
+    sfxQuotaMet();
+    return true;
+  }
+
   function tryPhoenixRevive(){
     if(!state || !hasRelic('phoenixDown')) return false;
     const reviveSec = getRelicStats('phoenixDown').reviveSec || 6;
@@ -3559,6 +3700,7 @@
       fulfillBtn.classList.remove('show');
     }
 
+    refreshShardReadouts();
     stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + getClickPower().toFixed(1) + '/click';
     stirCost.innerHTML = 'Cost: ' + fmt(getStirCost()) + ' ' + icon('sparkle','ic-mana');
     bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + getManaPerSecond().toFixed(1) + '/sec';
@@ -3605,7 +3747,7 @@
     marks.forEach(m => {
       if(!state.glacialMilestones[m.key] && state.mana >= quota * m.pct){
         state.glacialMilestones[m.key] = true;
-        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, getRelicStats('glacialCore').freezeSec || 2.0);
+        state.timeFreezeTimer = Math.max(state.timeFreezeTimer, (getRelicStats('glacialCore').freezeSec || 2.0) + getFreezeBonus());
         spawnFloatNumber('FROSTBITE!', 'crit', 50, 22);
       }
     });
@@ -3744,8 +3886,9 @@
     }
     if(crit && hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
       const grasp = getRelicStats('wintersGrasp');
-      const cap = grasp.freezeCap || 1.0;
-      const add = grasp.freezeAdd || 0.5;
+      const bonus = getFreezeBonus();
+      const cap = (grasp.freezeCap || 1.0) + bonus;
+      const add = (grasp.freezeAdd || 0.5) + bonus;
       if((state.timeFreezeTimer || 0) <= cap){
         state.timeFreezeTimer = Math.min(cap, (state.timeFreezeTimer || 0) + add);
       }
@@ -3848,8 +3991,9 @@
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
     } else if(id === 'timeFreeze'){
-      state.timeFreezeTimer = 3;
-      state.activeCharmTimeFreezeTimer = 3;
+      const freeze = 3 + getFreezeBonus();
+      state.timeFreezeTimer = freeze;
+      state.activeCharmTimeFreezeTimer = freeze;
       spawnFloatNumber('STASIS LOCK!', 'crit', 50, 22);
     } else if(id === 'goldenDrop'){
       const bonus = Math.floor(state.target * 0.15);
@@ -3943,6 +4087,7 @@
     state.bellowsHeatStacks = 0;
     state.cinderbrandBurnTimer = 0;
     state.magmaGeodeTriggered = false;
+    state.secondBreathUsed = false;
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * (getRelicStats('starter').quotaPct || 0.10));
       if(state.mana >= state.target){ state.quotaMet = true; }
@@ -4524,50 +4669,93 @@
     if(!sanctumTree) return;
     refreshShardReadouts();
     sanctumTree.innerHTML = '';
-    TALENTS.forEach(t => {
-      const lv = getTalentLevel(t.id);
-      const maxed = lv >= t.maxLv;
-      const cost = getTalentCost(t);
-      const canBuy = !maxed && meta.manaShards >= cost;
-      const node = document.createElement('div');
-      node.className = 'talent-node' + (lv > 0 ? ' owned' : '') + (maxed ? ' maxed' : '');
-      node.innerHTML = `
-        <div class="talent-gem">${icon(t.icon)}</div>
-        <div class="talent-body">
-          <div class="talent-name">${t.name}</div>
-          <div class="talent-desc">${t.desc}</div>
-          <div class="talent-rank">${maxed ? 'MAX Lv ' + lv : ('Lv ' + lv + ' / ' + t.maxLv)} · ${t.bonusLine(lv)}</div>
+    TALENT_PATHS.forEach(path => {
+      const col = document.createElement('div');
+      col.className = 'talent-path';
+      col.innerHTML = `
+        <div class="talent-path-header">
+          <div class="talent-path-name">${icon(path.icon)} ${path.name}</div>
+          <div class="talent-path-tag">${path.tag}</div>
         </div>
-        <button class="talent-buy" data-tid="${t.id}" ${canBuy ? '' : 'disabled'}>${maxed ? 'MAXED' : ('BUY ' + cost)}</button>
       `;
-      sanctumTree.appendChild(node);
+      TALENTS.filter(t => t.path === path.id).sort((a, b) => a.tier - b.tier).forEach(t => {
+        const lv = getTalentLevel(t.id);
+        const maxed = lv >= t.maxLv;
+        const unlocked = isTalentPrereqMet(t);
+        const cost = getTalentDisplayCost(t);
+        const canBuy = unlocked && !maxed && meta.manaShards >= cost && isFinite(getTalentCost(t));
+        const req = getTalentPrereqLabel(t);
+        const node = document.createElement('div');
+        let nodeState = ' locked';
+        if(unlocked && maxed) nodeState = ' unlocked maxed';
+        else if(unlocked && lv > 0) nodeState = ' unlocked owned';
+        else if(unlocked) nodeState = ' unlocked';
+        else if(lv > 0) nodeState = ' owned';
+        node.className = 'talent-node' + (t.tier >= 3 ? ' capstone' : '') + nodeState;
+        node.innerHTML = `
+          ${unlocked ? '' : '<div class="talent-lock">' + icon('lock') + '</div>'}
+          <div class="talent-gem">${icon(t.icon)}</div>
+          <div class="talent-body">
+            <div class="talent-name">${t.name}</div>
+            <div class="talent-desc">${t.desc}</div>
+            ${!unlocked && req ? '<div class="talent-req">' + req + '</div>' : ''}
+            <div class="talent-rank">${maxed ? 'MAX Lv ' + lv : ('Lv ' + lv + ' / ' + t.maxLv)} · ${t.bonusLine(lv)}</div>
+          </div>
+          <button class="talent-buy" data-tid="${t.id}" ${canBuy ? '' : 'disabled'}>${maxed ? 'MAXED' : (unlocked ? ('BUY ' + cost) : 'LOCKED')}</button>
+        `;
+        col.appendChild(node);
+      });
+      sanctumTree.appendChild(col);
     });
     sanctumTree.querySelectorAll('.talent-buy').forEach(btn => {
       btn.addEventListener('click', () => buyTalent(btn.getAttribute('data-tid')));
     });
   }
   function buyTalent(id){
-    const talent = TALENTS.find(t => t.id === id);
+    const talent = getTalentById(id);
     if(!talent) return;
+    if(!isTalentPrereqMet(talent)) return;
     const lv = getTalentLevel(id);
     if(lv >= talent.maxLv) return;
     const cost = getTalentCost(talent);
-    if(meta.manaShards < cost) return;
+    if(!isFinite(cost) || meta.manaShards < cost) return;
     meta.manaShards -= cost;
     meta.talents[id] = lv + 1;
     saveMeta();
     sfxBuy();
     renderSanctum();
+    if(state) updateUI();
   }
+  let sanctumHeldPause = false;
   function openSanctum(){
     if(!sanctumOverlay) return;
     hideTooltip();
+    if(state && state.phase === 'brewing' && !isPaused){
+      stopStirHold();
+      isPaused = true;
+      document.body.classList.add('game-paused');
+      setPauseButtonIcon();
+      setBgmDucked(true);
+      sanctumHeldPause = true;
+    }
     renderSanctum();
     sanctumOverlay.classList.remove('hidden');
   }
   function closeSanctum(){
     if(!sanctumOverlay) return;
     sanctumOverlay.classList.add('hidden');
+    if(sanctumHeldPause){
+      sanctumHeldPause = false;
+      isPaused = false;
+      document.body.classList.remove('game-paused');
+      setPauseButtonIcon();
+      setBgmDucked(false);
+    }
+  }
+  function toggleSanctum(){
+    if(!sanctumOverlay) return;
+    if(sanctumOverlay.classList.contains('hidden')) openSanctum();
+    else closeSanctum();
   }
 
   /* =========================================================
@@ -4728,6 +4916,10 @@
   }
 
   function togglePauseMenu(){
+    if(sanctumOverlay && !sanctumOverlay.classList.contains('hidden')){
+      closeSanctum();
+      return;
+    }
     if(isPaused){
       closePauseMenu();
     } else {
@@ -4838,6 +5030,7 @@
         return charm && isMetaUnlocked(charm);
       });
       if(typeof state.magmaGeodeTriggered !== 'boolean') state.magmaGeodeTriggered = state.mana >= (state.target || 1) * 0.5;
+      if(typeof state.secondBreathUsed !== 'boolean') state.secondBreathUsed = false;
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
         const m = state.mana || 0;
@@ -4959,7 +5152,10 @@
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
-          if(!state.quotaMet && tryPhoenixRevive()){
+          if(!state.quotaMet && trySecondBreath()){
+            updateUI();
+            saveGame();
+          } else if(!state.quotaMet && tryPhoenixRevive()){
             updateUI();
             saveGame();
           } else {
@@ -5051,6 +5247,7 @@
   if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
   if(resetSanctumBtn) resetSanctumBtn.addEventListener('click', resetSanctum);
   if(openSanctumBtn) openSanctumBtn.addEventListener('click', openSanctum);
+  if(hudSanctumBtn) hudSanctumBtn.addEventListener('click', toggleSanctum);
   if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', openSanctum);
   if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);
 
