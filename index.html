@@ -1141,6 +1141,12 @@
   <path fill="currentColor" d="M12 2c1 3-2 4-2 7a3 3 0 003 3c2 0 3-1.5 3-3.5 2 2 3 4 3 6.5a6 6 0 01-12 0c0-5 3-7 5-13z"/>
 </symbol>
 
+<symbol id="icon-bellows" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M2 9h6l3 2.5v1L8 15H2l2-3z"/>
+  <path fill="currentColor" d="M11 8.5h5.5L21 5v14l-4.5-3.5H11z"/>
+  <rect x="9.5" y="10" width="2" height="4" fill="currentColor"/>
+</symbol>
+
 <symbol id="icon-frost" viewBox="0 0 24 24">
   <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
     <line x1="12" y1="2" x2="12" y2="22"/>
@@ -1369,7 +1375,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.4</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.16</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1415,7 +1421,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.4</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.16</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1468,7 +1474,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.4 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Three new Fire relics join the pedestal: Combustion Bellows builds Heat from a rapid stirring streak, Cinderbrand Crucible can ignite the brew to keep ticking, and Magma Geode erupts when you cross half the quota.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.4</div>
         <ul class="changelog-list">
           <li>Rank 1 relic frames are a softer brown-bronze now, so they read less like cheap gold.</li>
         </ul>
@@ -1973,6 +1985,15 @@
     { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
       desc:"Cheat Death: if an order boils over without meeting quota, this relic is consumed to restore +6.0s at Lv 1 (+8.0s / +10.0s at higher levels) and erupt the brew in flame.",
       liquidTheme:null, unlockOrder:5 },
+    { id:'bellows', name:"Combustion Bellows", icon:'bellows', cost:24, tags:['fire'],
+      desc:"Every consecutive tap without a 1.0s pause builds +5% Heat (up to +50% Click Power at Lv 1, +75% at Lv 2, +100% at Lv 3); pausing resets the streak.",
+      liquidTheme:null },
+    { id:'cinderbrand', name:"Cinderbrand Crucible", icon:'fire', cost:26, tags:['fire'],
+      desc:"Active taps have an 8% chance to ignite the brew for 3.0s, passively ticking for 50% of your click power (65% at Lv 2, 80% at Lv 3) each second.",
+      liquidTheme:null },
+    { id:'magmaGeode', name:"Magma Geode", icon:'explosion', cost:28, tags:['fire'],
+      desc:"Reaching 50% of an order's quota triggers a Magma Eruption, instantly brewing 10% of the remaining quota at Lv 1 (15% at Lv 2, 20% at Lv 3) in a burst of fire particles.",
+      liquidTheme:'dragonfire' },
     { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:22, tags:['frost'],
       desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0s (longer at higher levels).",
       liquidTheme:null, unlockOrder:3 },
@@ -2090,6 +2111,10 @@
       sfxVolume: 80,
       shardPayoutAwarded: false,
       lastShardPayout: 0,
+      bellowsHeatTimer: 0,
+      bellowsHeatStacks: 0,
+      cinderbrandBurnTimer: 0,
+      magmaGeodeTriggered: false,
     };
   }
 
@@ -2756,6 +2781,19 @@
         s.bounty = Math.round(12 * lv * boon);
         s.summary = '+' + s.bounty + ' Gold bounty on fulfill';
         break;
+      case 'bellows':
+        s.maxHeat = [0, 0.50, 0.75, 1.00][lv] * boon;
+        s.summary = '+5% Click Power per quick tap (cap +' + Math.round(s.maxHeat * 100) + '%)';
+        break;
+      case 'cinderbrand':
+        s.burnTickPct = [0, 0.50, 0.65, 0.80][lv] * boon;
+        s.burnChance = 0.08;
+        s.summary = '8% chance on tap to ignite brew for ' + Math.round(s.burnTickPct * 100) + '% Click Power/sec for 3.0s';
+        break;
+      case 'magmaGeode':
+        s.eruptPct = [0, 0.10, 0.15, 0.20][lv] * boon;
+        s.summary = 'Crossing 50% quota erupts for ' + Math.round(s.eruptPct * 100) + '% remaining quota';
+        break;
       default:
         s.summary = 'Level ' + lv;
     }
@@ -2809,6 +2847,10 @@
     let bonusPct = 0;
     bonusPct += getRelicStats('dragonfire').clickPct || 0;
     bonusPct += getRelicStats('ashenSigil').clickPct || 0;
+    if(hasRelic('bellows')){
+      const heat = getRelicStats('bellows');
+      bonusPct += Math.min(heat.maxHeat || 0, (state.bellowsHeatStacks || 0) * 0.05);
+    }
     if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
     if(includeTithe) bonusPct += getGoldenTithePct();
     return bonusPct;
@@ -3350,6 +3392,7 @@
     state.lifetimeMana += amount;
     if(state.mana > state.peakMana) state.peakMana = state.mana;
     if(hasRelic('glacialCore')) checkGlacialMilestones();
+    tryMagmaEruption();
     if(state.mana >= state.target){
       if(!state.quotaMet){
         state.quotaMet = true;
@@ -3376,6 +3419,34 @@
         spawnFloatNumber('FROSTBITE!', 'crit', 50, 22);
       }
     });
+  }
+
+  function tryMagmaEruption(){
+    if(!state || !hasRelic('magmaGeode') || state.magmaGeodeTriggered) return;
+    if(state.mana < (state.target || 1) * 0.5) return;
+    state.magmaGeodeTriggered = true;
+    const rem = Math.max(0, state.target - state.mana);
+    const burst = rem * (getRelicStats('magmaGeode').eruptPct || 0.10);
+    if(burst <= 0) return;
+    addMana(burst);
+    spawnPhoenixBurst();
+    spawnFloatNumber('MAGMA ERUPTION! +' + fmt(burst), 'crit', 50, 22);
+    sfxScorch();
+  }
+
+  function spawnCinderFlames(count){
+    const n = count == null ? 2 : count;
+    for(let i = 0; i < n; i++){
+      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+      const size = 8 + Math.floor(Math.random() * 10);
+      spawnEl(fxLayer, 'px-particle fx-flame', {
+        left: p.x + '%',
+        top: p.y + '%',
+        width: size + 'px',
+        height: size + 'px',
+        '--sway': ((Math.random() - 0.5) * 70) + 'px'
+      }, 1000);
+    }
   }
 
   function bumpGold(amount){
@@ -3410,6 +3481,23 @@
 
     state.clickCountRun++;
     state.totalClicksAllTime++;
+
+    if(hasRelic('bellows')){
+      const heat = getRelicStats('bellows');
+      const maxStacks = Math.max(1, Math.round((heat.maxHeat || 0.5) / 0.05));
+      state.bellowsHeatStacks = Math.min(maxStacks, (state.bellowsHeatStacks || 0) + 1);
+      state.bellowsHeatTimer = 1.0;
+      if(state.bellowsHeatStacks >= 3) spawnCinderFlames(1);
+    }
+    if(hasRelic('cinderbrand')){
+      const brand = getRelicStats('cinderbrand');
+      if(Math.random() < (brand.burnChance || 0.08)){
+        state.cinderbrandBurnTimer = 3.0;
+        spawnFloatNumber('IGNITED!', 'crit', xPct, yPct-16);
+        spawnCinderFlames(6);
+        sfxScorch();
+      }
+    }
 
     let power = getClickPower();
     let crit = false;
@@ -3579,9 +3667,14 @@
     state.wintersGraspCooldown = 0;
     state.unstableBrewClock = 0;
     state.glacialMilestones = { q25:false, q50:false, q75:false };
+    state.bellowsHeatTimer = 0;
+    state.bellowsHeatStacks = 0;
+    state.cinderbrandBurnTimer = 0;
+    state.magmaGeodeTriggered = false;
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * (getRelicStats('starter').quotaPct || 0.10));
       if(state.mana >= state.target){ state.quotaMet = true; }
+      tryMagmaEruption();
     }
     state.phase = 'brewing';
     updateUI();
@@ -4373,6 +4466,10 @@
       state.sfxVolume = clampVolume(state.sfxVolume, 80);
       if(typeof state.shardPayoutAwarded !== 'boolean') state.shardPayoutAwarded = false;
       if(typeof state.lastShardPayout !== 'number') state.lastShardPayout = 0;
+      if(typeof state.bellowsHeatTimer !== 'number') state.bellowsHeatTimer = 0;
+      if(typeof state.bellowsHeatStacks !== 'number') state.bellowsHeatStacks = 0;
+      if(typeof state.cinderbrandBurnTimer !== 'number') state.cinderbrandBurnTimer = 0;
+      if(typeof state.magmaGeodeTriggered !== 'boolean') state.magmaGeodeTriggered = state.mana >= (state.target || 1) * 0.5;
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
         const m = state.mana || 0;
@@ -4457,6 +4554,18 @@
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
+
+      if((state.bellowsHeatTimer || 0) > 0){
+        state.bellowsHeatTimer = Math.max(0, state.bellowsHeatTimer - dt);
+        if(state.bellowsHeatTimer <= 0) state.bellowsHeatStacks = 0;
+      }
+      if((state.cinderbrandBurnTimer || 0) > 0){
+        const brand = getRelicStats('cinderbrand');
+        const tickPct = brand.burnTickPct || 0;
+        state.cinderbrandBurnTimer = Math.max(0, state.cinderbrandBurnTimer - dt);
+        if(tickPct > 0) addMana(getClickPower() * tickPct * dt, true);
+        if(Math.random() < dt * 8) spawnCinderFlames(1);
+      }
 
       if(hasCurse('rupture')){
         state.unstableBrewClock = (state.unstableBrewClock || 0) + dt;
