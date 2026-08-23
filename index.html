@@ -720,6 +720,7 @@
     text-align:left; padding:12px; background: rgba(255,255,255,0.04);
     border: 2px solid #000;
     display:flex; flex-direction:column; gap:6px;
+    cursor:pointer;
   }
   .relicCard .rName{ font-size:0.64rem; color:var(--amber-glow); line-height:1.5; }
   .relicCard .rDesc{ font-size:0.54rem; color:var(--text-dim); line-height:1.65; }
@@ -749,6 +750,21 @@
     background: rgba(120,10,25,0.08);
   }
   .corrupted-badge{ color:#ff4d6a; font-size:0.42rem; letter-spacing:0.5px; }
+  .rCurse, .tooltip-curse{
+    color:#ff6b7d; font-size:0.46rem; line-height:1.55;
+  }
+  .rBoon, .tooltip-boon{
+    color:#ffe27a; font-size:0.46rem; line-height:1.55;
+  }
+  .relic-badge.corrupted{
+    border-color:#ff2a4b;
+    background:#3a0810;
+    box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.55);
+  }
+  .relic-badge.corrupted .icon{
+    color:#ff6b7d;
+    filter: drop-shadow(0 0 3px rgba(255,42,75,0.85));
+  }
 
   .compendium-progress{
     font-size:0.5rem; color:var(--amber); margin:-4px 0 10px;
@@ -1230,7 +1246,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.13.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.14.0</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1273,7 +1289,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.13.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.14.0</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1325,7 +1341,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.13.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.0 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Any shop relic can now arrive Corrupted — swollen blessings with a crimson curse. Clean relics keep their upside; the old dedicated cursed relics are gone.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.13.1</div>
         <ul class="changelog-list">
           <li>Wide screens now stretch the brewing table, with a larger cauldron and a roomier relic rail along the right edge.</li>
         </ul>
@@ -1745,7 +1767,7 @@
 
   const RELICS = [
     { id:'dragonfire', name:"Dragonfire Pepper", icon:'pepper', cost:22, tags:['fire'],
-      desc:"Clicks generate +40% Mana, but every 10 clicks burns away 0.2s from the order deadline.",
+      desc:"Clicks generate +40% Mana per level.",
       liquidTheme:'dragonfire' },
     { id:'whisk', name:"Familiar's Whisk", icon:'cat', cost:28, tags:['arcane'],
       desc:"A spectral cat stirs the pot every second, generating 6% of your click power as bonus Mana/sec.",
@@ -1766,13 +1788,7 @@
       desc:"Instantly satisfies 10% of the required quota at the start of every order.",
       liquidTheme:null },
     { id:'catalyst', name:"Volatile Catalyst", icon:'lightning', cost:26, tags:['chaos'],
-      desc:"Mana generated per second is boosted +40%, but quotas increase by an extra 10%.",
-      liquidTheme:null },
-    { id:'cursedEmber', name:"Cursed Ember", icon:'skull', cost:30, tags:['fire'], corrupted:true,
-      desc:"CORRUPTED: Clicks generate +90% Mana, but every tap has a 6% chance to scorch away 1 second from the deadline.",
-      liquidTheme:'dragonfire' },
-    { id:'unstableBrew', name:"Unstable Brew", icon:'biohazard', cost:34, tags:['chaos'], corrupted:true,
-      desc:"CORRUPTED: Mana generated per second is boosted +150%, but bubbles may violently rupture — 8% chance every second to burn away 0.5s from the deadline.",
+      desc:"Mana generated per second is boosted +40% per level.",
       liquidTheme:null },
     { id:'ashenSigil', name:"Ashen Sigil", icon:'fire', cost:22, tags:['fire'],
       desc:"Residual embers linger in the pot, adding +25% Click Power per level to every tap.",
@@ -1793,15 +1809,25 @@
       desc:"Earn +10% interest on unspent Gold when completing an order (up to +15 Gold).",
       liquidTheme:null },
     { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'scroll', cost:20, tags:['midas'],
-      desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, but Shop Rerolls cost +3 Gold.",
+      desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, and even more at higher levels.",
       liquidTheme:null },
     { id:'gildedLedger', name:"Gilded Ledger", icon:'urn', cost:28, tags:['midas'],
-      desc:"Fulfilling an order grants a +12 Gold bounty, but boiling over loses 50% of your Gold.",
-      liquidTheme:null },
-    { id:'mammonCoin', name:"Cursed Midas Coin", icon:'skull', cost:34, tags:['midas'], corrupted:true,
-      desc:"CORRUPTED: Doubles all Gold earned from orders and drops. Every 10th tap yields +2 Gold per level, but Stirring Power and Bubbler upgrades cost 25% more Mana.",
+      desc:"Fulfilling an order grants a +12 Gold bounty per level.",
       liquidTheme:null },
   ];
+
+  const CORRUPTION_CHANCE = 0.12;
+  const CURSES = {
+    scorch: { id:'scorch', name:'Scorchmark', desc:'Each tap has a 5% chance to burn 0.8s from the deadline.' },
+    rupture: { id:'rupture', name:'Volatile Rupture', desc:'Each second, the brew has an 8% chance to violently burn 0.5s from the deadline.' },
+    costly: { id:'costly', name:'Blood Price', desc:'Shop relics, rerolls, charms, and in-round upgrades cost 25% more.' },
+    goldBleed: { id:'goldBleed', name:'Midas Debt', desc:'Every Critical Surge steals 1 Gold.' },
+  };
+  const LEGACY_CORRUPT_RELICS = {
+    cursedEmber: { id:'ashenSigil', curseType:'scorch', boonMult:1.9 },
+    unstableBrew: { id:'catalyst', curseType:'rupture', boonMult:1.9 },
+    mammonCoin: { id:'crucible', curseType:'costly', boonMult:1.85 },
+  };
 
   const CONSUMABLES = [
     { id:'stirFrenzy', name:'Stir Frenzy', icon:'chaos', cost:15,
@@ -2231,132 +2257,214 @@
     return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  function makeRelicRecord(level, extra){
+    const lv = clamp(Math.floor(Number(level) || 0), 0, RELIC_MAX_LEVEL);
+    if(lv <= 0) return null;
+    const rec = extra && typeof extra === 'object' ? extra : {};
+    const corrupted = !!rec.corrupted;
+    return {
+      level: lv,
+      corrupted: corrupted,
+      curseType: corrupted ? (rec.curseType || null) : null,
+      boonMult: corrupted ? clamp(Number(rec.boonMult) || 1.8, 1.75, 2) : 1
+    };
+  }
+  function mergeRelicRecords(a, b){
+    if(!a) return b;
+    if(!b) return a;
+    const corrupted = !!(a.corrupted || b.corrupted);
+    return {
+      level: Math.max(a.level, b.level),
+      corrupted: corrupted,
+      curseType: a.curseType || b.curseType || null,
+      boonMult: corrupted ? Math.max(a.boonMult || 1, b.boonMult || 1) : 1
+    };
+  }
   function normalizeRelicMap(raw){
     const map = {};
+    function add(id, rec){
+      if(!id || !rec) return;
+      const legacy = LEGACY_CORRUPT_RELICS[id];
+      const dest = legacy ? legacy.id : id;
+      if(!RELICS.some(r => r.id === dest)) return;
+      let next = rec;
+      if(legacy){
+        next = makeRelicRecord(rec.level, {
+          corrupted: true,
+          curseType: rec.curseType || legacy.curseType,
+          boonMult: rec.boonMult > 1 ? rec.boonMult : legacy.boonMult
+        });
+      }
+      map[dest] = mergeRelicRecords(map[dest], next);
+    }
     if(Array.isArray(raw)){
       raw.forEach(id => {
-        if(typeof id === 'string' && id) map[id] = 1;
+        if(typeof id === 'string') add(id, makeRelicRecord(1));
       });
       return map;
     }
     if(raw && typeof raw === 'object'){
       Object.keys(raw).forEach(id => {
-        const lv = Math.floor(Number(raw[id]));
-        if(lv > 0) map[id] = clamp(lv, 1, RELIC_MAX_LEVEL);
+        const val = raw[id];
+        if(val && typeof val === 'object' && !Array.isArray(val)){
+          add(id, makeRelicRecord(val.level, val));
+        } else {
+          add(id, makeRelicRecord(val));
+        }
       });
     }
     return map;
   }
+  function getRelicRecord(id){
+    if(!state || !state.relics || Array.isArray(state.relics)) return null;
+    const rec = state.relics[id];
+    if(!rec) return null;
+    if(typeof rec === 'number') return makeRelicRecord(rec);
+    return makeRelicRecord(rec.level, rec);
+  }
   function getRelicLevel(id){
-    if(!state || !state.relics || Array.isArray(state.relics)) return 0;
-    const lv = state.relics[id];
-    return (typeof lv === 'number' && lv > 0) ? clamp(Math.floor(lv), 0, RELIC_MAX_LEVEL) : 0;
+    const rec = getRelicRecord(id);
+    return rec ? rec.level : 0;
   }
   function hasRelic(id){ return getRelicLevel(id) > 0; }
+  function isRelicCorrupted(id){
+    const rec = getRelicRecord(id);
+    return !!(rec && rec.corrupted);
+  }
+  function getRelicCurseType(id){
+    const rec = getRelicRecord(id);
+    return (rec && rec.corrupted) ? rec.curseType : null;
+  }
+  function hasCurse(type){
+    return getOwnedRelicIds().some(id => getRelicCurseType(id) === type);
+  }
   function getOwnedRelicIds(){
     if(!state || !state.relics || Array.isArray(state.relics)) return [];
     return Object.keys(state.relics).filter(id => getRelicLevel(id) > 0);
   }
+  function rollBoonMult(){ return Math.round((1.75 + Math.random() * 0.25) * 100) / 100; }
+  function rollCurseType(){
+    const keys = Object.keys(CURSES);
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+  function createCorruptedOffer(id){
+    return { id: id, corrupted: true, curseType: rollCurseType(), boonMult: rollBoonMult() };
+  }
+  function shopOfferId(entry){ return (entry && typeof entry === 'object') ? entry.id : entry; }
+  function normalizeShopOffers(raw){
+    if(!Array.isArray(raw)) return [];
+    return raw.map(entry => {
+      if(typeof entry === 'string') return { id: entry, corrupted: false };
+      if(entry && typeof entry === 'object' && entry.id){
+        return {
+          id: entry.id,
+          corrupted: !!entry.corrupted,
+          curseType: entry.curseType || null,
+          boonMult: typeof entry.boonMult === 'number' ? entry.boonMult : null
+        };
+      }
+      return null;
+    }).filter(o => o && RELICS.some(r => r.id === o.id));
+  }
+  function getShopOffer(id){
+    if(!state || !Array.isArray(state.shopOffers)) return null;
+    return state.shopOffers.find(o => shopOfferId(o) === id) || null;
+  }
+  function getRelicDisplayName(id, corrupted){
+    const r = RELICS.find(x => x.id === id);
+    if(!r) return '';
+    return corrupted ? ('Corrupted ' + r.name) : r.name;
+  }
+  function getCurseCostMult(){ return hasCurse('costly') ? 1.25 : 1; }
   function formatRelicLevel(lv, compact){
     if(lv <= 0) return '';
     if(compact) return (lv >= RELIC_MAX_LEVEL ? '★' : '') + lv;
     return lv >= RELIC_MAX_LEVEL ? ('Lv ' + lv + ' [MAX]') : ('★ Lv ' + lv);
   }
-  function getRelicStats(id, level){
+  function getRelicStats(id, level, overlay){
     const lv = clamp(level == null ? getRelicLevel(id) : level, 0, RELIC_MAX_LEVEL);
     const s = { level: lv, summary: '' };
     if(lv <= 0) return s;
+    const rec = overlay || getRelicRecord(id);
+    const boon = (rec && rec.corrupted) ? clamp(Number(rec.boonMult) || 1.8, 1.75, 2) : 1;
     switch(id){
       case 'dragonfire':
-        s.clickPct = 0.4 * lv;
-        s.burnEvery = 10;
-        s.burnSec = 0.2;
-        s.summary = '+' + (40 * lv) + '% Click Power; every 10 taps −0.2s';
+        s.clickPct = 0.4 * lv * boon;
+        s.summary = '+' + Math.round(s.clickPct * 100) + '% Click Power';
         break;
       case 'whisk':
-        s.whiskPct = 0.06 * lv;
-        s.summary = (6 * lv) + '% of click power as Mana/sec';
+        s.whiskPct = 0.06 * lv * boon;
+        s.summary = (s.whiskPct * 100).toFixed(1) + '% of click power as Mana/sec';
         break;
       case 'moonstone':
         s.critEvery = 6 - lv;
-        s.summary = 'Critical Surge every ' + s.critEvery + (s.critEvery === 3 ? 'rd' : 'th') + ' tap';
+        s.critMult = 3 * boon;
+        s.summary = 'Critical Surge every ' + s.critEvery + (s.critEvery === 3 ? 'rd' : 'th') + ' tap (' + s.critMult.toFixed(1) + 'x Mana)';
         break;
       case 'hourglass':
-        s.bonusTime = [0, 8, 14, 20][lv];
-        s.summary = '+' + s.bonusTime + 's to every order deadline';
+        s.bonusTime = [0, 8, 14, 20][lv] * boon;
+        s.summary = '+' + s.bonusTime.toFixed(1) + 's to every order deadline';
         break;
       case 'bifrost':
-        s.goldChance = 0.1 * lv;
-        s.summary = (10 * lv) + '% chance per tap for +1 Gold';
+        s.goldChance = Math.min(1, 0.1 * lv * boon);
+        s.summary = Math.round(s.goldChance * 100) + '% chance per tap for +1 Gold';
         break;
       case 'crucible':
-        s.goldRate = 0.5 * lv;
-        s.summary = '+' + (50 * lv) + '% surplus Gold conversion';
+        s.goldRate = 0.5 * lv * boon;
+        s.summary = '+' + Math.round(s.goldRate * 100) + '% surplus Gold conversion';
         break;
       case 'starter':
-        s.quotaPct = 0.10 * lv;
-        s.summary = 'Start each order at ' + (10 * lv) + '% of quota';
+        s.quotaPct = Math.min(0.9, 0.10 * lv * boon);
+        s.summary = 'Start each order at ' + Math.round(s.quotaPct * 100) + '% of quota';
         break;
       case 'catalyst':
-        s.mpsPct = 0.4 * lv;
-        s.quotaMult = 1.1;
-        s.summary = '+' + (40 * lv) + '% Mana/sec; quotas +10%';
-        break;
-      case 'cursedEmber':
-        s.clickPct = 0.9 * lv;
-        s.scorchChance = 0.06;
-        s.summary = '+' + (90 * lv) + '% Click Power; 6% chance to −1.0s';
-        break;
-      case 'unstableBrew':
-        s.mpsPct = 1.5 * lv;
-        s.ruptureChance = 0.08;
-        s.summary = '+' + (150 * lv) + '% Mana/sec; 8% chance/sec to −0.5s';
+        s.mpsPct = 0.4 * lv * boon;
+        s.summary = '+' + Math.round(s.mpsPct * 100) + '% Mana/sec';
         break;
       case 'ashenSigil':
-        s.clickPct = 0.25 * lv;
-        s.summary = '+' + (25 * lv) + '% Click Power';
+        s.clickPct = 0.25 * lv * boon;
+        s.summary = '+' + Math.round(s.clickPct * 100) + '% Click Power';
         break;
       case 'phoenixDown':
-        s.reviveSec = [0, 6, 8, 10][lv];
+        s.reviveSec = [0, 6, 8, 10][lv] * boon;
         s.summary = 'Cheat Death restores +' + s.reviveSec.toFixed(1) + 's and consumes the relic';
         break;
       case 'glacialCore':
-        s.freezeSec = 2.0 + 0.5 * (lv - 1);
+        s.freezeSec = (2.0 + 0.5 * (lv - 1)) * boon;
         s.summary = 'Frostbite Surge freezes for ' + s.freezeSec.toFixed(1) + 's';
         break;
       case 'wintersGrasp':
-        s.freezeAdd = 0.5;
-        s.freezeCap = 1.0 + 0.25 * (lv - 1);
+        s.freezeAdd = 0.5 * boon;
+        s.freezeCap = (1.0 + 0.25 * (lv - 1)) * boon;
         s.icd = 1.0 - 0.15 * (lv - 1);
-        s.summary = 'Crits freeze +0.5s (cap ' + s.freezeCap.toFixed(2) + 's, ' + s.icd.toFixed(2) + 's cooldown)';
+        s.summary = 'Crits freeze +' + s.freezeAdd.toFixed(2) + 's (cap ' + s.freezeCap.toFixed(2) + 's, ' + s.icd.toFixed(2) + 's cooldown)';
         break;
       case 'arcaneConduit':
-        s.mpsPct = 0.15 * lv;
-        s.summary = '+' + (15 * lv) + '% Passive Mana/sec';
+        s.mpsPct = 0.15 * lv * boon;
+        s.summary = '+' + Math.round(s.mpsPct * 100) + '% Passive Mana/sec';
         break;
       case 'hoardersScale':
-        s.interestPct = 0.10 * lv;
-        s.interestCap = 15 * lv;
-        s.summary = '+' + (10 * lv) + '% interest on unspent Gold (up to +' + s.interestCap + ')';
+        s.interestPct = 0.10 * lv * boon;
+        s.interestCap = Math.round(15 * lv * boon);
+        s.summary = '+' + Math.round(s.interestPct * 100) + '% interest on unspent Gold (up to +' + s.interestCap + ')';
         break;
       case 'pawnTicket':
-        s.discount = 0.30 + 0.10 * (lv - 1);
-        s.rerollTax = 3;
-        s.summary = 'In-round upgrades cost ' + Math.round(s.discount * 100) + '% less; rerolls +3 Gold';
+        s.discount = Math.min(0.7, (0.30 + 0.10 * (lv - 1)) * boon);
+        s.summary = 'In-round upgrades cost ' + Math.round(s.discount * 100) + '% less';
         break;
       case 'gildedLedger':
-        s.bounty = 12 * lv;
-        s.failLoss = 0.5;
-        s.summary = '+' + s.bounty + ' Gold bounty on fulfill; lose 50% Gold on boil-over';
-        break;
-      case 'mammonCoin':
-        s.goldMult = 2;
-        s.tapGold = 2 * lv;
-        s.upgradeCostMult = 1.25;
-        s.summary = 'Double Gold; every 10th tap +' + s.tapGold + ' Gold; upgrades +25% Mana cost';
+        s.bounty = Math.round(12 * lv * boon);
+        s.summary = '+' + s.bounty + ' Gold bounty on fulfill';
         break;
       default:
         s.summary = 'Level ' + lv;
+    }
+    if(rec && rec.corrupted){
+      s.corrupted = true;
+      s.boonMult = boon;
+      s.curseType = rec.curseType || null;
+      const curse = CURSES[s.curseType];
+      s.curseText = curse ? curse.desc : '';
     }
     return s;
   }
@@ -2400,7 +2508,6 @@
   function getClickBonusPct(includeTithe){
     let bonusPct = 0;
     bonusPct += getRelicStats('dragonfire').clickPct || 0;
-    bonusPct += getRelicStats('cursedEmber').clickPct || 0;
     bonusPct += getRelicStats('ashenSigil').clickPct || 0;
     if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
     if(includeTithe) bonusPct += getGoldenTithePct();
@@ -2421,7 +2528,6 @@
     }
     let bonusPct = 0;
     if(hasRelic('catalyst')) bonusPct += (getRelicStats('catalyst').mpsPct || 0) * getSynergyMult('chaos');
-    if(hasRelic('unstableBrew')) bonusPct += (getRelicStats('unstableBrew').mpsPct || 0) * getSynergyMult('chaos');
     bonusPct += getRelicStats('arcaneConduit').mpsPct || 0;
     if(hasTagTier('arcane', 0)) bonusPct += 0.25; // Arcane Tier (2): +25% Passive Mana/sec
     bonusPct += getGoldenTithePct();
@@ -2432,29 +2538,24 @@
     let cost = Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel));
     const pawn = getRelicStats('pawnTicket');
     if(pawn.discount) cost = Math.floor(cost * (1 - pawn.discount));
-    const mammon = getRelicStats('mammonCoin');
-    if(mammon.upgradeCostMult) cost = Math.floor(cost * mammon.upgradeCostMult);
-    return cost;
+    return Math.floor(cost * getCurseCostMult());
   }
   function getBubbleCost(){
     let cost = Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel));
     const pawn = getRelicStats('pawnTicket');
     if(pawn.discount) cost = Math.floor(cost * (1 - pawn.discount));
-    const mammon = getRelicStats('mammonCoin');
-    if(mammon.upgradeCostMult) cost = Math.floor(cost * mammon.upgradeCostMult);
-    return cost;
+    return Math.floor(cost * getCurseCostMult());
   }
   function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
   function getRerollCost(){
     let cost = Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale());
-    if(hasRelic('pawnTicket')) cost += getRelicStats('pawnTicket').rerollTax || 3;
-    return cost;
+    return Math.round(cost * getCurseCostMult());
   }
   function getRelicCost(relic){
     const nextLv = getRelicLevel(relic.id) + 1;
-    return Math.round(relic.cost * getRoundCostScale() * Math.max(1, nextLv));
+    return Math.round(relic.cost * getRoundCostScale() * Math.max(1, nextLv) * getCurseCostMult());
   }
-  function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale()); }
+  function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale() * getCurseCostMult()); }
   function getOrderGrowthRatio(order){
     return ORDER_GROWTH_STEPS[order] || ROUND_TARGET_GROWTH;
   }
@@ -2464,7 +2565,6 @@
       t *= getOrderGrowthRatio(o);
     }
     t = Math.floor(t);
-    if(hasRelic('catalyst')) t = Math.floor(t * (getRelicStats('catalyst').quotaMult || 1.1));
     return t;
   }
   function getGoldRate(){
@@ -2548,7 +2648,7 @@
       if(!r) return;
       const lv = getRelicLevel(id);
       const el = document.createElement('div');
-      el.className = 'relic-badge';
+      el.className = 'relic-badge' + (isRelicCorrupted(id) ? ' corrupted' : '');
       el.innerHTML = icon(r.icon) + '<span class="relic-lv">' + formatRelicLevel(lv, true) + '</span>';
       el.style.cursor = 'pointer';
       el.addEventListener('click', (e) => {
@@ -2579,7 +2679,7 @@
         if(!r) return;
         const lv = getRelicLevel(id);
         const el = document.createElement('div');
-        el.className = 'relic-badge';
+        el.className = 'relic-badge' + (isRelicCorrupted(id) ? ' corrupted' : '');
         el.style.cursor = 'pointer';
         el.innerHTML = icon(r.icon) + '<span class="relic-lv">' + formatRelicLevel(lv, true) + '</span>';
         el.addEventListener('click', (e) => {
@@ -2975,7 +3075,6 @@
   }
 
   function awardDropGold(amount, xPct, yPct){
-    if(hasRelic('mammonCoin')) amount *= (getRelicStats('mammonCoin').goldMult || 2);
     bumpGold(amount);
     sfxGold();
     spawnFloatNumber('+' + amount + ' ' + icon('coin','ic-gold'), 'gold', xPct, yPct);
@@ -3004,7 +3103,7 @@
     let crit = false;
     const moon = getRelicStats('moonstone');
     if(moon.critEvery && state.clickCountRun % moon.critEvery === 0){
-      power *= 3;
+      power *= (moon.critMult || 3);
       crit = true;
       if(hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
         const grasp = getRelicStats('wintersGrasp');
@@ -3038,24 +3137,20 @@
     void cauldron.offsetWidth;
     cauldron.classList.add('squish');
 
-    if(hasRelic('dragonfire')){
-      state.dragonfireCounter++;
-      if(state.dragonfireCounter % 10 === 0){
-        state.timer = Math.max(0, state.timer - 0.2);
+    getOwnedRelicIds().forEach(id => {
+      if(getRelicCurseType(id) === 'scorch' && Math.random() < 0.05 && (state.timeFreezeTimer || 0) <= 0){
+        state.timer = Math.max(0, state.timer - 0.8);
+        spawnFloatNumber('-0.8s', 'danger', xPct, yPct-14);
+        sfxScorch();
       }
-    }
-
-    if(hasRelic('cursedEmber') && Math.random() < 0.06){
-      state.timer = Math.max(0, state.timer - 1);
-      spawnFloatNumber('-1.0s', 'danger', xPct, yPct-14);
-      sfxScorch();
-    }
-
-    const mammonTap = getRelicStats('mammonCoin');
-    if(mammonTap.tapGold && state.clickCountRun % 10 === 0){
-      bumpGold(mammonTap.tapGold);
-      sfxGold();
-      spawnFloatNumber('+' + mammonTap.tapGold + ' ' + icon('coin','ic-gold'), 'gold', xPct, yPct+10);
+    });
+    if(crit){
+      getOwnedRelicIds().forEach(id => {
+        if(getRelicCurseType(id) === 'goldBleed' && state.gold > 0){
+          state.gold = Math.max(0, state.gold - 1);
+          spawnFloatNumber('-1 ' + icon('coin','ic-danger'), 'danger', xPct, yPct+10);
+        }
+      });
     }
 
     if(hasTagTier('midas', 0) && Math.random() < 0.12){
@@ -3133,7 +3228,10 @@
   function startRun(){
     closePauseMenu();
     closeCompendium();
-    const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics.slice() : [];
+    const discovered = ((state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : []).map(id => {
+      const legacy = LEGACY_CORRUPT_RELICS[id];
+      return legacy ? legacy.id : id;
+    }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
     const bgmVolume = clampVolume(state && state.bgmVolume, 60);
     const sfxVolume = clampVolume(state && state.sfxVolume, 80);
     state = freshState();
@@ -3179,7 +3277,6 @@
     state.phase = 'roundEnd';
     const surplus = Math.max(0, state.mana - state.target);
     let goldEarned = getSurplusGold(surplus);
-    if(hasRelic('mammonCoin')) goldEarned *= (getRelicStats('mammonCoin').goldMult || 2);
     if(hasRelic('gildedLedger')) goldEarned += getRelicStats('gildedLedger').bounty || 12;
     if(hasRelic('hoardersScale')){
       const scale = getRelicStats('hoardersScale');
@@ -3203,7 +3300,6 @@
   function failRound(){
     closePauseMenu();
     state.phase = 'gameover';
-    if(hasRelic('gildedLedger')) state.gold = Math.floor(state.gold * (getRelicStats('gildedLedger').failLoss || 0.5));
     sfxFail();
     renderGameOver();
     gameoverOverlay.classList.remove('hidden');
@@ -3234,7 +3330,10 @@
   function rollShopOffers(){
     const pool = getShopRelicPool();
     const shuffled = pool.slice().sort(() => Math.random() - 0.5);
-    state.shopOffers = shuffled.slice(0, 4).map(r => r.id);
+    state.shopOffers = shuffled.slice(0, 4).map(r => {
+      if(Math.random() < CORRUPTION_CHANCE) return createCorruptedOffer(r.id);
+      return { id: r.id, corrupted: false };
+    });
     state.purchasedOffers = [];
   }
 
@@ -3251,7 +3350,9 @@
       shopCards.appendChild(msg);
     } else {
       const tagCounts = getTagCounts();
-      state.shopOffers.forEach(id => {
+      state.shopOffers = normalizeShopOffers(state.shopOffers);
+      state.shopOffers.forEach(offer => {
+        const id = shopOfferId(offer);
         const r = RELICS.find(x => x.id === id);
         if(!r) return;
         const lv = getRelicLevel(id);
@@ -3260,6 +3361,8 @@
         const nextLv = lv + 1;
         const maxed = lv >= RELIC_MAX_LEVEL;
         const price = getRelicCost(r);
+        const showCorrupted = !!(offer.corrupted || isRelicCorrupted(id));
+        const previewOverlay = offer.corrupted ? offer : (isRelicCorrupted(id) ? getRelicRecord(id) : null);
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
           return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
@@ -3270,14 +3373,21 @@
         }).join('');
         const tierStatusHtml = getRelicTierStatusHTML(r, 'rTierLine');
         const nowStats = lv > 0 ? getRelicStats(id, lv) : null;
-        const nextStats = !maxed && !boughtThisVisit ? getRelicStats(id, nextLv) : null;
+        const nextStats = !maxed && !boughtThisVisit ? getRelicStats(id, nextLv, previewOverlay) : null;
+        const shownStats = boughtThisVisit ? nowStats : (nextStats || nowStats);
         const preview = boughtThisVisit && nowStats
           ? `<div class="rUpgrade">${formatRelicLevel(lv)}: ${nowStats.summary}</div>`
           : (isUpgrade
             ? `<div class="rUpgrade">${formatRelicLevel(lv)} now: ${nowStats.summary}<br>${maxed ? 'MAXED' : ('Next ' + formatRelicLevel(nextLv) + ': ' + nextStats.summary)}</div>`
             : (nextStats ? `<div class="rUpgrade">Lv 1: ${nextStats.summary}</div>` : ''));
+        const boonHtml = (showCorrupted && shownStats && shownStats.boonMult)
+          ? `<div class="rBoon">Corrupted Boon x${shownStats.boonMult.toFixed(2)}</div>`
+          : '';
+        const curseHtml = (showCorrupted && shownStats && shownStats.curseText)
+          ? `<div class="rCurse">${icon('warning','ic-danger')} ${shownStats.curseText}</div>`
+          : '';
         const card = document.createElement('div');
-        card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (r.corrupted ? ' corrupted' : '');
+        card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (showCorrupted ? ' corrupted' : '');
         card.setAttribute('data-id', r.id);
         const buyLabel = boughtThisVisit
           ? (lv > 1 ? 'UPGRADED' : 'PURCHASED')
@@ -3290,11 +3400,13 @@
           ? formatRelicLevel(lv)
           : (isUpgrade ? formatRelicLevel(lv) : 'NEW');
         card.innerHTML = `
-          <div class="rName">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
+          <div class="rName">${icon(r.icon)} ${getRelicDisplayName(id, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
           ${preview}
+          ${boonHtml}
+          ${curseHtml}
           ${tierStatusHtml ? '<div class="rTierStatus">' + tierStatusHtml + '</div>' : ''}
           <button class="rBuy" data-id="${r.id}" ${maxed || boughtThisVisit || state.gold < price ? 'disabled' : ''}>
             ${buyLabel}
@@ -3312,6 +3424,17 @@
         e.stopPropagation();
         buyRelic(btn.getAttribute('data-id'));
       });
+    });
+    shopCards.querySelectorAll('.relicCard').forEach(card => {
+      const id = card.getAttribute('data-id');
+      const offer = getShopOffer(id);
+      card.addEventListener('click', (e) => {
+        if(e.target.closest('.rBuy')) return;
+        e.stopPropagation();
+        toggleTooltip(card, getRelicTooltipHTML(id, offer), 'shop-relic-' + id);
+      });
+      card.addEventListener('mouseenter', () => showHoverTooltip(card, getRelicTooltipHTML(id, offer), 'shop-relic-' + id));
+      card.addEventListener('mouseleave', hideHoverTooltip);
     });
 
     renderConsumableShop();
@@ -3465,12 +3588,15 @@
     return html;
   }
 
-  function getRelicTooltipHTML(relicId){
+  function getRelicTooltipHTML(relicId, overlay){
     const r = RELICS.find(x => x.id === relicId);
     if(!r) return '';
     const lv = getRelicLevel(relicId);
+    const preview = overlay || getRelicRecord(relicId);
+    const showCorrupted = !!(preview && preview.corrupted);
     const now = lv > 0 ? getRelicStats(relicId, lv) : null;
-    const next = lv < RELIC_MAX_LEVEL ? getRelicStats(relicId, Math.max(1, lv + 1)) : null;
+    const next = lv < RELIC_MAX_LEVEL ? getRelicStats(relicId, Math.max(1, lv + 1), overlay || getRelicRecord(relicId)) : getRelicStats(relicId, 1, overlay);
+    const shown = now || next;
     const tagsHtml = (r.tags||[]).map(t => {
       const info = TAG_INFO[t];
       return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
@@ -3481,14 +3607,22 @@
     const currentLine = now ? `<div class="tooltip-line">Now: ${now.summary}</div>` : '';
     const nextLine = lv >= RELIC_MAX_LEVEL
       ? `<div class="tooltip-line">Next: MAXED</div>`
-      : (next ? `<div class="tooltip-line">Next ${formatRelicLevel(Math.max(1, lv + 1))}: ${next.summary}</div>` : '');
+      : (next ? `<div class="tooltip-line">${lv > 0 ? ('Next ' + formatRelicLevel(Math.max(1, lv + 1)) + ': ') : 'Lv 1: '}${next.summary}</div>` : '');
+    const boonLine = (showCorrupted && shown && shown.boonMult)
+      ? `<div class="tooltip-line tooltip-boon">Corrupted Boon x${shown.boonMult.toFixed(2)}</div>`
+      : '';
+    const curseLine = (showCorrupted && shown && shown.curseText)
+      ? `<div class="tooltip-line tooltip-curse">${icon('warning','ic-danger')} ${shown.curseText}</div>`
+      : '';
     return `
-      <div class="tooltip-title">${icon(r.icon)} ${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
+      <div class="tooltip-title">${icon(r.icon)} ${getRelicDisplayName(relicId, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
       <div class="rTags" style="margin-bottom:6px;">${tagsHtml}</div>
       ${levelLine}
       <div class="tooltip-desc">${r.desc}</div>
       ${currentLine}
       ${nextLine}
+      ${boonLine}
+      ${curseLine}
       ${getRelicTierStatusHTML(r)}
     `;
   }
@@ -3573,7 +3707,18 @@
     if(state.gold < price) return;
     state.gold -= price;
     if(Array.isArray(state.relics)) state.relics = normalizeRelicMap(state.relics);
-    state.relics[id] = lv + 1;
+    const prev = getRelicRecord(id);
+    const offer = getShopOffer(id);
+    const nextRec = makeRelicRecord(lv + 1, {
+      corrupted: !!(prev && prev.corrupted) || !!(offer && offer.corrupted),
+      curseType: (prev && prev.curseType) || (offer && offer.curseType) || null,
+      boonMult: (prev && prev.corrupted && prev.boonMult) || (offer && offer.boonMult) || 1
+    });
+    if(nextRec.corrupted && !nextRec.curseType){
+      nextRec.curseType = rollCurseType();
+      nextRec.boonMult = nextRec.boonMult > 1 ? nextRec.boonMult : rollBoonMult();
+    }
+    state.relics[id] = nextRec;
     if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
     if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
     if(id === 'glacialCore' && lv === 0){
@@ -3665,8 +3810,9 @@
     compendiumGrid.innerHTML = '';
     RELICS.forEach(r => {
       const known = discovered.includes(r.id);
+      const ownedCorrupt = known && isRelicCorrupted(r.id);
       const card = document.createElement('div');
-      card.className = 'compendium-card' + (known ? '' : ' locked') + (known && r.corrupted ? ' corrupted' : '');
+      card.className = 'compendium-card' + (known ? '' : ' locked') + (ownedCorrupt ? ' corrupted' : '');
       if(known){
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
@@ -3676,10 +3822,11 @@
         const stats = lv > 0 ? getRelicStats(r.id, lv) : null;
         card.innerHTML = `
           <div class="cIcon">${icon(r.icon)}</div>
-          <div class="cName">${r.name}${r.corrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} ${lv > 0 ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
+          <div class="cName">${getRelicDisplayName(r.id, ownedCorrupt)}${ownedCorrupt ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} ${lv > 0 ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
           <div class="cDesc">${r.desc}</div>
           ${stats ? '<div class="cDesc relic-lv-badge">Now: ' + stats.summary + '</div>' : ''}
+          ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : ''}
         `;
       } else {
         card.innerHTML = `
@@ -3803,10 +3950,14 @@
       });
       state.relics = normalizeRelicMap(state.relics);
       if(Array.isArray(state.shopOffers)){
-        state.shopOffers = state.shopOffers.filter(id => getRelicLevel(id) < RELIC_MAX_LEVEL);
+        state.shopOffers = normalizeShopOffers(state.shopOffers).filter(o => getRelicLevel(o.id) < RELIC_MAX_LEVEL);
       }
       if(!Array.isArray(state.purchasedOffers)) state.purchasedOffers = [];
       if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
+      state.discoveredRelics = state.discoveredRelics.map(id => {
+        const legacy = LEGACY_CORRUPT_RELICS[id];
+        return legacy ? legacy.id : id;
+      }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
       getOwnedRelicIds().forEach(id => {
         if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
       });
@@ -3885,15 +4036,17 @@
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
 
-      if(hasRelic('unstableBrew')){
+      if(hasCurse('rupture')){
         state.unstableBrewClock = (state.unstableBrewClock || 0) + dt;
         while(state.unstableBrewClock >= 1){
           state.unstableBrewClock -= 1;
-          if(Math.random() < (getRelicStats('unstableBrew').ruptureChance || 0.08)){
-            state.timer = Math.max(0, state.timer - 0.5);
-            spawnFloatNumber(icon('explosion','ic-danger') + ' -0.5s', 'danger', 50, 20);
-            sfxRupture();
-          }
+          getOwnedRelicIds().forEach(id => {
+            if(getRelicCurseType(id) === 'rupture' && Math.random() < 0.08 && (state.timeFreezeTimer || 0) <= 0){
+              state.timer = Math.max(0, state.timer - 0.5);
+              spawnFloatNumber(icon('explosion','ic-danger') + ' -0.5s', 'danger', 50, 20);
+              sfxRupture();
+            }
+          });
         }
       }
 
