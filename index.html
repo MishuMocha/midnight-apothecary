@@ -174,18 +174,29 @@
     transform: scale(0.95) translateY(1px);
   }
   .relic-badge-row{ display:flex; gap:8px; flex-wrap:wrap; width:100%; margin-top:6px; min-height:4px; }
+  .tag-fire-icon{ color:#ff7a3d; filter: drop-shadow(0 0 2px #ff7a3d) drop-shadow(0 0 5px rgba(255, 122, 61, 0.45)); }
+  .tag-frost-icon{ color:#8fd0f5; filter: drop-shadow(0 0 2px #8fd0f5) drop-shadow(0 0 5px rgba(143, 208, 245, 0.45)); }
+  .tag-arcane-icon{ color:#c186ff; filter: drop-shadow(0 0 2px #c186ff) drop-shadow(0 0 5px rgba(193, 134, 255, 0.45)); }
+  .tag-chaos-icon{ color:#ff4d6a; filter: drop-shadow(0 0 2px #ff4d6a) drop-shadow(0 0 5px rgba(255, 77, 106, 0.45)); }
+  .tag-midas-icon{ color:#ffd043; filter: drop-shadow(0 0 2px #ffd043) drop-shadow(0 0 5px rgba(255, 208, 67, 0.45)); }
   .relic-badge{
     position:relative;
     width:42px; height:42px;
     flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
-    background: var(--purple-mid);
+    --tag-glow-rgb: 168, 110, 255;
+    background: radial-gradient(circle at 50% 50%, rgba(var(--tag-glow-rgb), 0.15) 0%, var(--purple-mid) 85%);
     border:2px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
     font-size:18px;
     cursor:pointer;
     overflow:visible;
   }
+  .relic-badge.tag-fire{ --tag-glow-rgb: 255, 122, 61; }
+  .relic-badge.tag-frost{ --tag-glow-rgb: 143, 208, 245; }
+  .relic-badge.tag-arcane{ --tag-glow-rgb: 193, 134, 255; }
+  .relic-badge.tag-chaos{ --tag-glow-rgb: 255, 77, 106; }
+  .relic-badge.tag-midas{ --tag-glow-rgb: 255, 208, 67; }
   .relic-badge .icon{ width:26px; height:26px; }
   .relic-badge.lv-1{
     border:3px solid var(--relic-bronze);
@@ -781,6 +792,18 @@
     cursor:pointer;
   }
   .relicCard .rName{ font-size:0.64rem; color:var(--amber-glow); line-height:1.5; }
+  .relicCard.tag-fire{ --tag-glow-rgb: 255, 122, 61; }
+  .relicCard.tag-frost{ --tag-glow-rgb: 143, 208, 245; }
+  .relicCard.tag-arcane{ --tag-glow-rgb: 193, 134, 255; }
+  .relicCard.tag-chaos{ --tag-glow-rgb: 255, 77, 106; }
+  .relicCard.tag-midas{ --tag-glow-rgb: 255, 208, 67; }
+  .relicCard.tag-fire,
+  .relicCard.tag-frost,
+  .relicCard.tag-arcane,
+  .relicCard.tag-chaos,
+  .relicCard.tag-midas{
+    background: radial-gradient(circle at 12% 18%, rgba(var(--tag-glow-rgb), 0.16) 0%, rgba(255,255,255,0.04) 42%);
+  }
   .relicCard .rDesc{ font-size:0.54rem; color:var(--text-dim); line-height:1.65; }
   .rTierStatus{
     display:flex; flex-direction:column; gap:2px;
@@ -816,13 +839,14 @@
   }
   .relic-badge.corrupted{
     border-color:#ff2a4b;
-    background:#3a0810;
+    background: radial-gradient(circle at 50% 50%, rgba(var(--tag-glow-rgb), 0.16) 0%, #3a0810 85%);
     box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.55);
   }
-  .relic-badge.corrupted .icon{
-    color:#ff6b7d;
-    filter: drop-shadow(0 0 3px rgba(255,42,75,0.85));
-  }
+  .relic-badge.corrupted .icon.tag-fire-icon{ color:#ff7a3d; filter: drop-shadow(0 0 2px #ff7a3d) drop-shadow(0 0 5px rgba(255, 122, 61, 0.45)); }
+  .relic-badge.corrupted .icon.tag-frost-icon{ color:#8fd0f5; filter: drop-shadow(0 0 2px #8fd0f5) drop-shadow(0 0 5px rgba(143, 208, 245, 0.45)); }
+  .relic-badge.corrupted .icon.tag-arcane-icon{ color:#c186ff; filter: drop-shadow(0 0 2px #c186ff) drop-shadow(0 0 5px rgba(193, 134, 255, 0.45)); }
+  .relic-badge.corrupted .icon.tag-chaos-icon{ color:#ff4d6a; filter: drop-shadow(0 0 2px #ff4d6a) drop-shadow(0 0 5px rgba(255, 77, 106, 0.45)); }
+  .relic-badge.corrupted .icon.tag-midas-icon{ color:#ffd043; filter: drop-shadow(0 0 2px #ffd043) drop-shadow(0 0 5px rgba(255, 208, 67, 0.45)); }
   .relic-badge.corrupted.lv-1{
     border:3px solid var(--relic-bronze);
     box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
@@ -856,7 +880,18 @@
     display:flex; flex-direction:column; gap:5px; min-width:0;
   }
   .compendium-card.locked{ background:rgba(0,0,0,0.4); }
-  .compendium-card .cIcon{ font-size:20px; line-height:1; }
+  .compendium-card .cIcon{
+    font-size:20px; line-height:1;
+    width:36px; height:36px;
+    display:flex; align-items:center; justify-content:center;
+    --tag-glow-rgb: 168, 110, 255;
+    background: radial-gradient(circle at 50% 50%, rgba(var(--tag-glow-rgb), 0.18) 0%, transparent 78%);
+  }
+  .compendium-card.tag-fire .cIcon{ --tag-glow-rgb: 255, 122, 61; }
+  .compendium-card.tag-frost .cIcon{ --tag-glow-rgb: 143, 208, 245; }
+  .compendium-card.tag-arcane .cIcon{ --tag-glow-rgb: 193, 134, 255; }
+  .compendium-card.tag-chaos .cIcon{ --tag-glow-rgb: 255, 77, 106; }
+  .compendium-card.tag-midas .cIcon{ --tag-glow-rgb: 255, 208, 67; }
   .compendium-card.locked .cIcon{ filter:brightness(0.2); }
   .compendium-card.milestone-locked .cIcon{ filter:none; color:#c9a6ff; }
   .compendium-card .cName{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; }
@@ -1375,7 +1410,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.16</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.16.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1421,7 +1456,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.16</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.16.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1474,7 +1509,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16.1 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Relic icons now glow in their synergy color — fire, frost, arcane, chaos, or midas — on the rail, in the shop, and in the Grimoire.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.16</div>
         <ul class="changelog-list">
           <li>Three new Fire relics join the pedestal: Combustion Bellows builds Heat from a rapid stirring streak, Cinderbrand Crucible can ignite the brew to keep ticking, and Magma Geode erupts when you cross half the quota.</li>
         </ul>
@@ -2701,10 +2742,23 @@
     if(compact) return (lv >= RELIC_MAX_LEVEL ? '★' : '') + lv;
     return lv >= RELIC_MAX_LEVEL ? ('Lv ' + lv + ' [MAX]') : ('★ Lv ' + lv);
   }
+  function getRelicPrimaryTag(relicOrId){
+    const r = typeof relicOrId === 'string' ? RELICS.find(x => x.id === relicOrId) : relicOrId;
+    return (r && r.tags && r.tags[0]) || '';
+  }
+  function relicTagIconClass(relicOrId){
+    const tag = getRelicPrimaryTag(relicOrId);
+    return tag ? ('tag-' + tag + '-icon') : '';
+  }
+  function relicTagTileClass(relicOrId){
+    const tag = getRelicPrimaryTag(relicOrId);
+    return tag ? ('tag-' + tag) : '';
+  }
   function relicBadgeClassName(id){
     const lv = getRelicLevel(id);
     const rank = lv >= 3 ? ' lv-3' : lv >= 2 ? ' lv-2' : ' lv-1';
-    return 'relic-badge' + rank + (isRelicCorrupted(id) ? ' corrupted' : '');
+    const tagClass = relicTagTileClass(id);
+    return 'relic-badge' + rank + (isRelicCorrupted(id) ? ' corrupted' : '') + (tagClass ? ' ' + tagClass : '');
   }
   function getRelicStats(id, level, overlay){
     const lv = clamp(level == null ? getRelicLevel(id) : level, 0, RELIC_MAX_LEVEL);
@@ -3004,7 +3058,7 @@
       if(!r) return;
       const el = document.createElement('div');
       el.className = relicBadgeClassName(id);
-      el.innerHTML = icon(r.icon);
+      el.innerHTML = icon(r.icon, relicTagIconClass(r));
       el.style.cursor = 'pointer';
       el.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -3035,7 +3089,7 @@
         const el = document.createElement('div');
         el.className = relicBadgeClassName(id);
         el.style.cursor = 'pointer';
-        el.innerHTML = icon(r.icon);
+        el.innerHTML = icon(r.icon, relicTagIconClass(r));
         el.addEventListener('click', (e) => {
           e.stopPropagation();
           toggleTooltip(el, getRelicTooltipHTML(id), 'pause-relic-' + id);
@@ -3800,7 +3854,7 @@
           ? `<div class="rCurse">${icon('warning','ic-danger')} ${shownStats.curseText}</div>`
           : '';
         const card = document.createElement('div');
-        card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (showCorrupted ? ' corrupted' : '');
+        card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (showCorrupted ? ' corrupted' : '') + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
         card.setAttribute('data-id', r.id);
         const buyLabel = boughtThisVisit
           ? (lv > 1 ? 'UPGRADED' : 'PURCHASED')
@@ -3813,7 +3867,7 @@
           ? formatRelicLevel(lv)
           : (isUpgrade ? formatRelicLevel(lv) : 'NEW');
         card.innerHTML = `
-          <div class="rName">${icon(r.icon)} ${getRelicDisplayName(id, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
+          <div class="rName">${icon(r.icon, relicTagIconClass(r))} ${getRelicDisplayName(id, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
@@ -4301,7 +4355,7 @@
       const ownedCorrupt = known && isRelicCorrupted(r.id);
       const card = document.createElement('div');
       if(!isMetaUnlocked(r)){
-        card.className = 'compendium-card locked milestone-locked';
+        card.className = 'compendium-card locked milestone-locked' + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
         card.innerHTML = `
           <div class="cIcon">${icon('lock','ic-lock')}</div>
           <div class="cName">LOCKED</div>
@@ -4310,7 +4364,7 @@
         compendiumGrid.appendChild(card);
         return;
       }
-      card.className = 'compendium-card' + (known ? '' : ' locked') + (ownedCorrupt ? ' corrupted' : '');
+      card.className = 'compendium-card' + (known ? '' : ' locked') + (ownedCorrupt ? ' corrupted' : '') + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
       if(known){
         const tagsHtml = (r.tags||[]).map(t => {
           const info = TAG_INFO[t];
@@ -4319,7 +4373,7 @@
         const lv = getRelicLevel(r.id);
         const stats = lv > 0 ? getRelicStats(r.id, lv) : null;
         card.innerHTML = `
-          <div class="cIcon">${icon(r.icon)}</div>
+          <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
           <div class="cName">${getRelicDisplayName(r.id, ownedCorrupt)}${ownedCorrupt ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} ${lv > 0 ? '<span class="relic-lv-badge">' + formatRelicLevel(lv) + '</span>' : ''}</div>
           <div class="rTags">${tagsHtml}</div>
           <div class="cDesc">${r.desc}</div>
@@ -4328,7 +4382,7 @@
         `;
       } else {
         card.innerHTML = `
-          <div class="cIcon">${icon(r.icon)}</div>
+          <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
           <div class="cName">???</div>
           <div class="cDesc">Discover this relic in the shop to reveal its alchemical secrets.</div>
         `;
