@@ -713,16 +713,21 @@
   .consumable-row{ display:flex; gap:6px; flex-wrap:wrap; }
   .consumable-btn{
     position:relative; flex:1 1 72px; padding:12px 4px 8px; background: var(--purple-mid);
-    border:3px solid #000;
-    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 3px 0 #000;
+    border:2px solid #784da6;
+    box-shadow: inset 0 0 0 1px #000, inset 1px 1px 0 rgba(220, 185, 255, 0.2), inset -1px -1px 0 rgba(0, 0, 0, 0.6), 0 3px 0 #000;
     color:var(--text-light); cursor:pointer; font-family:inherit; font-size:0.48rem; line-height:1.5;
     display:flex; flex-direction:column; align-items:center; gap:2px;
     touch-action: manipulation; user-select:none;
-    transition: filter 0.1s ease;
+    transition: filter 0.1s ease, border-color 0.12s ease, box-shadow 0.12s ease;
   }
-  .consumable-btn:hover:not(:disabled){ filter:brightness(1.25); }
-  .consumable-btn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
+  .consumable-btn:hover:not(:disabled){
+    filter:brightness(1.15);
+    border-color:#a872e6;
+    box-shadow: inset 0 0 0 1px #000, inset 1px 1px 0 rgba(220, 185, 255, 0.28), 0 0 6px rgba(168, 114, 230, 0.45), 0 3px 0 #000;
+  }
+  .consumable-btn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: inset 0 0 0 1px #000, 0 0 0 #000; }
   .consumable-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .consumable-btn:disabled.on-cooldown{ opacity:1; }
   .consumable-btn .cIcon{ font-size:18px; line-height:1; pointer-events:none; }
   .consumable-btn .cCount{
     position:absolute; top:-8px; right:-8px; background: var(--amber); color:#2a1a08;
@@ -747,15 +752,14 @@
     pointer-events:none; text-align:center; max-width:100%;
     line-height:1.25; font-size:0.42rem;
   }
-  .consumable-btn .cHotkey{
-    position:absolute; left:2px; top:2px;
-    font-size:0.3rem; color:var(--amber-glow); letter-spacing:0.4px;
-    background:#000; border:2px solid var(--amber);
-    padding:0 3px; line-height:1.4;
-    pointer-events:none; opacity:0.95;
-    box-shadow: 1px 1px 0 #000;
+  .consumable-btn .cCooldown{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background: conic-gradient(rgba(8, 2, 16, 0.78) var(--cd-pct, 0%), transparent 0);
+    color:#e8d6ff; font-size:0.42rem; letter-spacing:0.3px;
+    pointer-events:none; text-shadow:1px 1px 0 #000;
   }
-  .consumable-btn .cHotkey:empty{ display:none; }
+  .consumable-btn .cCooldown:empty{ display:none; }
 
   /* ---------- OVERLAYS / MODALS ---------- */
   .hidden{ display:none !important; }
@@ -946,7 +950,13 @@
   .shelfItem{
     flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px;
     text-align:center; padding:8px 4px; background: rgba(255,255,255,0.04);
-    border:2px solid #000; cursor:pointer;
+    border:2px solid #784da6; cursor:pointer;
+    box-shadow: inset 0 0 0 1px #000, inset 1px 1px 0 rgba(255, 210, 122, 0.22), inset -1px -1px 0 rgba(0, 0, 0, 0.55);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .shelfItem:hover{
+    border-color:#a872e6;
+    box-shadow: inset 0 0 0 1px #000, inset 1px 1px 0 rgba(255, 210, 122, 0.3), 0 0 6px rgba(168, 114, 230, 0.45);
   }
   .shelfItem .sIcon{ font-size:18px; line-height:1; }
   .shelfItem .sName{ font-size:0.44rem; color:var(--amber-glow); line-height:1.4; }
@@ -1517,7 +1527,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.19</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.20</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1563,7 +1573,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.19</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.20</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1616,7 +1626,15 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.19 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.20 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Ingredient Charms now need a moment to recharge after you toss them — the button darkens with a sweeping overlay and counts down the wait.</li>
+          <li>Charm pouch buttons and Supply Shelf cards wear a richer violet-gold rim.</li>
+          <li>The number tags are gone from the charm buttons. Keys 1 through 6 still toss your pouch in order.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.19</div>
         <ul class="changelog-list">
           <li>Your Mana Shard count now sits beside Gold on the top bar, and a Sanctum button lets you spend shards mid-brew — the deadline freezes until you close it.</li>
           <li>The Alchemical Sanctum is now a branching tree: Alchemy, Chronos, and Commerce. Later nodes stay locked until you put a rank in the talent above them.</li>
@@ -2211,17 +2229,17 @@
   };
 
   const CONSUMABLES = [
-    { id:'stirFrenzy', name:"Berserker's Fang", icon:'chaos', cost:15,
+    { id:'stirFrenzy', name:"Berserker's Fang", icon:'chaos', cost:15, cooldown:6.0,
       desc:'Instantly triples your click power for 4 seconds.' },
-    { id:'timeFreeze', name:'Stasis Crystal', icon:'ice', cost:18,
+    { id:'timeFreeze', name:'Stasis Crystal', icon:'ice', cost:18, cooldown:8.0,
       desc:'Freezes the order deadline for 3 seconds.', unlockOrder:3 },
-    { id:'goldenDrop', name:'Midas Tear', icon:'droplet', cost:16,
+    { id:'goldenDrop', name:'Midas Tear', icon:'droplet', cost:16, cooldown:4.0,
       desc:'Instantly brews 15% of the current quota as bonus Mana.', unlockTotalTaps:250 },
-    { id:'moltenEmber', name:'Molten Ember', icon:'fire', cost:20,
+    { id:'moltenEmber', name:'Molten Ember', icon:'fire', cost:20, cooldown:7.0,
       desc:'Every tap is guaranteed to be a Critical Surge for 3.0 seconds.', unlockTotalTaps:600 },
-    { id:'aethericDew', name:'Aetheric Dew', icon:'droplet', cost:18,
+    { id:'aethericDew', name:'Aetheric Dew', icon:'droplet', cost:18, cooldown:5.0,
       desc:'Instantly triggers 5 seconds of passive Bubbler Mana generation.', unlockLifetimeShards:35 },
-    { id:'philosopherStone', name:"Philosopher's Stone", icon:'urn', cost:35, rare:true,
+    { id:'philosopherStone', name:"Philosopher's Stone", icon:'urn', cost:35, cooldown:10.0, rare:true,
       desc:'RARE: Instantly converts 50% of your current Mana into immediate Gold, but drains that Mana from the cauldron.', unlockOrder:6 },
   ];
   const CHARM_SHELF_SLOTS = 3;
@@ -2289,7 +2307,8 @@
 
   function freshState(){
     const consumables = {};
-    CONSUMABLES.forEach(c => { consumables[c.id] = 0; });
+    const charmCooldowns = {};
+    CONSUMABLES.forEach(c => { consumables[c.id] = 0; charmCooldowns[c.id] = 0; });
     return {
       phase: 'start', // start | brewing | shop | gameover
       round: 1,
@@ -2313,6 +2332,7 @@
       charmOffers: [],
       purchasedOffers: [],
       consumables: consumables,
+      charmCooldowns: charmCooldowns,
       stirFrenzyTimer: 0,
       moltenEmberTimer: 0,
       timeFreezeTimer: 0,
@@ -3379,6 +3399,17 @@
     if(id === 'timeFreeze') return state.activeCharmTimeFreezeTimer || 0;
     return 0;
   }
+  function getCharmCooldown(id){
+    return (state && state.charmCooldowns && state.charmCooldowns[id]) || 0;
+  }
+  function normalizeCharmCooldowns(raw){
+    const map = {};
+    CONSUMABLES.forEach(c => {
+      const n = Number(raw && raw[c.id]);
+      map[c.id] = n > 0 ? n : 0;
+    });
+    return map;
+  }
 
   function renderConsumables(){
     if(!consumableButtons) return;
@@ -3387,37 +3418,41 @@
     // invoked from updateUI(), which runs on every animation frame while
     // brewing — was destroying/recreating the buttons out from under the
     // player's click, which made the charms appear completely unresponsive.
-    if(consumableButtons.children.length !== CONSUMABLES.length){
+    if(consumableButtons.dataset.charmHud !== 'cd1' || consumableButtons.children.length !== CONSUMABLES.length){
       consumableButtons.innerHTML = '';
       CONSUMABLES.forEach(c => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'consumable-btn';
         btn.dataset.cid = c.id;
-        btn.innerHTML = '<span class="cHotkey"></span>' +
+        btn.innerHTML =
           '<span class="cIcon">' + icon(c.icon) + '</span>' +
           '<span class="cLabel">' + c.name + '</span>' +
           '<span class="cCount">0</span>' +
-          '<span class="cBuffTimer"></span>';
+          '<span class="cBuffTimer"></span>' +
+          '<span class="cCooldown"></span>';
         btn.addEventListener('pointerdown', (e) => { e.preventDefault(); useConsumable(c.id); }, { passive:false });
         consumableButtons.appendChild(btn);
       });
+      consumableButtons.dataset.charmHud = 'cd1';
     }
-    const ownedIds = getOwnedCharmIds();
     CONSUMABLES.forEach(c => {
       const btn = consumableButtons.querySelector('[data-cid="' + c.id + '"]');
       if(!btn) return;
       const count = (state.consumables && state.consumables[c.id]) || 0;
       const buffTime = getConsumableBuffTimer(c.id);
-      const hotkeyIdx = ownedIds.indexOf(c.id);
-      btn.disabled = count <= 0 || state.phase !== 'brewing';
+      const cd = getCharmCooldown(c.id);
+      const maxCd = c.cooldown || 0;
+      btn.disabled = count <= 0 || cd > 0 || state.phase !== 'brewing';
       btn.classList.toggle('buff-active', buffTime > 0);
+      btn.classList.toggle('on-cooldown', cd > 0);
+      btn.style.setProperty('--cd-pct', maxCd > 0 && cd > 0 ? ((cd / maxCd) * 100).toFixed(1) + '%' : '0%');
       const countEl = btn.querySelector('.cCount');
       if(countEl) countEl.textContent = count;
       const timerEl = btn.querySelector('.cBuffTimer');
       if(timerEl) timerEl.textContent = buffTime > 0 ? buffTime.toFixed(1) + 's' : '';
-      const hotkeyEl = btn.querySelector('.cHotkey');
-      if(hotkeyEl) hotkeyEl.textContent = hotkeyIdx >= 0 ? '[' + (hotkeyIdx + 1) + ']' : '';
+      const cdEl = btn.querySelector('.cCooldown');
+      if(cdEl) cdEl.textContent = cd > 0 ? cd.toFixed(1) + 's' : '';
     });
   }
 
@@ -3985,8 +4020,13 @@
 
   function useConsumable(id){
     if(!state || state.phase !== 'brewing' || isPaused) return;
+    const charm = CONSUMABLES.find(x => x.id === id);
+    if(!charm) return;
     if(!state.consumables || !state.consumables[id]) return;
+    if(!state.charmCooldowns) state.charmCooldowns = normalizeCharmCooldowns(null);
+    if((state.charmCooldowns[id] || 0) > 0) return;
     state.consumables[id]--;
+    state.charmCooldowns[id] = charm.cooldown || 0;
     if(id === 'stirFrenzy'){
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
@@ -4503,7 +4543,7 @@
       <div class="tooltip-title">${icon(c.icon)} ${c.name}</div>
       ${rareLine}
       <div class="tooltip-desc">${c.desc}</div>
-      <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')}</div>
+      <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')} &nbsp;·&nbsp; Recharge: ${(c.cooldown || 0).toFixed(1)}s</div>
     `;
   }
 
@@ -4998,6 +5038,7 @@
       CONSUMABLES.forEach(c => {
         if(typeof state.consumables[c.id] !== 'number') state.consumables[c.id] = 0;
       });
+      state.charmCooldowns = normalizeCharmCooldowns(state.charmCooldowns);
       state.relics = normalizeRelicMap(state.relics);
       if(Array.isArray(state.shopOffers)){
         state.shopOffers = normalizeShopOffers(state.shopOffers).filter(o => {
@@ -5115,6 +5156,13 @@
 
       if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
       if(state.moltenEmberTimer > 0) state.moltenEmberTimer = Math.max(0, state.moltenEmberTimer - dt);
+      if(state.charmCooldowns){
+        CONSUMABLES.forEach(c => {
+          if((state.charmCooldowns[c.id] || 0) > 0){
+            state.charmCooldowns[c.id] = Math.max(0, state.charmCooldowns[c.id] - dt);
+          }
+        });
+      }
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
