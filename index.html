@@ -661,6 +661,7 @@
     padding:16px;
   }
   #compendiumOverlay{ z-index:21; }
+  #sanctumOverlay{ z-index:22; }
   .overlay.hidden{ display:none !important; }
 
   .panelCard{
@@ -765,6 +766,7 @@
   .compendium-card.locked{ background:rgba(0,0,0,0.4); }
   .compendium-card .cIcon{ font-size:20px; line-height:1; }
   .compendium-card.locked .cIcon{ filter:brightness(0.2); }
+  .compendium-card.milestone-locked .cIcon{ filter:none; color:#c9a6ff; }
   .compendium-card .cName{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; }
   .compendium-card.locked .cName{ color:var(--text-dim); }
   .compendium-card .cDesc{ font-size:0.42rem; color:var(--text-dim); line-height:1.55; }
@@ -946,6 +948,50 @@
   .statRow{ display:flex; justify-content:space-between; font-size:0.56rem; border-bottom:2px dashed rgba(255,255,255,0.1); padding-bottom:8px; line-height:1.6; }
   .statRow span:first-child{ color:var(--text-dim); }
   .statRow span:last-child{ color:var(--amber-glow); }
+  .statRow.shard-payout span:last-child{ color:#c9a6ff; }
+  .sanctum-vault{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    color:#c9a6ff; font-size:0.56rem; margin:0 0 14px;
+    letter-spacing:0.5px;
+  }
+  .sanctum-tree{
+    display:flex; flex-direction:column; gap:10px;
+    text-align:left; margin:8px 0 12px;
+  }
+  .talent-node{
+    display:flex; gap:10px; align-items:flex-start;
+    padding:10px; background:rgba(0,0,0,0.38);
+    border:3px solid #000;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
+  }
+  .talent-node.owned{
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.35);
+  }
+  .talent-node.maxed{
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 8px rgba(244,184,96,0.35);
+  }
+  .talent-gem{
+    width:44px; height:44px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--purple-mid); border:3px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+    color:var(--text-dim);
+  }
+  .talent-node.owned .talent-gem{ background:#5a2f12; color:var(--amber-glow); }
+  .talent-node.maxed .talent-gem{ background:var(--amber); color:#2a1a08; }
+  .talent-body{ flex:1; min-width:0; }
+  .talent-name{ font-size:0.52rem; color:var(--amber-glow); line-height:1.45; margin-bottom:4px; }
+  .talent-desc{ font-size:0.42rem; color:var(--text-dim); line-height:1.55; }
+  .talent-rank{ font-size:0.42rem; color:var(--amber); margin-top:5px; }
+  .talent-buy{
+    flex-shrink:0; align-self:center;
+    padding:8px 8px; font-size:0.42rem; min-width:86px;
+    background:var(--amber); color:#2a1a08; border:3px solid #000;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), 0 3px 0 #000;
+    font-family:inherit; cursor:pointer;
+  }
+  .talent-buy:hover:not(:disabled){ filter:brightness(1.15); }
+  .talent-buy:disabled{ background:#5a5064; color:#8a7fa0; box-shadow:none; cursor:not-allowed; }
 
   ::-webkit-scrollbar{ width:8px; }
   ::-webkit-scrollbar-thumb{ background: var(--purple-mid); border:2px solid #000; }
@@ -1231,9 +1277,11 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.14.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.15.0</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
+    <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
+    <button class="smallBtn" id="openSanctumBtn"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL SANCTUM</button>
   </div>
 </div>
 
@@ -1266,6 +1314,7 @@
     <h1><svg class="icon ic-danger"><use href="#icon-jar"></use></svg> THE CAULDRON<br>BOILED OVER!</h1>
     <p>The order was not fulfilled in time. Instability consumed the brew.</p>
     <div id="statsList"></div>
+    <button class="smallBtn" id="gameoverSanctumBtn"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL SANCTUM</button>
     <button class="pixel-btn bigBtn" id="restartBtn">START NEW BREW</button>
   </div>
 </div>
@@ -1274,7 +1323,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.14.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.15.0</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1315,7 +1364,8 @@
         </div>
       </div>
       <div class="setting-row" style="margin-top:14px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:10px;">
-        <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;"><svg class="icon"><use href="#icon-trash"></use></svg> RESET PROGRESS / NEW RUN</button>
+        <button class="smallBtn" id="resetSaveBtn" style="width:100%; margin-top:0; color:var(--danger); border-color:#ff5d6c;"><svg class="icon"><use href="#icon-trash"></use></svg> ABANDON THIS RUN</button>
+        <button class="smallBtn" id="resetSanctumBtn" style="width:100%; margin-top:8px; color:var(--danger); border-color:#ff5d6c;"><svg class="icon"><use href="#icon-trash"></use></svg> RESET SANCTUM</button>
       </div>
     </div>
 
@@ -1326,7 +1376,15 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.15.0 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Boiling over now yields Mana Shards you can spend in the Alchemical Sanctum on permanent talents that last between brews.</li>
+          <li>Sanctum talents stretch every deadline, start you with extra Gold, add innate Critical Surges, deepen the cauldron's brew power, or unlock a fifth Relic Pedestal slot.</li>
+          <li>Rarer relics and charms stay locked until you hit career milestones — the Grimoire shows a padlock and tells you what to chase.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.14.1</div>
         <ul class="changelog-list">
           <li>Spending your last Gold on Ingredient Charms now greys out shop relics you can no longer afford.</li>
           <li>The dark puddle of shadow under the cauldron is gone, and tap bubbles are a little more see-through.</li>
@@ -1687,6 +1745,17 @@
   </div>
 </div>
 
+<!-- ALCHEMICAL SANCTUM / MASTERY TREE -->
+<div class="overlay hidden" id="sanctumOverlay">
+  <div class="panelCard pixel-panel">
+    <h1><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL<br>SANCTUM</h1>
+    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. These persist after every new brew.</p>
+    <div class="sanctum-vault"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> Mana Shards: <span id="sanctumShardValue" data-shard-count>0</span></div>
+    <div id="sanctumTree" class="sanctum-tree"></div>
+    <button class="pixel-btn bigBtn" id="closeSanctumBtn">CLOSE SANCTUM</button>
+  </div>
+</div>
+
 <div id="synergyTooltip" class="hidden"></div>
 
 <script>
@@ -1772,40 +1841,40 @@
       liquidTheme:null },
     { id:'bifrost', name:"Bifrost Blossom", icon:'rainbow', cost:24, tags:['chaos'],
       desc:"Every tap has a 10% chance to also yield 1 Gold Coin directly.",
-      liquidTheme:'bifrost' },
+      liquidTheme:'bifrost', unlockOrder:3 },
     { id:'crucible', name:"Philosopher's Crucible", icon:'urn', cost:32, tags:['arcane'],
       desc:"Increases the Gold conversion rate for surplus Mana by 50%.",
-      liquidTheme:'crucible' },
+      liquidTheme:'crucible', unlockOrder:4 },
     { id:'starter', name:"Alchemist's Starter", icon:'scroll', cost:28, tags:['arcane'],
       desc:"Instantly satisfies 10% of the required quota at the start of every order.",
-      liquidTheme:null },
+      liquidTheme:null, unlockTotalTaps:200 },
     { id:'catalyst', name:"Volatile Catalyst", icon:'lightning', cost:26, tags:['chaos'],
       desc:"Mana generated per second is boosted +40% per level.",
-      liquidTheme:null },
+      liquidTheme:null, unlockOrder:3 },
     { id:'ashenSigil', name:"Ashen Sigil", icon:'fire', cost:22, tags:['fire'],
       desc:"Residual embers linger in the pot, adding +25% Click Power per level to every tap.",
       liquidTheme:null },
     { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
       desc:"Cheat Death: if an order boils over without meeting quota, this relic is consumed to restore +6.0s at Lv 1 (+8.0s / +10.0s at higher levels) and erupt the brew in flame.",
-      liquidTheme:null },
+      liquidTheme:null, unlockOrder:5 },
     { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:22, tags:['frost'],
       desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0s (longer at higher levels).",
-      liquidTheme:null },
+      liquidTheme:null, unlockOrder:3 },
     { id:'wintersGrasp', name:"Winter's Grasp", icon:'frost', cost:24, tags:['frost'],
       desc:"Every Critical Surge also freezes the deadline for 0.5 seconds. Higher levels raise the freeze cap and shorten the cooldown.",
-      liquidTheme:null },
+      liquidTheme:null, unlockOrder:4 },
     { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcane', cost:30, tags:['arcane'],
       desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
-      liquidTheme:null },
+      liquidTheme:null, unlockLifetimeShards:50 },
     { id:'hoardersScale', name:"Hoarder's Scale", icon:'coin', cost:24, tags:['midas'],
       desc:"Earn +10% interest on unspent Gold when completing an order (up to +15 Gold).",
-      liquidTheme:null },
+      liquidTheme:null, unlockLifetimeShards:25 },
     { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'scroll', cost:20, tags:['midas'],
       desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, and even more at higher levels.",
-      liquidTheme:null },
+      liquidTheme:null, unlockTotalTaps:400 },
     { id:'gildedLedger', name:"Gilded Ledger", icon:'urn', cost:28, tags:['midas'],
       desc:"Fulfilling an order grants a +12 Gold bounty per level.",
-      liquidTheme:null },
+      liquidTheme:null, unlockOrder:5 },
   ];
 
   const CORRUPTION_CHANCE = 0.12;
@@ -1825,9 +1894,35 @@
     { id:'stirFrenzy', name:'Stir Frenzy', icon:'chaos', cost:15,
       desc:'Instantly triples your click power for 4 seconds.' },
     { id:'timeFreeze', name:'Time Freeze', icon:'ice', cost:18,
-      desc:'Freezes the order deadline for 3 seconds.' },
+      desc:'Freezes the order deadline for 3 seconds.', unlockOrder:3 },
     { id:'goldenDrop', name:'Golden Droplet', icon:'droplet', cost:16,
-      desc:'Instantly brews 15% of the current quota as bonus Mana.' },
+      desc:'Instantly brews 15% of the current quota as bonus Mana.', unlockTotalTaps:250 },
+  ];
+
+  const META_SAVE_KEY = 'apothecary_meta_v1';
+  const SHARDS_PER_ORDER = 5;
+  const SHARDS_PER_MANA = 2000;
+  const TALENTS = [
+    { id:'chronoInfusion', name:'Chrono-Infusion', icon:'hourglass', maxLv:5,
+      desc:'+1.0s to every order deadline per rank.',
+      bonusLine: function(lv){ return '+' + lv.toFixed(1) + 's base deadline'; },
+      baseCost:8, costGrowth:1.55 },
+    { id:'merchantsPurse', name:"Merchant's Purse", icon:'coin', maxLv:5,
+      desc:'Start every new brew with +5 Gold per rank.',
+      bonusLine: function(lv){ return 'Start with +' + (lv * 5) + ' Gold'; },
+      baseCost:10, costGrowth:1.5 },
+    { id:'arcaneKeenness', name:'Arcane Keenness', icon:'moon', maxLv:5,
+      desc:'+1% innate Critical Surge chance on every tap, even without Moonstone Dust.',
+      bonusLine: function(lv){ return '+' + lv + '% innate crit chance'; },
+      baseCost:12, costGrowth:1.6 },
+    { id:'deepCauldron', name:'Deep Cauldron', icon:'urn', maxLv:3,
+      desc:'+10% base Click Power and Passive Mana generation per rank.',
+      bonusLine: function(lv){ return '+' + (lv * 10) + '% base brew power'; },
+      baseCost:16, costGrowth:1.65 },
+    { id:'expandedPedestal', name:'Expanded Pedestal', icon:'sparkle', maxLv:1,
+      desc:'The Relic Pedestal permanently offers a fifth shop card.',
+      bonusLine: function(lv){ return lv > 0 ? '5 relic offers per shop' : '4 relic offers per shop'; },
+      baseCost:40, costGrowth:1 },
   ];
 
   const LIQUID_THEMES = {
@@ -1877,7 +1972,93 @@
       glacialMilestones: { q25:false, q50:false, q75:false },
       bgmVolume: 60,
       sfxVolume: 80,
+      shardPayoutAwarded: false,
+      lastShardPayout: 0,
     };
+  }
+
+  function freshMeta(){
+    const talents = {};
+    TALENTS.forEach(t => { talents[t.id] = 0; });
+    return {
+      manaShards: 0,
+      talents: talents,
+      career: {
+        bestOrder: 1,
+        totalTaps: 0,
+        lifetimeMana: 0,
+        lifetimeShards: 0,
+        runsCompleted: 0,
+      }
+    };
+  }
+
+  let meta = freshMeta();
+
+  function saveMeta(){
+    try { localStorage.setItem(META_SAVE_KEY, JSON.stringify(meta)); }
+    catch(e){}
+  }
+  function loadMeta(){
+    try {
+      const raw = localStorage.getItem(META_SAVE_KEY);
+      if(!raw){ meta = freshMeta(); return; }
+      const data = JSON.parse(raw);
+      const base = freshMeta();
+      if(!data || typeof data !== 'object'){ meta = base; return; }
+      meta = base;
+      meta.manaShards = Math.max(0, Math.floor(Number(data.manaShards) || 0));
+      TALENTS.forEach(t => {
+        const lv = Math.floor(Number(data.talents && data.talents[t.id]) || 0);
+        meta.talents[t.id] = clamp(lv, 0, t.maxLv);
+      });
+      const career = data.career && typeof data.career === 'object' ? data.career : {};
+      meta.career.bestOrder = Math.max(1, Math.floor(Number(career.bestOrder) || 1));
+      meta.career.totalTaps = Math.max(0, Math.floor(Number(career.totalTaps) || 0));
+      meta.career.lifetimeMana = Math.max(0, Math.floor(Number(career.lifetimeMana) || 0));
+      meta.career.lifetimeShards = Math.max(0, Math.floor(Number(career.lifetimeShards) || 0));
+      meta.career.runsCompleted = Math.max(0, Math.floor(Number(career.runsCompleted) || 0));
+    } catch(e){
+      meta = freshMeta();
+    }
+  }
+  function getTalentLevel(id){
+    return (meta && meta.talents && meta.talents[id]) || 0;
+  }
+  function getTalentCost(talent){
+    const lv = getTalentLevel(talent.id);
+    return Math.round(talent.baseCost * Math.pow(talent.costGrowth, lv));
+  }
+  function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
+  function getShopOfferCount(){ return 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0); }
+  function getCareerBestOrder(){
+    const runOrder = (state && state.round) ? state.round : 1;
+    return Math.max(meta.career.bestOrder || 1, runOrder);
+  }
+  function getCareerTaps(){
+    const runTaps = (state && state.totalClicksAllTime) ? state.totalClicksAllTime : 0;
+    if(state && state.shardPayoutAwarded) return meta.career.totalTaps || 0;
+    return (meta.career.totalTaps || 0) + runTaps;
+  }
+  function getCareerShardsEarned(){ return meta.career.lifetimeShards || 0; }
+  function isMetaUnlocked(item){
+    if(!item) return true;
+    if(item.unlockOrder && getCareerBestOrder() < item.unlockOrder) return false;
+    if(item.unlockTotalTaps && getCareerTaps() < item.unlockTotalTaps) return false;
+    if(item.unlockLifetimeShards && getCareerShardsEarned() < item.unlockLifetimeShards) return false;
+    return true;
+  }
+  function getUnlockHint(item){
+    if(!item) return '';
+    if(item.unlockOrder) return 'Reach Order ' + item.unlockOrder + ' in a single run to unlock.';
+    if(item.unlockTotalTaps) return 'Tap the cauldron ' + fmt(item.unlockTotalTaps) + ' times across all brews to unlock.';
+    if(item.unlockLifetimeShards) return 'Earn ' + item.unlockLifetimeShards + ' Mana Shards across all brews to unlock.';
+    return '';
+  }
+  function refreshShardReadouts(){
+    document.querySelectorAll('[data-shard-count]').forEach(el => {
+      el.textContent = fmt(meta.manaShards);
+    });
   }
 
   /* =========================================================
@@ -1942,6 +2123,12 @@
   const mainSynergyRow = $('mainSynergyRow');
   const synergyTooltip = $('synergyTooltip');
   const resetSaveBtn = $('resetSaveBtn');
+  const resetSanctumBtn = $('resetSanctumBtn');
+  const sanctumOverlay = $('sanctumOverlay');
+  const sanctumTree = $('sanctumTree');
+  const closeSanctumBtn = $('closeSanctumBtn');
+  const openSanctumBtn = $('openSanctumBtn');
+  const gameoverSanctumBtn = $('gameoverSanctumBtn');
   const compendiumBtn = $('compendiumBtn');
   const compendiumOverlay = $('compendiumOverlay');
   const compendiumGrid = $('compendiumGrid');
@@ -2506,7 +2693,7 @@
     return bonusPct;
   }
   function getClickPower(){
-    let p = getBaseClickPower() * (1 + getClickBonusPct(true));
+    let p = getBaseClickPower() * getDeepCauldronMult() * (1 + getClickBonusPct(true));
     if(state.stirFrenzyTimer > 0) p *= 3;
     return p;
   }
@@ -2523,7 +2710,7 @@
     bonusPct += getRelicStats('arcaneConduit').mpsPct || 0;
     if(hasTagTier('arcane', 0)) bonusPct += 0.25; // Arcane Tier (2): +25% Passive Mana/sec
     bonusPct += getGoldenTithePct();
-    mps *= (1 + bonusPct);
+    mps *= (1 + bonusPct) * getDeepCauldronMult();
     return mps;
   }
   function getStirCost(){
@@ -2569,6 +2756,7 @@
     let t = ROUND_BASE_TIME;
     if(hasRelic('hourglass')) t += getRelicStats('hourglass').bonusTime || 0;
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
+    t += getTalentLevel('chronoInfusion');
     return t;
   }
   function getEarlyCompletionGold(){
@@ -3097,15 +3285,18 @@
     if(moon.critEvery && state.clickCountRun % moon.critEvery === 0){
       power *= (moon.critMult || 3);
       crit = true;
-      if(hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
-        const grasp = getRelicStats('wintersGrasp');
-        const cap = grasp.freezeCap || 1.0;
-        const add = grasp.freezeAdd || 0.5;
-        if((state.timeFreezeTimer || 0) <= cap){
-          state.timeFreezeTimer = Math.min(cap, (state.timeFreezeTimer || 0) + add);
-        }
-        state.wintersGraspCooldown = grasp.icd || 1.0;
+    } else if(Math.random() < getTalentLevel('arcaneKeenness') * 0.01){
+      power *= 3;
+      crit = true;
+    }
+    if(crit && hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
+      const grasp = getRelicStats('wintersGrasp');
+      const cap = grasp.freezeCap || 1.0;
+      const add = grasp.freezeAdd || 0.5;
+      if((state.timeFreezeTimer || 0) <= cap){
+        state.timeFreezeTimer = Math.min(cap, (state.timeFreezeTimer || 0) + add);
       }
+      state.wintersGraspCooldown = grasp.icd || 1.0;
     }
 
     addMana(power);
@@ -3231,7 +3422,9 @@
     state.bgmVolume = bgmVolume;
     state.sfxVolume = sfxVolume;
     state.phase = 'brewing';
+    state.gold = getTalentLevel('merchantsPurse') * 5;
     state.timer = getRoundTime();
+    closeSanctum();
     updateCauldronVisuals();
     updateUI();
     syncVolumeUI();
@@ -3275,6 +3468,8 @@
       goldEarned += Math.min(scale.interestCap || 15, Math.floor(state.gold * (scale.interestPct || 0.10)));
     }
     bumpGold(goldEarned);
+    meta.career.bestOrder = Math.max(meta.career.bestOrder || 1, state.round || 1);
+    saveMeta();
     sfxSuccess();
 
     shopTitle.textContent = 'ORDER ' + state.round + ' FULFILLED!';
@@ -3292,6 +3487,7 @@
   function failRound(){
     closePauseMenu();
     state.phase = 'gameover';
+    ensureShardPayout();
     sfxFail();
     renderGameOver();
     gameoverOverlay.classList.remove('hidden');
@@ -3316,13 +3512,13 @@
      SHOP / RELIC DRAFT
   ========================================================= */
   function getShopRelicPool(){
-    return RELICS.filter(r => getRelicLevel(r.id) < RELIC_MAX_LEVEL);
+    return RELICS.filter(r => isMetaUnlocked(r) && getRelicLevel(r.id) < RELIC_MAX_LEVEL);
   }
 
   function rollShopOffers(){
     const pool = getShopRelicPool();
     const shuffled = pool.slice().sort(() => Math.random() - 0.5);
-    state.shopOffers = shuffled.slice(0, 4).map(r => {
+    state.shopOffers = shuffled.slice(0, getShopOfferCount()).map(r => {
       if(Math.random() < CORRUPTION_CHANCE) return createCorruptedOffer(r.id);
       return { id: r.id, corrupted: false };
     });
@@ -3657,6 +3853,7 @@
     if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
     consumableShop.innerHTML = '';
     CONSUMABLES.forEach(c => {
+      if(!isMetaUnlocked(c)) return;
       const cost = getConsumableCost(c);
       const owned = (state.consumables && state.consumables[c.id]) || 0;
       const item = document.createElement('div');
@@ -3747,15 +3944,89 @@
   /* =========================================================
      GAME OVER
   ========================================================= */
+  function calcShardPayout(){
+    const completed = Math.max(0, (state && state.round ? state.round : 1) - 1);
+    const fromOrders = completed * SHARDS_PER_ORDER;
+    const fromMana = Math.floor(((state && state.lifetimeMana) || 0) / SHARDS_PER_MANA);
+    return fromOrders + fromMana;
+  }
+  function ensureShardPayout(){
+    if(!state || state.shardPayoutAwarded) return state ? (state.lastShardPayout || 0) : 0;
+    const payout = calcShardPayout();
+    meta.manaShards += payout;
+    meta.career.lifetimeShards += payout;
+    meta.career.bestOrder = Math.max(meta.career.bestOrder || 1, state.round || 1);
+    meta.career.totalTaps += state.totalClicksAllTime || 0;
+    meta.career.lifetimeMana += state.lifetimeMana || 0;
+    meta.career.runsCompleted += 1;
+    state.shardPayoutAwarded = true;
+    state.lastShardPayout = payout;
+    saveMeta();
+    refreshShardReadouts();
+    return payout;
+  }
   function renderGameOver(){
     const completed = Math.max(0, state.round - 1);
+    const payout = state.lastShardPayout || 0;
     statsList.innerHTML = `
       <div class="statRow"><span>Orders Fulfilled</span><span>${completed}</span></div>
       <div class="statRow"><span>Gold Earned</span><span>${fmt(state.totalGoldEarned)} ${icon('coin','ic-gold')}</span></div>
       <div class="statRow"><span>Total Taps</span><span>${fmt(state.totalClicksAllTime)}</span></div>
       <div class="statRow"><span>Peak Mana</span><span>${fmt(state.peakMana)} ${icon('sparkle','ic-mana')}</span></div>
       <div class="statRow"><span>Relics Collected</span><span>${getOwnedRelicIds().length} / ${RELICS.length}</span></div>
+      <div class="statRow shard-payout"><span>Mana Shards Earned</span><span>+${fmt(payout)} ${icon('sparkle','ic-mana')}</span></div>
+      <div class="statRow shard-payout"><span>Sanctum Vault</span><span>${fmt(meta.manaShards)} ${icon('sparkle','ic-mana')}</span></div>
     `;
+  }
+
+  function renderSanctum(){
+    if(!sanctumTree) return;
+    refreshShardReadouts();
+    sanctumTree.innerHTML = '';
+    TALENTS.forEach(t => {
+      const lv = getTalentLevel(t.id);
+      const maxed = lv >= t.maxLv;
+      const cost = getTalentCost(t);
+      const canBuy = !maxed && meta.manaShards >= cost;
+      const node = document.createElement('div');
+      node.className = 'talent-node' + (lv > 0 ? ' owned' : '') + (maxed ? ' maxed' : '');
+      node.innerHTML = `
+        <div class="talent-gem">${icon(t.icon)}</div>
+        <div class="talent-body">
+          <div class="talent-name">${t.name}</div>
+          <div class="talent-desc">${t.desc}</div>
+          <div class="talent-rank">${maxed ? 'MAX Lv ' + lv : ('Lv ' + lv + ' / ' + t.maxLv)} · ${t.bonusLine(lv)}</div>
+        </div>
+        <button class="talent-buy" data-tid="${t.id}" ${canBuy ? '' : 'disabled'}>${maxed ? 'MAXED' : ('BUY ' + cost)}</button>
+      `;
+      sanctumTree.appendChild(node);
+    });
+    sanctumTree.querySelectorAll('.talent-buy').forEach(btn => {
+      btn.addEventListener('click', () => buyTalent(btn.getAttribute('data-tid')));
+    });
+  }
+  function buyTalent(id){
+    const talent = TALENTS.find(t => t.id === id);
+    if(!talent) return;
+    const lv = getTalentLevel(id);
+    if(lv >= talent.maxLv) return;
+    const cost = getTalentCost(talent);
+    if(meta.manaShards < cost) return;
+    meta.manaShards -= cost;
+    meta.talents[id] = lv + 1;
+    saveMeta();
+    sfxBuy();
+    renderSanctum();
+  }
+  function openSanctum(){
+    if(!sanctumOverlay) return;
+    hideTooltip();
+    renderSanctum();
+    sanctumOverlay.classList.remove('hidden');
+  }
+  function closeSanctum(){
+    if(!sanctumOverlay) return;
+    sanctumOverlay.classList.add('hidden');
   }
 
   /* =========================================================
@@ -3804,6 +4075,16 @@
       const known = discovered.includes(r.id);
       const ownedCorrupt = known && isRelicCorrupted(r.id);
       const card = document.createElement('div');
+      if(!isMetaUnlocked(r)){
+        card.className = 'compendium-card locked milestone-locked';
+        card.innerHTML = `
+          <div class="cIcon">${icon('lock','ic-lock')}</div>
+          <div class="cName">LOCKED</div>
+          <div class="cDesc">${getUnlockHint(r)}</div>
+        `;
+        compendiumGrid.appendChild(card);
+        return;
+      }
       card.className = 'compendium-card' + (known ? '' : ' locked') + (ownedCorrupt ? ' corrupted' : '');
       if(known){
         const tagsHtml = (r.tags||[]).map(t => {
@@ -3942,7 +4223,10 @@
       });
       state.relics = normalizeRelicMap(state.relics);
       if(Array.isArray(state.shopOffers)){
-        state.shopOffers = normalizeShopOffers(state.shopOffers).filter(o => getRelicLevel(o.id) < RELIC_MAX_LEVEL);
+        state.shopOffers = normalizeShopOffers(state.shopOffers).filter(o => {
+          const relic = RELICS.find(x => x.id === o.id);
+          return relic && isMetaUnlocked(relic) && getRelicLevel(o.id) < RELIC_MAX_LEVEL;
+        });
       }
       if(!Array.isArray(state.purchasedOffers)) state.purchasedOffers = [];
       if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
@@ -3955,6 +4239,8 @@
       });
       state.bgmVolume = clampVolume(state.bgmVolume, 60);
       state.sfxVolume = clampVolume(state.sfxVolume, 80);
+      if(typeof state.shardPayoutAwarded !== 'boolean') state.shardPayoutAwarded = false;
+      if(typeof state.lastShardPayout !== 'number') state.lastShardPayout = 0;
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
         const m = state.mana || 0;
@@ -3982,6 +4268,7 @@
         renderShop();
         shopOverlay.classList.remove('hidden');
       } else if(state.phase === 'gameover'){
+        ensureShardPayout();
         renderGameOver();
         gameoverOverlay.classList.remove('hidden');
       } else if(state.phase === 'brewing'){
@@ -4002,11 +4289,22 @@
   }
 
   function resetSave(){
-    if(confirm("Are you sure you want to wipe your save?")){
+    if(confirm("Abandon this brew? Your Sanctum shards and talents will stay.")){
       try {
         localStorage.removeItem(SAVE_KEY);
       } catch(e){}
       window.location.reload();
+    }
+  }
+  function resetSanctum(){
+    if(confirm("Wipe all Mana Shards, talents, and career unlocks? This cannot be undone.")){
+      try {
+        localStorage.removeItem(META_SAVE_KEY);
+      } catch(e){}
+      meta = freshMeta();
+      saveMeta();
+      refreshShardReadouts();
+      renderSanctum();
     }
   }
 
@@ -4133,9 +4431,17 @@
   }
   document.addEventListener('pointerdown', unlockAndStartBgm, { passive:true });
   if(resetSaveBtn) resetSaveBtn.addEventListener('click', resetSave);
+  if(resetSanctumBtn) resetSanctumBtn.addEventListener('click', resetSanctum);
+  if(openSanctumBtn) openSanctumBtn.addEventListener('click', openSanctum);
+  if(gameoverSanctumBtn) gameoverSanctumBtn.addEventListener('click', openSanctum);
+  if(closeSanctumBtn) closeSanctumBtn.addEventListener('click', closeSanctum);
 
   window.addEventListener('keydown', function(e){
     if(e.key === 'Escape'){
+      if(sanctumOverlay && !sanctumOverlay.classList.contains('hidden')){
+        closeSanctum();
+        return;
+      }
       if(compendiumOverlay && !compendiumOverlay.classList.contains('hidden')){
         closeCompendium();
         return;
@@ -4161,12 +4467,14 @@
   /* =========================================================
      INIT (load from localStorage or fresh state)
   ========================================================= */
+  loadMeta();
   if(!loadGame()){
     state = freshState();
     updateCauldronVisuals();
     updateUI();
     syncVolumeUI();
   }
+  refreshShardReadouts();
 
 })();
 </script>
