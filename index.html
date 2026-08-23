@@ -985,6 +985,8 @@
     z-index:5;
     width:140%; height:170%;
     display:block;
+    image-rendering:auto;
+    contain:layout style;
   }
   #numbersLayer{
     z-index:6;
@@ -2794,7 +2796,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.2</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.3</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2851,7 +2853,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.2</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.3</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2931,7 +2933,13 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.2 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.3 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The brew stays smoother on Firefox.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.2</div>
         <ul class="changelog-list">
           <li>Arcane and Chaos particles now swirl as glowing spiral vortexes instead of simple circular sparks.</li>
         </ul>
@@ -4280,9 +4288,17 @@
     if(item.unlockLifetimeShards) return 'Earn ' + item.unlockLifetimeShards + ' Mana Shards across all brews to unlock.';
     return '';
   }
+  let fxLastShardText = null;
+  let fxLastKeystoneSig = '';
+  let fxLastStirCost = '';
+  let fxLastBubbleCost = '';
+  let fxLastFulfillHtml = '';
   function refreshShardReadouts(){
+    const text = fmt(meta.manaShards);
+    if(text === fxLastShardText) return;
+    fxLastShardText = text;
     document.querySelectorAll('[data-shard-count]').forEach(el => {
-      el.textContent = fmt(meta.manaShards);
+      el.textContent = text;
     });
   }
 
@@ -5559,6 +5575,7 @@
   let fxEmitClock = { fire:0, frost:0, arcane:0, chaos:0, midas:0 };
   let fxLastSyncW = 0;
   let fxLastSyncH = 0;
+  let fxNeedsSync = true;
 
   function fxCap(){
     const mode = getParticleMode();
@@ -5574,14 +5591,17 @@
     if(mode === 'low') return base * 0.42;
     return base;
   }
-  function syncCauldronFxCanvas(){
+  function syncCauldronFxCanvas(force){
     if(!cauldronFxCanvas || !cauldron) return false;
-    const cr = cauldron.getBoundingClientRect();
-    if(cr.width < 8 || cr.height < 8) return false;
-    const cssW = cr.width * 1.40;
-    const cssH = cr.height * 1.70;
+    if(!fxCtx) fxCtx = cauldronFxCanvas.getContext('2d', { alpha:true, desynchronized:true });
+    if(!force && !fxNeedsSync && fxCssW > 0) return true;
+    const w = cauldron.offsetWidth;
+    const h = cauldron.offsetHeight;
+    if(w < 8 || h < 8) return false;
+    const cssW = w * 1.40;
+    const cssH = h * 1.70;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    if(Math.abs(cssW - fxLastSyncW) > 0.5 || Math.abs(cssH - fxLastSyncH) > 0.5){
+    if(Math.abs(cssW - fxLastSyncW) > 2 || Math.abs(cssH - fxLastSyncH) > 2){
       cauldronFxCanvas.style.width = cssW + 'px';
       cauldronFxCanvas.style.height = cssH + 'px';
       fxLastSyncW = cssW;
@@ -5596,7 +5616,7 @@
     fxCssW = cssW;
     fxCssH = cssH;
     fxDpr = dpr;
-    if(!fxCtx) fxCtx = cauldronFxCanvas.getContext('2d', { alpha:true });
+    fxNeedsSync = false;
     return !!fxCtx;
   }
   function cauldronPctToCanvas(xPct, yPct){
@@ -5773,11 +5793,13 @@
     return 'rgba(176,18,6,' + a + ')';
   }
   function updateCauldronFx(dt){
-    if(!syncCauldronFxCanvas()) return;
     if(isPaused){
+      if(fxNeedsSync) syncCauldronFxCanvas(true);
       return;
     }
-    if(getParticleMode() === 'off'){
+    if(!syncCauldronFxCanvas()) return;
+    const mode = getParticleMode();
+    if(mode === 'off'){
       if(fxParticles.length){
         fxParticles.length = 0;
         fxCtx.setTransform(fxDpr, 0, 0, fxDpr, 0, 0);
@@ -5785,8 +5807,10 @@
       }
       return;
     }
+    const brewing = !!(state && state.phase === 'brewing');
+    if(!brewing && !fxParticles.length) return;
 
-    if(state && state.phase === 'brewing'){
+    if(brewing){
       const tags = getTagCounts();
       const mouthX = () => brewMouthX();
       const mouthY = () => brewMouthY();
@@ -6080,16 +6104,20 @@
     if(cauldronStage) cauldronStage.classList.toggle('boss-order', boss && state.phase === 'brewing');
     if(keystoneHud){
       const ks = getKeystoneById(meta && meta.activeKeystone);
-      if(ks){
-        keystoneHud.classList.remove('hidden');
-        keystoneHud.classList.add('show');
-        keystoneHud.innerHTML = icon(ks.icon, 'ic-amber') + ' ' + ks.name + ' [ACTIVE]';
-        keystoneHud.title = ks.upside + ' / ' + ks.drawback;
-      } else {
-        keystoneHud.classList.add('hidden');
-        keystoneHud.classList.remove('show');
-        keystoneHud.innerHTML = '';
-        keystoneHud.title = '';
+      const sig = ks ? ks.id : '';
+      if(sig !== fxLastKeystoneSig){
+        fxLastKeystoneSig = sig;
+        if(ks){
+          keystoneHud.classList.remove('hidden');
+          keystoneHud.classList.add('show');
+          keystoneHud.innerHTML = icon(ks.icon, 'ic-amber') + ' ' + ks.name + ' [ACTIVE]';
+          keystoneHud.title = ks.upside + ' / ' + ks.drawback;
+        } else {
+          keystoneHud.classList.add('hidden');
+          keystoneHud.classList.remove('show');
+          keystoneHud.innerHTML = '';
+          keystoneHud.title = '';
+        }
       }
     }
   }
@@ -6125,20 +6153,33 @@
       fulfillBtn.classList.add('show');
       fulfillBtn.classList.toggle('surplus-urgent', surplusUrgent);
       if(fulfillCopy){
-        fulfillCopy.innerHTML = '<span class="fulfill-main">CASH OUT <span class="fulfill-gold">+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + '</span></span><span class="fulfill-sub">END ROUND · Auto-finish in ' + Math.ceil(remain) + 's</span>';
+        const html = '<span class="fulfill-main">CASH OUT <span class="fulfill-gold">+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + '</span></span><span class="fulfill-sub">END ROUND · Auto-finish in ' + Math.ceil(remain) + 's</span>';
+        if(html !== fxLastFulfillHtml){
+          fxLastFulfillHtml = html;
+          fulfillCopy.innerHTML = html;
+        }
       }
     } else {
       fulfillBtn.classList.remove('show');
       fulfillBtn.classList.remove('surplus-urgent');
-      if(fulfillFx) fulfillFx.innerHTML = '';
+      if(fulfillFx && fulfillFx.firstChild) fulfillFx.innerHTML = '';
+      fxLastFulfillHtml = '';
     }
     if(cauldron) cauldron.classList.toggle('surplus-urgent', surplusUrgent);
 
     refreshShardReadouts();
     stirSub.textContent = 'Lv ' + state.clickLevel + ' · +' + (getClickPower() * getAlchemicalMasteryMult()).toFixed(1) + '/click';
-    stirCost.innerHTML = 'Cost: ' + fmt(getStirCost()) + ' ' + icon('sparkle','ic-mana');
+    const stirCostHtml = 'Cost: ' + fmt(getStirCost()) + ' ' + icon('sparkle','ic-mana');
+    if(stirCostHtml !== fxLastStirCost){
+      fxLastStirCost = stirCostHtml;
+      stirCost.innerHTML = stirCostHtml;
+    }
     bubbleSub.textContent = 'Lv ' + state.bubblerLevel + ' · +' + (getManaPerSecond() * getAlchemicalMasteryMult()).toFixed(1) + '/sec';
-    bubbleCost.innerHTML = 'Cost: ' + fmt(getBubbleCost()) + ' ' + icon('sparkle','ic-mana');
+    const bubbleCostHtml = 'Cost: ' + fmt(getBubbleCost()) + ' ' + icon('sparkle','ic-mana');
+    if(bubbleCostHtml !== fxLastBubbleCost){
+      fxLastBubbleCost = bubbleCostHtml;
+      bubbleCost.innerHTML = bubbleCostHtml;
+    }
 
     const canBuyStir = state.phase === 'brewing' && state.mana >= getStirCost();
     const canBuyBubble = state.phase === 'brewing' && state.mana >= getBubbleCost();
@@ -6875,6 +6916,9 @@
     if(!container) return;
     const counts = getTagCounts();
     const activeTags = Object.keys(TAG_INFO).filter(t => counts[t] > 0);
+    const sig = activeTags.map(t => t + counts[t]).join('|');
+    if(container.dataset.synSig === sig) return;
+    container.dataset.synSig = sig;
     if(activeTags.length === 0){
       container.style.display = 'none';
       container.innerHTML = '';
@@ -8313,7 +8357,8 @@
   window.addEventListener('pointercancel', stopStirHold);
   window.addEventListener('pointerleave', stopStirHold);
   window.addEventListener('resize', () => {
-    syncCauldronFxCanvas();
+    fxNeedsSync = true;
+    syncCauldronFxCanvas(true);
     if(isSanctumOpen()) drawSanctumLines();
   });
   buyStirBtn.addEventListener('click', buyStir);
