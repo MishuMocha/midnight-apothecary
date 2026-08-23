@@ -700,9 +700,9 @@
   /* ---------- CONSUMABLES ---------- */
   #consumablesPanel{ padding:10px 12px; margin-bottom:10px; }
   .consumable-label{ font-size:0.5rem; color:var(--text-dim); letter-spacing:1px; margin-bottom:8px; }
-  .consumable-row{ display:flex; gap:8px; }
+  .consumable-row{ display:flex; gap:6px; flex-wrap:wrap; }
   .consumable-btn{
-    position:relative; flex:1; padding:10px 4px; background: var(--purple-mid);
+    position:relative; flex:1 1 72px; padding:12px 4px 8px; background: var(--purple-mid);
     border:3px solid #000;
     box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 3px 0 #000;
     color:var(--text-light); cursor:pointer; font-family:inherit; font-size:0.48rem; line-height:1.5;
@@ -714,7 +714,6 @@
   .consumable-btn:active:not(:disabled){ transform: translate(2px,3px); box-shadow: 0 0 0 #000; }
   .consumable-btn:disabled{ opacity:0.35; cursor:not-allowed; }
   .consumable-btn .cIcon{ font-size:18px; line-height:1; pointer-events:none; }
-  .consumable-btn .cLabel{ pointer-events:none; }
   .consumable-btn .cCount{
     position:absolute; top:-8px; right:-8px; background: var(--amber); color:#2a1a08;
     border:2px solid #000; border-radius:50%; width:18px; height:18px; font-size:0.42rem;
@@ -734,11 +733,19 @@
     pointer-events:none;
   }
   .consumable-btn .cBuffTimer:empty{ display:none; }
-  .consumable-btn .cHotkey{
-    position:absolute; right:3px; bottom:2px;
-    font-size:0.32rem; color:var(--text-dim); letter-spacing:0.5px;
-    pointer-events:none; opacity:0.7;
+  .consumable-btn .cLabel{
+    pointer-events:none; text-align:center; max-width:100%;
+    line-height:1.25; font-size:0.42rem;
   }
+  .consumable-btn .cHotkey{
+    position:absolute; left:2px; top:2px;
+    font-size:0.3rem; color:var(--amber-glow); letter-spacing:0.4px;
+    background:#000; border:2px solid var(--amber);
+    padding:0 3px; line-height:1.4;
+    pointer-events:none; opacity:0.95;
+    box-shadow: 1px 1px 0 #000;
+  }
+  .consumable-btn .cHotkey:empty{ display:none; }
 
   /* ---------- OVERLAYS / MODALS ---------- */
   .hidden{ display:none !important; }
@@ -934,6 +941,18 @@
   .shelfItem .sIcon{ font-size:18px; line-height:1; }
   .shelfItem .sName{ font-size:0.44rem; color:var(--amber-glow); line-height:1.4; }
   .shelfItem .sOwned{ font-size:0.4rem; color:var(--text-dim); }
+  .shelfItem .sRare{
+    font-size:0.32rem; color:var(--amber-glow); letter-spacing:1px;
+  }
+  .shelfItem.rare{
+    border-color:var(--amber);
+    background: radial-gradient(circle at 50% 0%, rgba(244,184,96,0.22) 0%, rgba(255,255,255,0.04) 62%);
+    animation: rareShelfPulse 1.1s ease-in-out infinite alternate;
+  }
+  @keyframes rareShelfPulse{
+    0%{ box-shadow: 0 0 6px rgba(244,184,96,0.3); }
+    100%{ box-shadow: 0 0 14px rgba(255,210,122,0.75), inset 0 0 0 1px rgba(255,210,122,0.35); }
+  }
   .shelfItem .rBuy{
     align-self:stretch; margin-top:2px; padding:6px 4px; font-size:0.44rem;
   }
@@ -1431,7 +1450,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.17.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.18</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1477,7 +1496,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.17.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.18</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1530,7 +1549,17 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.17.1 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.18 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Alchemist's Supply Shelf now stocks three random Ingredient Charms each visit — rerolling the shop restocks those slots too.</li>
+          <li>Stir Frenzy, Time Freeze, and Golden Droplet have been renamed Berserker's Fang, Stasis Crystal, and Midas Tear.</li>
+          <li>New charms: Molten Ember guarantees Critical Surges for a few seconds, Aetheric Dew dumps five seconds of Bubbler Mana at once, and the rare Philosopher's Stone turns half your current Mana into Gold.</li>
+          <li>Philosopher's Stone only rarely appears on the shelf, glowing amber-gold with a RARE badge when it does.</li>
+          <li>Keys 1 through 6 toss the charms you currently carry, in pouch order, and those same numbers now sit on the active charm buttons.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.17.1</div>
         <ul class="changelog-list">
           <li>The Grimoire's Standard tab always shows the clean relic. Corrupted variants stay in the Corrupted tab, even if that's the copy you're brewing with.</li>
         </ul>
@@ -2107,13 +2136,21 @@
   };
 
   const CONSUMABLES = [
-    { id:'stirFrenzy', name:'Stir Frenzy', icon:'chaos', cost:15,
+    { id:'stirFrenzy', name:"Berserker's Fang", icon:'chaos', cost:15,
       desc:'Instantly triples your click power for 4 seconds.' },
-    { id:'timeFreeze', name:'Time Freeze', icon:'ice', cost:18,
+    { id:'timeFreeze', name:'Stasis Crystal', icon:'ice', cost:18,
       desc:'Freezes the order deadline for 3 seconds.', unlockOrder:3 },
-    { id:'goldenDrop', name:'Golden Droplet', icon:'droplet', cost:16,
+    { id:'goldenDrop', name:'Midas Tear', icon:'droplet', cost:16,
       desc:'Instantly brews 15% of the current quota as bonus Mana.', unlockTotalTaps:250 },
+    { id:'moltenEmber', name:'Molten Ember', icon:'fire', cost:20,
+      desc:'Every tap is guaranteed to be a Critical Surge for 3.0 seconds.', unlockTotalTaps:600 },
+    { id:'aethericDew', name:'Aetheric Dew', icon:'droplet', cost:18,
+      desc:'Instantly triggers 5 seconds of passive Bubbler Mana generation.', unlockLifetimeShards:35 },
+    { id:'philosopherStone', name:"Philosopher's Stone", icon:'urn', cost:35, rare:true,
+      desc:'RARE: Instantly converts 50% of your current Mana into immediate Gold, but drains that Mana from the cauldron.', unlockOrder:6 },
   ];
+  const CHARM_SHELF_SLOTS = 3;
+  const PHILOSOPHER_STONE_CHANCE = 0.09;
 
   const META_SAVE_KEY = 'apothecary_meta_v1';
   const SHARDS_PER_ORDER = 5;
@@ -2181,9 +2218,11 @@
       liquidTheme: 'default',
       rerollCount: 0,
       shopOffers: [],
+      charmOffers: [],
       purchasedOffers: [],
       consumables: consumables,
       stirFrenzyTimer: 0,
+      moltenEmberTimer: 0,
       timeFreezeTimer: 0,
       activeCharmTimeFreezeTimer: 0,
       wintersGraspCooldown: 0,
@@ -3200,8 +3239,14 @@
     }
   }
 
+  function getOwnedCharmIds(){
+    return CONSUMABLES
+      .filter(c => state && state.consumables && (state.consumables[c.id] || 0) > 0)
+      .map(c => c.id);
+  }
   function getConsumableBuffTimer(id){
     if(id === 'stirFrenzy') return state.stirFrenzyTimer || 0;
+    if(id === 'moltenEmber') return state.moltenEmberTimer || 0;
     if(id === 'timeFreeze') return state.activeCharmTimeFreezeTimer || 0;
     return 0;
   }
@@ -3215,31 +3260,35 @@
     // player's click, which made the charms appear completely unresponsive.
     if(consumableButtons.children.length !== CONSUMABLES.length){
       consumableButtons.innerHTML = '';
-      CONSUMABLES.forEach((c, i) => {
+      CONSUMABLES.forEach(c => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'consumable-btn';
         btn.dataset.cid = c.id;
-        btn.innerHTML = '<span class="cIcon">' + icon(c.icon) + '</span>' +
+        btn.innerHTML = '<span class="cHotkey"></span>' +
+          '<span class="cIcon">' + icon(c.icon) + '</span>' +
           '<span class="cLabel">' + c.name + '</span>' +
           '<span class="cCount">0</span>' +
-          '<span class="cBuffTimer"></span>' +
-          '<span class="cHotkey">[' + (i + 1) + ']</span>';
+          '<span class="cBuffTimer"></span>';
         btn.addEventListener('pointerdown', (e) => { e.preventDefault(); useConsumable(c.id); }, { passive:false });
         consumableButtons.appendChild(btn);
       });
     }
+    const ownedIds = getOwnedCharmIds();
     CONSUMABLES.forEach(c => {
       const btn = consumableButtons.querySelector('[data-cid="' + c.id + '"]');
       if(!btn) return;
       const count = (state.consumables && state.consumables[c.id]) || 0;
       const buffTime = getConsumableBuffTimer(c.id);
+      const hotkeyIdx = ownedIds.indexOf(c.id);
       btn.disabled = count <= 0 || state.phase !== 'brewing';
       btn.classList.toggle('buff-active', buffTime > 0);
       const countEl = btn.querySelector('.cCount');
       if(countEl) countEl.textContent = count;
       const timerEl = btn.querySelector('.cBuffTimer');
       if(timerEl) timerEl.textContent = buffTime > 0 ? buffTime.toFixed(1) + 's' : '';
+      const hotkeyEl = btn.querySelector('.cHotkey');
+      if(hotkeyEl) hotkeyEl.textContent = hotkeyIdx >= 0 ? '[' + (hotkeyIdx + 1) + ']' : '';
     });
   }
 
@@ -3326,6 +3375,12 @@
       width: size+'px', height: size+'px',
       animationDuration: (0.7 + Math.random()*0.5)+'s'
     }, 1300);
+  }
+
+  function spawnManaSurgeBurst(){
+    spawnBubbleCluster();
+    spawnBubbleCluster();
+    for(let i = 0; i < 10; i++) spawnLiquidBubble();
   }
 
   // Bubble Clusters — a handful of organic, varied-size bubbles spawned
@@ -3683,6 +3738,10 @@
       power *= 3;
       crit = true;
     }
+    if((state.moltenEmberTimer || 0) > 0){
+      if(!crit) power *= 3;
+      crit = true;
+    }
     if(crit && hasRelic('wintersGrasp') && (state.wintersGraspCooldown || 0) <= 0){
       const grasp = getRelicStats('wintersGrasp');
       const cap = grasp.freezeCap || 1.0;
@@ -3787,15 +3846,34 @@
     state.consumables[id]--;
     if(id === 'stirFrenzy'){
       state.stirFrenzyTimer = 4;
-      spawnFloatNumber('STIR FRENZY!', 'crit', 50, 22);
+      spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
     } else if(id === 'timeFreeze'){
       state.timeFreezeTimer = 3;
       state.activeCharmTimeFreezeTimer = 3;
-      spawnFloatNumber('TIME FROZEN!', 'crit', 50, 22);
+      spawnFloatNumber('STASIS LOCK!', 'crit', 50, 22);
     } else if(id === 'goldenDrop'){
       const bonus = Math.floor(state.target * 0.15);
       addMana(bonus);
       spawnFloatNumber('+' + fmt(bonus), 'gold', 50, 22);
+    } else if(id === 'moltenEmber'){
+      state.moltenEmberTimer = 3.0;
+      spawnFloatNumber('MOLTEN EMBER!', 'crit', 50, 22);
+    } else if(id === 'aethericDew'){
+      const burst = getManaPerSecond() * 5.0;
+      addMana(burst);
+      spawnManaSurgeBurst();
+      spawnFloatNumber('+' + fmt(burst) + ' MANA SURGE', 'crit', 50, 22);
+    } else if(id === 'philosopherStone'){
+      const drain = Math.floor(state.mana * 0.5);
+      if(drain > 0){
+        state.mana -= drain;
+        if(state.mana < state.target) state.quotaMet = false;
+        const goldGained = Math.max(1, Math.floor(drain / getSurplusGoldDivisor()));
+        bumpGold(goldGained);
+        spawnFloatNumber('+' + fmt(goldGained) + ' GOLD CONVERTED!', 'gold', 50, 22);
+      } else {
+        spawnFloatNumber('NO MANA TO CONVERT', 'danger', 50, 22);
+      }
     }
     sfxBuy();
     updateUI();
@@ -3855,6 +3933,7 @@
     state.mana = 0;
     state.quotaMet = false;
     state.stirFrenzyTimer = 0;
+    state.moltenEmberTimer = 0;
     state.timeFreezeTimer = 0;
     state.activeCharmTimeFreezeTimer = 0;
     state.wintersGraspCooldown = 0;
@@ -3943,6 +4022,36 @@
       return { id: r.id, corrupted: false };
     });
     state.purchasedOffers = [];
+    rollCharmOffers();
+  }
+
+  function getUnlockedCharms(){
+    return CONSUMABLES.filter(c => isMetaUnlocked(c));
+  }
+
+  function rollCharmOffers(){
+    const unlocked = getUnlockedCharms();
+    const commons = unlocked.filter(c => !c.rare);
+    const rares = unlocked.filter(c => c.rare);
+    const offers = [];
+    const used = {};
+    const pickFrom = (pool) => {
+      const open = pool.filter(c => !used[c.id]);
+      if(!open.length) return null;
+      return open[Math.floor(Math.random() * open.length)];
+    };
+    for(let i = 0; i < CHARM_SHELF_SLOTS; i++){
+      let pick = null;
+      if(rares.some(c => !used[c.id]) && Math.random() < PHILOSOPHER_STONE_CHANCE){
+        pick = pickFrom(rares);
+      }
+      if(!pick) pick = pickFrom(commons);
+      if(!pick) pick = pickFrom(unlocked);
+      if(!pick) break;
+      used[pick.id] = true;
+      offers.push(pick.id);
+    }
+    state.charmOffers = offers;
   }
 
   function renderShop(){
@@ -4026,7 +4135,10 @@
     }
 
     rerollBtn.innerHTML = icon('refresh') + ' REROLL SHOP (' + getRerollCost() + ' ' + icon('coin','ic-gold') + ')';
-    rerollBtn.disabled = state.gold < getRerollCost() || pool.length <= state.shopOffers.length;
+    const canRerollRelics = pool.length > state.shopOffers.length;
+    const unlockedCharmCount = getUnlockedCharms().length;
+    const canRerollCharms = unlockedCharmCount > 1;
+    rerollBtn.disabled = state.gold < getRerollCost() || (!canRerollRelics && !canRerollCharms);
 
     shopCards.querySelectorAll('.rBuy').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -4241,8 +4353,10 @@
     if(!c) return '';
     const owned = (state && state.consumables && state.consumables[c.id]) || 0;
     const cost = getConsumableCost(c);
+    const rareLine = c.rare ? '<div class="tooltip-line" style="color:var(--amber-glow);">RARE CHARM</div>' : '';
     return `
       <div class="tooltip-title">${icon(c.icon)} ${c.name}</div>
+      ${rareLine}
       <div class="tooltip-desc">${c.desc}</div>
       <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')}</div>
     `;
@@ -4272,15 +4386,20 @@
   function renderConsumableShop(){
     if(!consumableShop) return;
     if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
+    if(!Array.isArray(state.charmOffers) || state.charmOffers.length === 0){
+      rollCharmOffers();
+    }
     consumableShop.innerHTML = '';
-    CONSUMABLES.forEach(c => {
-      if(!isMetaUnlocked(c)) return;
+    state.charmOffers.forEach(id => {
+      const c = CONSUMABLES.find(x => x.id === id);
+      if(!c || !isMetaUnlocked(c)) return;
       const cost = getConsumableCost(c);
       const owned = (state.consumables && state.consumables[c.id]) || 0;
       const item = document.createElement('div');
-      item.className = 'shelfItem';
+      item.className = 'shelfItem' + (c.rare ? ' rare' : '');
       item.setAttribute('data-cid', c.id);
       item.innerHTML = `
+        ${c.rare ? '<div class="sRare">RARE</div>' : ''}
         <div class="sIcon">${icon(c.icon)}</div>
         <div class="sName">${c.name}</div>
         <div class="sOwned">Owned: ${owned}</div>
@@ -4712,6 +4831,12 @@
       if(typeof state.bellowsHeatTimer !== 'number') state.bellowsHeatTimer = 0;
       if(typeof state.bellowsHeatStacks !== 'number') state.bellowsHeatStacks = 0;
       if(typeof state.cinderbrandBurnTimer !== 'number') state.cinderbrandBurnTimer = 0;
+      if(typeof state.moltenEmberTimer !== 'number') state.moltenEmberTimer = 0;
+      if(!Array.isArray(state.charmOffers)) state.charmOffers = [];
+      state.charmOffers = state.charmOffers.filter(id => {
+        const charm = CONSUMABLES.find(x => x.id === id);
+        return charm && isMetaUnlocked(charm);
+      });
       if(typeof state.magmaGeodeTriggered !== 'boolean') state.magmaGeodeTriggered = state.mana >= (state.target || 1) * 0.5;
       if(!state.glacialMilestones || typeof state.glacialMilestones !== 'object'){
         const q = state.target || 1;
@@ -4736,6 +4861,8 @@
         shopSummary.textContent = 'Surplus converted into Gold.';
         if(!state.shopOffers || state.shopOffers.length === 0){
           rollShopOffers();
+        } else if(!state.charmOffers || state.charmOffers.length === 0){
+          rollCharmOffers();
         }
         renderShop();
         shopOverlay.classList.remove('hidden');
@@ -4794,6 +4921,7 @@
       if(mps > 0) addMana(mps * dt, true);
 
       if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
+      if(state.moltenEmberTimer > 0) state.moltenEmberTimer = Math.max(0, state.moltenEmberTimer - dt);
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
@@ -4928,11 +5056,12 @@
 
   window.addEventListener('keydown', function(e){
     if(e.repeat) return;
-    const charmHotkeys = { '1':'stirFrenzy', '2':'timeFreeze', '3':'goldenDrop' };
-    if(charmHotkeys[e.key] && !e.ctrlKey && !e.metaKey && !e.altKey){
+    if(e.key >= '1' && e.key <= '6' && !e.ctrlKey && !e.metaKey && !e.altKey){
       const tag = (e.target && e.target.tagName) || '';
       if(tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT'){
-        useConsumable(charmHotkeys[e.key]);
+        const ownedIds = getOwnedCharmIds();
+        const charmId = ownedIds[parseInt(e.key, 10) - 1];
+        if(charmId) useConsumable(charmId);
         return;
       }
     }
