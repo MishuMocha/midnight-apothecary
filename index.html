@@ -160,7 +160,7 @@
   /* ---------- TOP BAR ---------- */
   #topbar{
     display:flex; align-items:center; justify-content:space-between;
-    gap:10px; padding:10px 14px; margin-top:6px;
+    gap:16px; padding:10px 18px; margin-top:6px;
     flex-wrap: wrap;
   }
   .topbar-left{
@@ -179,40 +179,60 @@
     100%{ filter:brightness(1.18); text-shadow: 0 0 12px rgba(255, 200, 80, 0.85), 0 0 8px rgba(255, 70, 60, 0.8); }
   }
   .top-actions{
-    display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap;
-    gap:10px; flex-shrink:0; margin-left:auto;
+    display:flex; align-items:center; justify-content:flex-end; flex-wrap:nowrap;
+    gap:18px; flex-shrink:0; margin-left:auto;
     max-width:100%;
   }
   .top-action-btns,
   .top-currencies{
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center;
     flex-shrink:0; width:max-content;
+  }
+  .top-action-btns{ gap:12px; }
+  .top-currencies{
+    gap:22px;
+    padding-left:18px;
+    margin-left:2px;
+    border-left:2px dashed rgba(255,255,255,0.16);
   }
   #goldDisplay,
   #shardDisplay{
     flex:0 0 auto;
     width:max-content; min-width:max-content;
-    white-space:nowrap; overflow:visible;
+    white-space:nowrap; overflow:hidden;
     background: rgba(0, 0, 0, 0.45);
     border: 2px solid #000;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
-    padding: 4px 8px;
+    padding: 5px 10px;
     display: inline-flex; align-items: center; gap: 6px;
     font-size:0.68rem;
   }
-  #goldDisplay{ color:var(--amber); transform-origin:left center; }
-  #goldDisplay.pulse{ animation: goldPulse 0.4s steps(3); }
+  #goldDisplay{ color:var(--amber); }
+  #goldDisplay.pulse{
+    animation: goldPulse 0.4s ease-out;
+  }
+  #goldDisplay.pulse #goldValue{
+    animation: goldValuePulse 0.4s ease-out;
+  }
   #shardDisplay{ color:#c9a6ff; }
   #goldValue,
   #shardDisplay [data-shard-count]{
     display:inline-block;
     font-variant-numeric: tabular-nums;
     min-width:6ch;
+    transform-origin:center;
   }
   #sanctumHudBtn:hover {
     filter: drop-shadow(0 0 6px rgba(201, 166, 255, 0.85));
   }
-  @keyframes goldPulse{ 0%{transform:scale(1.5); color:#fff;} 100%{transform:scale(1);} }
+  @keyframes goldPulse{
+    0%{ color:#fff; box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 10px rgba(255,208,67,0.7); }
+    100%{ color:var(--amber); box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark); }
+  }
+  @keyframes goldValuePulse{
+    0%{ transform:scale(1.18); color:#fff; }
+    100%{ transform:scale(1); }
+  }
   .icon-btn{
     padding:6px 10px; font-size:0.55rem; line-height:1; display:inline-flex; align-items:center; justify-content:center;
     flex-shrink:0;
@@ -1897,6 +1917,8 @@
   @media (max-width: 720px){
     .sanctum-tree{ grid-template-columns: 1fr; }
     .keystone-grid{ grid-template-columns: 1fr; }
+    .top-actions{ flex-wrap:wrap; gap:12px; }
+    .top-currencies{ padding-left:0; margin-left:0; border-left:none; }
   }
 
   ::-webkit-scrollbar{ width:8px; }
@@ -1913,9 +1935,10 @@
     #upgradesPanel{ margin-bottom:4px; }
   }
   @media (min-width: 1280px){
-    #topbar{ padding:12px 18px; flex-wrap:nowrap; align-items:center; }
+    #topbar{ padding:12px 22px; flex-wrap:nowrap; align-items:center; }
     .topbar-left{ flex:1 1 auto; }
-    .top-actions{ flex-wrap:nowrap; }
+    .top-actions{ flex-wrap:nowrap; gap:22px; }
+    .top-currencies{ gap:24px; padding-left:20px; }
     .barTrack{ height:20px; }
     #orderPanel{ padding:14px 18px; }
     #upgradesPanel{ gap:12px; }
@@ -2463,7 +2486,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.0</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.0.2</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2520,7 +2543,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.0</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.0.2</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2600,7 +2623,20 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.2 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Each new order's Mana Essence quota now rounds to a cleaner hundred — 3,325 becomes 3,300, and 7,347 becomes 7,300.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.1</div>
+        <ul class="changelog-list">
+          <li>Hover an Ingredient Charm to see what it does, how many you own, and how long it takes to recharge.</li>
+          <li>Gold earned from passive effects no longer makes the coin banner bounce over the Mana Shards — the top bar now gives Gold and Shards their own breathing room.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0</div>
         <ul class="changelog-list">
           <li>The Midnight Apothecary steps out of Dev Test and into Pre-Alpha — Version History now keeps Pre-Alpha builds and the older Dev Test archive on their own tabs.</li>
           <li>The Cash Out plaque now sheds the same gold sparks and Midas coins that drift off a Midas cauldron, instead of tiny white specks.</li>
@@ -4812,6 +4848,11 @@
     t = Math.floor(t);
     return t;
   }
+  function roundQuota(amount){
+    const n = Math.max(1, Math.floor(Number(amount) || 0));
+    if(n < 100) return n;
+    return Math.max(100, Math.round(n / 100) * 100);
+  }
   function getGoldRate(){
     let rate = 1;
     if(hasRelic('crucible')) rate += getRelicStats('crucible').goldRate || 0;
@@ -5012,7 +5053,7 @@
     // invoked from updateUI(), which runs on every animation frame while
     // brewing — was destroying/recreating the buttons out from under the
     // player's click, which made the charms appear completely unresponsive.
-    if(consumableButtons.dataset.charmHud !== 'cd1' || consumableButtons.children.length !== CONSUMABLES.length){
+    if(consumableButtons.dataset.charmHud !== 'cd2' || consumableButtons.children.length !== CONSUMABLES.length){
       consumableButtons.innerHTML = '';
       CONSUMABLES.forEach(c => {
         const btn = document.createElement('button');
@@ -5025,10 +5066,16 @@
           '<span class="cCount">0</span>' +
           '<span class="cBuffTimer"></span>' +
           '<span class="cCooldown"></span>';
-        btn.addEventListener('pointerdown', (e) => { e.preventDefault(); useConsumable(c.id); }, { passive:false });
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          hideTooltip();
+          useConsumable(c.id);
+        }, { passive:false });
+        btn.addEventListener('mouseenter', () => showHoverTooltip(btn, getCharmTooltipHTML(c.id), 'hud-charm-' + c.id, true));
+        btn.addEventListener('mouseleave', hideHoverTooltip);
         consumableButtons.appendChild(btn);
       });
-      consumableButtons.dataset.charmHud = 'cd1';
+      consumableButtons.dataset.charmHud = 'cd2';
     }
     CONSUMABLES.forEach(c => {
       const btn = consumableButtons.querySelector('[data-cid="' + c.id + '"]');
@@ -5956,7 +6003,7 @@
 
   function beginOrder(){
     rollOrderAffix();
-    state.target = applyAffixOrderTarget(getOrderTarget(state.round));
+    state.target = roundQuota(applyAffixOrderTarget(getOrderTarget(state.round)));
     state.timer = getRoundTime();
     state.dragonfireCounter = 0;
     state.clickCountRun = 0;
@@ -7259,7 +7306,7 @@
         state.currentAffix = null;
         state.isBossOrder = false;
       }
-      state.target = applyAffixOrderTarget(getOrderTarget(state.round || 1));
+      state.target = roundQuota(applyAffixOrderTarget(getOrderTarget(state.round || 1)));
 
       startOverlay.classList.add('hidden');
       shopOverlay.classList.add('hidden');
