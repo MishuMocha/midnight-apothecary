@@ -1052,7 +1052,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.14</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.11.0</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1095,7 +1095,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.14</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.11.0</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1141,7 +1141,15 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.14 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.11.0 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Phoenix Down now Cheats Death: if an order boils over without the quota, the relic burns itself to give you +6 seconds and a burst of flame.</li>
+          <li>Ashen Sigil is now the Fire relic for raw tap power, granting +25% Click Power.</li>
+          <li>The Cursed Midas Coin no longer does nothing when you're broke — every 10th tap tosses you +2 Gold, but your in-round upgrades cost 25% more Mana.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.14</div>
         <ul class="changelog-list">
           <li>The Order Deadline bar now turns icy whenever the clock is frozen, and the Time Freeze charm only pulses when you actually use it — Frost relics no longer light it up.</li>
         </ul>
@@ -1524,10 +1532,10 @@
       desc:"CORRUPTED: Mana generated per second is boosted +150%, but bubbles may violently rupture — 8% chance every second to burn away 0.5s from the deadline.",
       liquidTheme:null },
     { id:'ashenSigil', name:"Ashen Sigil", icon:'fire', cost:22, tags:['fire'],
-      desc:"Residual embers linger in the pot, adding +15% Mana to every tap.",
+      desc:"Residual embers linger in the pot, adding +25% Click Power to every tap.",
       liquidTheme:null },
     { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
-      desc:"Phoenix ash infuses the brew, adding +20% Mana to every tap.",
+      desc:"Cheat Death: if an order boils over without meeting quota, this relic is consumed to restore +6.0 seconds and erupt the brew in flame.",
       liquidTheme:null },
     { id:'glacialCore', name:"Glacial Core", icon:'ice', cost:22, tags:['frost'],
       desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0 seconds.",
@@ -1548,7 +1556,7 @@
       desc:"Fulfilling an order grants a +12 Gold bounty, but boiling over loses 50% of your Gold.",
       liquidTheme:null },
     { id:'mammonCoin', name:"Cursed Midas Coin", icon:'skull', cost:34, tags:['midas'], corrupted:true,
-      desc:"CORRUPTED: Doubles all Gold earned from orders and drops, but each tap consumes 1 Gold.",
+      desc:"CORRUPTED: Doubles all Gold earned from orders and drops. Every 10th tap yields +2 Gold, but Stirring Power and Bubbler upgrades cost 25% more Mana.",
       liquidTheme:null },
   ];
 
@@ -1783,8 +1791,7 @@
     let bonusPct = 0;
     if(hasRelic('dragonfire')) bonusPct += 0.4;
     if(hasRelic('cursedEmber')) bonusPct += 0.9;
-    if(hasRelic('ashenSigil')) bonusPct += 0.15;
-    if(hasRelic('phoenixDown')) bonusPct += 0.2;
+    if(hasRelic('ashenSigil')) bonusPct += 0.25;
     if(hasTagTier('fire', 0)) bonusPct += 0.3; // Fire Tier (2): +30% Click Power
     if(hasTagTier('midas', 1)) bonusPct += (state.gold / 2) * 0.01; // Midas Tier (4): Golden Tithe
     p *= (1 + bonusPct);
@@ -1806,11 +1813,13 @@
   function getStirCost(){
     let cost = Math.floor(CLICK_UPGRADE_BASE_COST * Math.pow(CLICK_UPGRADE_COST_GROWTH, state.clickLevel));
     if(hasRelic('pawnTicket')) cost = Math.floor(cost * 0.7);
+    if(hasRelic('mammonCoin')) cost = Math.floor(cost * 1.25);
     return cost;
   }
   function getBubbleCost(){
     let cost = Math.floor(BUBBLER_BASE_COST * Math.pow(BUBBLER_COST_GROWTH, state.bubblerLevel));
     if(hasRelic('pawnTicket')) cost = Math.floor(cost * 0.7);
+    if(hasRelic('mammonCoin')) cost = Math.floor(cost * 1.25);
     return cost;
   }
   function getRoundCostScale(){ return 1 + (state.round - 1) * RELIC_COST_SCALE_PER_ROUND; }
@@ -2042,6 +2051,32 @@
       left: pos.x + '%', top: pos.y + '%'
     }, 900);
     el.innerHTML = text;
+  }
+
+  function spawnPhoenixBurst(){
+    for(let i = 0; i < 14; i++){
+      const p = cauldronToLayerPct(brewMouthX(), brewMouthY());
+      const size = 10 + Math.floor(Math.random() * 12);
+      spawnEl(fxLayer, 'px-particle fx-flame', {
+        left: p.x + '%',
+        top: p.y + '%',
+        width: size + 'px',
+        height: size + 'px',
+        '--sway': ((Math.random() - 0.5) * 90) + 'px'
+      }, 1100);
+    }
+  }
+
+  function tryPhoenixRevive(){
+    if(!state || !hasRelic('phoenixDown')) return false;
+    state.relics = state.relics.filter(id => id !== 'phoenixDown');
+    state.timer = 6.0;
+    spawnPhoenixBurst();
+    spawnFloatNumber(icon('feather','ic-fire') + ' CHEAT DEATH! +6.0s', 'crit', 50, 22);
+    sfxScorch();
+    sfxQuotaMet();
+    updateCauldronVisuals();
+    return true;
   }
 
   function spawnClickBubbles(xPct, yPct){
@@ -2374,8 +2409,10 @@
       sfxScorch();
     }
 
-    if(hasRelic('mammonCoin') && state.gold > 0){
-      state.gold -= 1;
+    if(hasRelic('mammonCoin') && state.clickCountRun % 10 === 0){
+      bumpGold(2);
+      sfxGold();
+      spawnFloatNumber('+' + 2 + ' ' + icon('coin','ic-gold'), 'gold', xPct, yPct+10);
     }
 
     if(hasTagTier('midas', 0) && Math.random() < 0.12){
@@ -3167,9 +3204,14 @@
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
-          state.timer = 0;
-          updateUI();
-          if(state.quotaMet){ succeedRound(); } else { failRound(); }
+          if(!state.quotaMet && tryPhoenixRevive()){
+            updateUI();
+            saveGame();
+          } else {
+            state.timer = 0;
+            updateUI();
+            if(state.quotaMet){ succeedRound(); } else { failRound(); }
+          }
         } else {
           updateUI();
         }
