@@ -1050,6 +1050,185 @@
   .shop-gold-label{ font-size:0.46rem; color:var(--text-dim); letter-spacing:1px; }
   .shop-gold-amount{ font-size:0.68rem; color:var(--amber-glow); display:inline-flex; align-items:center; gap:5px; }
 
+  /* ---------- SHOP: FULL-WIDTH ROUND-END LAYOUT ---------- */
+  #shopOverlay.shop-overlay{
+    padding:10px 14px;
+    align-items:stretch;
+    justify-content:center;
+  }
+  #shopOverlay .shop-panel{
+    width:min(100%, 1560px);
+    max-width:none;
+    height:100%;
+    max-height:100%;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:20px 24px 16px;
+    text-align:left;
+  }
+  .shop-header{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) auto;
+    gap:16px 28px;
+    align-items:start;
+    flex-shrink:0;
+  }
+  .shop-header-copy h2{
+    font-size:1rem;
+    line-height:1.45;
+    margin:0 0 10px;
+    text-align:left;
+  }
+  .shop-header-copy p{
+    font-size:0.75rem;
+    line-height:1.7;
+    margin:0;
+    color:var(--text-light);
+  }
+  .shop-header-meta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+    min-width:220px;
+  }
+  .shop-panel .shop-gold-bar{
+    margin:0;
+    padding:10px 16px;
+    width:auto;
+  }
+  .shop-panel .shop-gold-label{ font-size:0.625rem; }
+  .shop-panel .shop-gold-amount{ font-size:0.875rem; }
+  .shop-panel .shop-gold-amount .icon{ width:1.25em; height:1.25em; }
+  .shop-panel #synergySummary{
+    justify-content:flex-end;
+    margin:0;
+    gap:8px;
+  }
+  .shop-panel .tag-pill{
+    font-size:0.625rem;
+    padding:5px 8px;
+  }
+  .shop-panel .shop-tier-label{
+    font-size:0.75rem;
+    margin:0;
+    padding-bottom:8px;
+    flex-shrink:0;
+  }
+  .shop-panel #shopCards{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:18px;
+    margin:0;
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    padding-right:4px;
+    align-content:start;
+  }
+  .shop-panel .relicCard{
+    padding:18px 18px 16px;
+    gap:12px;
+    min-width:0;
+  }
+  .shop-panel .relicCard .rHead{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .shop-panel .relicCard .rName{
+    font-size:0.75rem;
+    line-height:1.5;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    flex:1;
+    min-width:0;
+  }
+  .shop-panel .relicCard .rName .icon{ width:28px; height:28px; flex-shrink:0; }
+  .shop-panel .relicCard .relic-lv-badge{ font-size:0.625rem; flex-shrink:0; padding-top:2px; }
+  .shop-panel .relicCard .rDesc{
+    font-size:0.75rem;
+    line-height:1.7;
+    color:var(--text-light);
+  }
+  .shop-panel .relicCard .rUpgrade{
+    font-size:0.625rem;
+    line-height:1.65;
+  }
+  .shop-panel .relicCard .rTierLine,
+  .shop-panel .relicCard .rBoon,
+  .shop-panel .relicCard .rCurse,
+  .shop-panel .relicCard .synergy-hint,
+  .shop-panel .relicCard .corrupted-badge{
+    font-size:0.625rem;
+    line-height:1.65;
+  }
+  .shop-panel .relicCard .synergy-hint{ padding:6px 8px; }
+  .shop-panel .relicCard .rBuy{
+    align-self:stretch;
+    width:100%;
+    margin-top:auto;
+    padding:12px 14px;
+    font-size:0.75rem;
+  }
+  .shop-footer{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) minmax(260px, 320px);
+    gap:18px 24px;
+    align-items:end;
+    flex-shrink:0;
+  }
+  .shop-shelf-wrap{ min-width:0; }
+  .shop-shelf-wrap .shop-tier-label{ margin-bottom:8px; }
+  .shop-panel .shop-shelf{
+    gap:12px;
+    padding:12px;
+    margin:0;
+  }
+  .shop-panel .shelfItem{
+    padding:12px 10px;
+    gap:8px;
+  }
+  .shop-panel .shelfItem .sIcon{ font-size:22px; }
+  .shop-panel .shelfItem .sIcon .icon{ width:28px; height:28px; }
+  .shop-panel .shelfItem .sName{ font-size:0.625rem; line-height:1.5; }
+  .shop-panel .shelfItem .sOwned{ font-size:0.625rem; }
+  .shop-panel .shelfItem .sRare{ font-size:0.5rem; }
+  .shop-panel .shelfItem .rBuy{ font-size:0.625rem; padding:8px 6px; }
+  .shop-actions{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .shop-actions .smallBtn,
+  .shop-actions .bigBtn{
+    margin-top:0;
+    width:100%;
+    font-size:0.75rem;
+    padding:12px 14px;
+  }
+  @media (max-width: 1180px){
+    .shop-panel #shopCards{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .shop-footer{ grid-template-columns:1fr; }
+    .shop-header{ grid-template-columns:1fr; }
+    .shop-header-meta{ align-items:flex-start; }
+    .shop-panel #synergySummary{ justify-content:flex-start; }
+  }
+  @media (max-width: 720px){
+    #shopOverlay.shop-overlay{ padding:8px; }
+    #shopOverlay .shop-panel{ padding:14px 12px 12px; }
+    .shop-panel #shopCards{ grid-template-columns:1fr; }
+    .shop-header-copy h2{ font-size:0.875rem; }
+    .shop-header-copy p,
+    .shop-panel .relicCard .rName,
+    .shop-panel .relicCard .rDesc,
+    .shop-panel .relicCard .rBuy{ font-size:0.625rem; }
+  }
+
   /* ---------- SHOP: TWO-TIER LAYOUT ---------- */
   .shop-tier-label{
     display:flex; align-items:center; gap:6px;
@@ -2183,7 +2362,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.5</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -2192,26 +2371,36 @@
 </div>
 
 <!-- SHOP OVERLAY -->
-<div class="overlay hidden" id="shopOverlay">
-  <div class="panelCard pixel-panel">
-    <div class="shop-gold-bar" id="shopGoldBar">
-      <span class="shop-gold-label">YOUR GOLD</span>
-      <span class="shop-gold-amount"><svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg> <span id="shopGoldValue">0</span></span>
-    </div>
-    <h2 id="shopTitle">ORDER FULFILLED!</h2>
-    <p id="shopSummary">Surplus converted to Gold.</p>
-    <div id="synergySummary"></div>
+<div class="overlay hidden shop-overlay" id="shopOverlay">
+  <div class="panelCard pixel-panel shop-panel">
+    <header class="shop-header">
+      <div class="shop-header-copy">
+        <h2 id="shopTitle">ORDER FULFILLED!</h2>
+        <p id="shopSummary">Surplus converted to Gold.</p>
+      </div>
+      <div class="shop-header-meta">
+        <div class="shop-gold-bar" id="shopGoldBar">
+          <span class="shop-gold-label">YOUR GOLD</span>
+          <span class="shop-gold-amount"><svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg> <span id="shopGoldValue">0</span></span>
+        </div>
+        <div id="synergySummary"></div>
+      </div>
+    </header>
 
     <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> RELIC PEDESTAL</div>
     <div id="shopCards" class="shop-vault"></div>
 
-    <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> ALCHEMIST'S SUPPLY SHELF</div>
-    <div id="consumableShop" class="shop-shelf"></div>
-
-    <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg>)</button>
-    <button class="smallBtn" id="shopSanctumBtn" style="color:var(--danger); border-color:#ff5d6c;"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> RETREAT TO SANCTUM</button>
-    <br>
-    <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
+    <footer class="shop-footer">
+      <div class="shop-shelf-wrap">
+        <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> ALCHEMIST'S SUPPLY SHELF</div>
+        <div id="consumableShop" class="shop-shelf"></div>
+      </div>
+      <div class="shop-actions">
+        <button class="smallBtn" id="rerollBtn"><svg class="icon"><use href="#icon-refresh"></use></svg> REROLL SHOP (5 <svg class="icon painted ic-gold" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#291c02"/><circle cx="12" cy="12" r="9" fill="#8a610e"/><circle cx="12" cy="12" r="7" fill="#ffd043"/><circle cx="12" cy="12" r="5" fill="none" stroke="#c4942a" stroke-width="1.5"/><rect x="11" y="8" width="2" height="8" fill="#8a610e"/><rect x="9" y="11" width="6" height="2" fill="#8a610e"/></svg>)</button>
+        <button class="smallBtn" id="shopSanctumBtn" style="color:var(--danger); border-color:#ff5d6c;"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> RETREAT TO SANCTUM</button>
+        <button class="pixel-btn bigBtn" id="continueBtn">CONTINUE BREWING ➜</button>
+      </div>
+    </footer>
   </div>
 </div>
 
@@ -2230,7 +2419,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.5</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27.6</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -2305,7 +2494,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.5 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The between-round shop now fills the screen — relic cards sit in a wider grid with larger text, and the supply shelf sits beside the continue buttons.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27.5</div>
         <ul class="changelog-list">
           <li>Midas relics now have their own painted pixel icons — a hoarder's scale, a pawn ticket, a gilded ledger, and a cursed gold coin.</li>
         </ul>
@@ -5800,7 +5995,6 @@
           const hint = getSynergyHint(t, tagCounts[t] || 0);
           return hint ? `<div class="synergy-hint">${hint}</div>` : '';
         }).join('');
-        const tierStatusHtml = getRelicTierStatusHTML(r, 'rTierLine');
         const nowStats = lv > 0 ? getRelicStats(id, lv) : null;
         const nextStats = !maxed && !boughtThisVisit ? getRelicStats(id, nextLv, previewOverlay) : null;
         const shownStats = boughtThisVisit ? nowStats : (nextStats || nowStats);
@@ -5832,14 +6026,16 @@
           ? formatRelicLevel(lv)
           : (isUpgrade ? formatRelicLevel(lv) : 'NEW');
         card.innerHTML = `
-          <div class="rName">${icon(r.icon, relicTagIconClass(r))} ${getRelicDisplayName(id, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''} <span class="relic-lv-badge">${levelBadge}</span></div>
+          <div class="rHead">
+            <div class="rName">${icon(r.icon, relicTagIconClass(r))} <span>${getRelicDisplayName(id, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</span></div>
+            <span class="relic-lv-badge">${levelBadge}</span>
+          </div>
           <div class="rTags">${tagsHtml}</div>
           ${hintsHtml}
           <div class="rDesc">${r.desc}</div>
           ${preview}
           ${boonHtml}
           ${curseHtml}
-          ${tierStatusHtml ? '<div class="rTierStatus">' + tierStatusHtml + '</div>' : ''}
           <button class="rBuy" data-id="${r.id}" ${maxed || boughtThisVisit || state.gold < price ? 'disabled' : ''}>
             ${buyLabel}
           </button>
