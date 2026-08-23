@@ -1512,8 +1512,79 @@
   }
   .talent-buy:hover:not(:disabled){ filter:brightness(1.15); }
   .talent-buy:disabled{ background:#5a5064; color:#8a7fa0; box-shadow:none; cursor:not-allowed; }
+  .keystone-section{ margin-top:18px; text-align:left; }
+  .keystone-section-header{
+    text-align:center; margin-bottom:10px; padding:8px 8px 6px;
+    border:3px solid #000; background:rgba(42,16,8,0.55);
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
+  }
+  .keystone-section-title{ font-size:0.52rem; color:#ffe37a; letter-spacing:1px; }
+  .keystone-section-sub{ font-size:0.36rem; color:var(--text-dim); margin-top:4px; line-height:1.45; }
+  .keystone-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+  }
+  .keystone-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .keystone-col-label{ font-size:0.38rem; color:var(--amber-glow); letter-spacing:0.8px; text-align:center; }
+  .keystone-node{
+    position:relative;
+    display:flex; flex-direction:column; align-items:stretch; gap:8px;
+    padding:12px 10px 10px;
+    background: rgba(18, 8, 6, 0.72);
+    border:3px solid #5a3a12;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark);
+  }
+  .keystone-node.locked{ opacity:0.48; }
+  .keystone-node.available{ border-color:var(--amber); }
+  .keystone-node.owned{ border-color:#c99212; }
+  .keystone-node.active{
+    border-color:#ffe37a;
+    background: radial-gradient(circle at 50% 0%, rgba(255,210,122,0.22) 0%, rgba(18,8,6,0.72) 70%);
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 16px rgba(255,210,122,0.55);
+    animation: keystoneActivePulse 1.25s ease-in-out infinite alternate;
+  }
+  @keyframes keystoneActivePulse{
+    0%{ box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 10px rgba(255,210,122,0.35); }
+    100%{ box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 20px rgba(255,210,122,0.75); }
+  }
+  .keystone-hex-wrap{
+    width:56px; height:56px; align-self:center;
+    display:flex; align-items:center; justify-content:center;
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    background:#5a3a12;
+  }
+  .keystone-node.locked .keystone-hex-wrap{ background:#4a4254; }
+  .keystone-node.available .keystone-hex-wrap{ background:var(--amber); }
+  .keystone-node.owned .keystone-hex-wrap{ background:#c99212; }
+  .keystone-node.active .keystone-hex-wrap{ background:#ffe37a; }
+  .keystone-hex{
+    width:46px; height:46px;
+    display:flex; align-items:center; justify-content:center;
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    background: var(--purple-mid);
+    color: var(--amber-glow);
+  }
+  .keystone-node.active .keystone-hex{ background:#5a2f12; color:#ffe37a; }
+  .keystone-name{ font-size:0.46rem; color:#ffe37a; text-align:center; line-height:1.4; }
+  .keystone-active-tag{
+    align-self:center; font-size:0.32rem; color:#2a1a08; background:#ffe37a;
+    padding:2px 6px; border:2px solid #000; letter-spacing:0.6px;
+  }
+  .keystone-up{ font-size:0.36rem; color:#ffd27a; line-height:1.45; }
+  .keystone-down{ font-size:0.36rem; color:#ff6b7d; line-height:1.45; }
+  .keystone-actions{ display:flex; gap:6px; }
+  .keystone-actions .talent-buy{ flex:1; min-width:0; }
+  #keystoneHud{
+    display:none;
+    padding:3px 8px;
+    font-size:0.38rem; line-height:1.4; color:#ffe37a;
+    background:rgba(90,47,18,0.72); border:2px solid #000;
+    box-shadow: inset 1px 1px 0 var(--px-light);
+    cursor:pointer;
+  }
+  #keystoneHud.show{ display:inline-flex; align-items:center; gap:5px; }
   @media (max-width: 720px){
     .sanctum-tree{ grid-template-columns: 1fr; }
+    .keystone-grid{ grid-template-columns: 1fr; }
   }
 
   ::-webkit-scrollbar{ width:8px; }
@@ -1752,6 +1823,7 @@
     <div class="topbar-left">
       <div id="roundLabel">ORDER 1</div>
       <div id="affixBanner" class="hidden"></div>
+      <div id="keystoneHud" class="hidden"></div>
       <div id="mainSynergyRow" class="tag-row"></div>
     </div>
     <div class="top-actions">
@@ -1822,7 +1894,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.26</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.27</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -1869,7 +1941,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.26</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.27</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1944,7 +2016,14 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.26 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.27 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Sanctum now has Keystone Masteries — six mutually exclusive playstyles with sharp trade-offs. Buy them with shards, then equip only one at a time.</li>
+          <li>Alchemy keystones split click-storms from idle bubblers, Chronos keystones trade gold-rush overcharge for glacial time, and Commerce keystones shrink synergy requirements or transmute every charm into essence and gold.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.26</div>
         <ul class="changelog-list">
           <li>From Order 3 onward, each Guild order can carry a wild affix that twists the brew — doubled stirring, faster boils, silenced crits, or mercurial gold taps.</li>
           <li>Every fifth order is a Guild Boss with its own mandate, a pulsing crimson title, and a shard bounty plus a free corrupted relic if you prevail.</li>
@@ -2505,9 +2584,10 @@
 <div class="overlay hidden" id="sanctumOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> ALCHEMICAL<br>SANCTUM</h1>
-    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later tiers stay locked until you have invested enough shards in that branch.</p>
+    <p>Spend Mana Shards earned from boiled-over runs on permanent talents. Climb Alchemy, Chronos, and Commerce — later tiers stay locked until you have invested enough shards in that branch. Keystone Masteries are mutually exclusive playstyles: buy them, then equip only one.</p>
     <div class="sanctum-vault"><svg class="icon ic-mana"><use href="#icon-sparkle"></use></svg> Mana Shards: <span id="sanctumShardValue" data-shard-count>0</span></div>
     <div id="sanctumTree" class="sanctum-tree"></div>
+    <div id="keystoneSection" class="keystone-section"></div>
     <button class="pixel-btn bigBtn" id="closeSanctumBtn">CLOSE SANCTUM</button>
   </div>
 </div>
@@ -2766,6 +2846,26 @@
       bonusLine: function(lv){ return '+' + (lv * 2) + '% gold on orders'; },
       baseCost:150, costGrowth:1.45 },
   ];
+  const KEYSTONES = [
+    { id:'pyroKineticism', name:'Pyromantic Kineticism', icon:'fire', path:'potency', cost:200,
+      upside:'Base Click Power is amplified by +150%. Critical Surges deal 5x instead of 3x.',
+      drawback:'Enchanted Bubblers generate 0 passive Mana/sec.' },
+    { id:'aethericSiphon', name:'Aetheric Siphon', icon:'sparkle', path:'potency', cost:200,
+      upside:'Enchanted Bubblers produce +200% Mana/sec. Passive ticks have a 10% chance to trigger an automatic Critical Surge.',
+      drawback:'Cauldron clicks produce 0 direct Mana (clicks still advance tap counters, heat, and procs).' },
+    { id:'volatileOvercharge', name:'Volatile Overcharge', icon:'lightning', path:'chronos', cost:200,
+      upside:'Surplus Gold conversion is doubled (+100% surplus Gold rate).',
+      drawback:'Auto-finish surplus timer is reduced from 30.0s to 12.0s; active deadline drains 25% faster.' },
+    { id:'glacialPreservation', name:'Glacial Preservation', icon:'ice', path:'chronos', cost:200,
+      upside:'Base Order Deadlines receive +15.0s, and freeze cap is raised to 6.0s.',
+      drawback:'In-shop Relics and Charms cost 35% more Gold.' },
+    { id:'alchemicalPolymath', name:'Alchemical Polymath', icon:'scroll', path:'commerce', cost:200,
+      upside:'All Synergy Tag set-piece milestone requirements are reduced by 1 (4-piece unlocks at 3, 2-piece unlocks at 1).',
+      drawback:'Relic Pedestal offers 1 fewer relic per visit; shop rerolls cost +5 Gold.' },
+    { id:'philosophersTransmutation', name:"Philosopher's Transmutation", icon:'urn', path:'commerce', cost:200,
+      upside:'Consuming any Ingredient Charm grants +15% of remaining order quota as Mana and +3 Gold.',
+      drawback:'Ingredient Charm cooldowns are increased by +5.0s.' },
+  ];
 
   const LIQUID_THEMES = {
     default:    { c1:'#c9a6ff', c2:'#8a5cf0', c3:'#4b2a8f', glow:'168, 110, 255' },
@@ -2832,6 +2932,7 @@
       cinderbrandBurnTimer: 0,
       magmaGeodeTriggered: false,
       secondBreathUsed: false,
+      siphonCritClock: 0,
       currentAffix: null,
       isBossOrder: false,
       lastAffix: null,
@@ -2844,6 +2945,8 @@
     return {
       manaShards: 0,
       talents: talents,
+      unlockedKeystones: {},
+      activeKeystone: null,
       career: {
         bestOrder: 1,
         totalTaps: 0,
@@ -2879,6 +2982,13 @@
       meta.career.lifetimeMana = Math.max(0, Math.floor(Number(career.lifetimeMana) || 0));
       meta.career.lifetimeShards = Math.max(0, Math.floor(Number(career.lifetimeShards) || 0));
       meta.career.runsCompleted = Math.max(0, Math.floor(Number(career.runsCompleted) || 0));
+      meta.unlockedKeystones = {};
+      const rawKeys = data.unlockedKeystones && typeof data.unlockedKeystones === 'object' ? data.unlockedKeystones : {};
+      KEYSTONES.forEach(k => {
+        if(rawKeys[k.id]) meta.unlockedKeystones[k.id] = true;
+      });
+      const active = typeof data.activeKeystone === 'string' ? data.activeKeystone : null;
+      meta.activeKeystone = (active && meta.unlockedKeystones[active]) ? active : null;
     } catch(e){
       meta = freshMeta();
     }
@@ -2958,6 +3068,34 @@
     return Math.round(talent.baseCost * Math.pow(talent.costGrowth, lv));
   }
   const MAX_FREEZE_TIME = 4.0;
+  function getKeystoneById(id){
+    return KEYSTONES.find(k => k.id === id) || null;
+  }
+  function isKeystoneUnlocked(id){
+    return !!(meta && meta.unlockedKeystones && meta.unlockedKeystones[id]);
+  }
+  function hasKeystone(id){
+    return !!(meta && meta.activeKeystone === id);
+  }
+  function getCritSurgeMult(base){
+    if(hasKeystone('pyroKineticism')) return 5;
+    return (typeof base === 'number' && base > 0) ? base : 3;
+  }
+  function getMaxFreezeTime(){
+    return hasKeystone('glacialPreservation') ? 6.0 : MAX_FREEZE_TIME;
+  }
+  function getSurplusAutoFinish(){
+    return hasKeystone('volatileOvercharge') ? 12.0 : SURPLUS_AUTO_FINISH;
+  }
+  function getSurplusWarnAt(){
+    return hasKeystone('volatileOvercharge') ? 8.0 : SURPLUS_WARN_AT;
+  }
+  function getTierRequiredCount(tier){
+    if(!tier) return 1;
+    let n = tier.count;
+    if(hasKeystone('alchemicalPolymath')) n = Math.max(1, n - 1);
+    return n;
+  }
   function getFreezeBonus(){ return 0.5 * getTalentLevel('stasisMastery'); }
   function getAffixDef(id){
     if(!id) return null;
@@ -3002,12 +3140,16 @@
   function clampFreeze(seconds){
     let s = Number(seconds) || 0;
     if(hasAffix('frostBaron')) s *= 0.5;
-    return clamp(s, 0, MAX_FREEZE_TIME);
+    return clamp(s, 0, getMaxFreezeTime());
   }
   function getDeepCauldronMult(){ return 1 + 0.10 * getTalentLevel('deepCauldron'); }
   function getAlchemicalMasteryMult(){ return 1 + 0.01 * getTalentLevel('alchemicalMastery'); }
   function getGildedProsperityMult(){ return 1 + 0.02 * getTalentLevel('gildedProsperity'); }
-  function getShopOfferCount(){ return 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0); }
+  function getShopOfferCount(){
+    let n = 4 + (getTalentLevel('expandedPedestal') > 0 ? 1 : 0);
+    if(hasKeystone('alchemicalPolymath')) n = Math.max(1, n - 1);
+    return n;
+  }
   function getCareerBestOrder(){
     const runOrder = (state && state.round) ? state.round : 1;
     return Math.max(meta.career.bestOrder || 1, runOrder);
@@ -3111,6 +3253,8 @@
   const resetSanctumBtn = $('resetSanctumBtn');
   const sanctumOverlay = $('sanctumOverlay');
   const sanctumTree = $('sanctumTree');
+  const keystoneSection = $('keystoneSection');
+  const keystoneHud = $('keystoneHud');
   const closeSanctumBtn = $('closeSanctumBtn');
   const openSanctumBtn = $('openSanctumBtn');
   const sanctumHudBtn = $('sanctumHudBtn');
@@ -3881,14 +4025,14 @@
     if(!tiers) return 0;
     const c = getTagCounts()[tag] || 0;
     let level = 0;
-    tiers.forEach((t, i) => { if(c >= t.count) level = i + 1; });
+    tiers.forEach((t, i) => { if(c >= getTierRequiredCount(t)) level = i + 1; });
     return level;
   }
   function hasTagTier(tag, tierIndex){
     const tiers = TAG_TIERS[tag];
     if(!tiers || !tiers[tierIndex]) return false;
     const c = getTagCounts()[tag] || 0;
-    return c >= tiers[tierIndex].count;
+    return c >= getTierRequiredCount(tiers[tierIndex]);
   }
 
   function getBaseClickPower(){
@@ -3910,19 +4054,25 @@
     if(includeTithe) bonusPct += getGoldenTithePct();
     return bonusPct;
   }
-  function getClickPower(){
+  function getRawClickPower(){
     let p = getBaseClickPower() * getDeepCauldronMult() * (1 + getClickBonusPct(true));
     if(state.stirFrenzyTimer > 0) p *= 3;
     if(hasRelic('permafrostShard') && (state.timeFreezeTimer || 0) > 0){
       p *= getRelicStats('permafrostShard').frozenMult || 2.0;
     }
     if(hasAffix('denseLiquid')) p *= 2;
+    if(hasKeystone('pyroKineticism')) p *= 2.5;
     return p;
+  }
+  function getClickPower(){
+    if(hasKeystone('aethericSiphon')) return 0;
+    return getRawClickPower();
   }
   function getManaPerSecond(){
     let bubbler = state.bubblerLevel * BUBBLER_RATE_PER_LEVEL;
-    if(hasAffix('denseLiquid')) bubbler = 0;
+    if(hasAffix('denseLiquid') || hasKeystone('pyroKineticism')) bubbler = 0;
     else if(hasAffix('spectralInterference')) bubbler *= 2;
+    if(hasKeystone('aethericSiphon')) bubbler *= 3;
     let mps = bubbler;
     const whisk = getRelicStats('whisk');
     if(whisk.whiskPct){
@@ -3959,15 +4109,22 @@
     let cost = Math.round((REROLL_BASE_COST + state.rerollCount * 3) * getRoundCostScale());
     cost = Math.round(cost * getCurseCostMult());
     cost = Math.max(1, cost - getTalentLevel('bargainMaster'));
+    if(hasKeystone('alchemicalPolymath')) cost += 5;
     return cost;
   }
   function getRelicCost(relic){
     const offer = relic && getShopOffer(relic.id);
     if(offer && offer.free) return 0;
     const nextLv = getRelicLevel(relic.id) + 1;
-    return Math.round(relic.cost * getRoundCostScale() * Math.max(1, nextLv) * getCurseCostMult());
+    let cost = Math.round(relic.cost * getRoundCostScale() * Math.max(1, nextLv) * getCurseCostMult());
+    if(hasKeystone('glacialPreservation')) cost = Math.round(cost * 1.35);
+    return cost;
   }
-  function getConsumableCost(consumable){ return Math.round(consumable.cost * getRoundCostScale() * getCurseCostMult()); }
+  function getConsumableCost(consumable){
+    let cost = Math.round(consumable.cost * getRoundCostScale() * getCurseCostMult());
+    if(hasKeystone('glacialPreservation')) cost = Math.round(cost * 1.35);
+    return cost;
+  }
   function getOrderGrowthRatio(order){
     return ORDER_GROWTH_STEPS[order] || ROUND_TARGET_GROWTH;
   }
@@ -3984,6 +4141,7 @@
     if(hasRelic('crucible')) rate += getRelicStats('crucible').goldRate || 0;
     if(hasTagTier('arcane', 1)) rate += 0.5; // Arcane Tier (4): Transmutation
     if(hasAffix('rapidBoil')) rate *= 1.5;
+    if(hasKeystone('volatileOvercharge')) rate *= 2;
     return rate;
   }
   function getRoundTime(){
@@ -3993,6 +4151,7 @@
     if(hasTagTier('frost', 0)) t += 3; // Frost Tier (2): +3s Deadline
     t += getTalentLevel('chronoInfusion');
     t += 0.5 * getTalentLevel('temporalAnchor');
+    if(hasKeystone('glacialPreservation')) t += 15;
     return t;
   }
   function getEarlyCompletionGold(){
@@ -4151,6 +4310,12 @@
     if(id === 'timeFreeze') return state.activeCharmTimeFreezeTimer || 0;
     return 0;
   }
+  function getCharmMaxCooldown(charm){
+    if(hasAffix('midnightEclipse')) return 0;
+    let cd = (charm && charm.cooldown) || 0;
+    if(hasKeystone('philosophersTransmutation')) cd += 5;
+    return cd;
+  }
   function getCharmCooldown(id){
     if(hasAffix('midnightEclipse')) return 0;
     return (state && state.charmCooldowns && state.charmCooldowns[id]) || 0;
@@ -4195,7 +4360,7 @@
       const count = (state.consumables && state.consumables[c.id]) || 0;
       const buffTime = getConsumableBuffTimer(c.id);
       const cd = getCharmCooldown(c.id);
-      const maxCd = c.cooldown || 0;
+      const maxCd = getCharmMaxCooldown(c);
       btn.disabled = count <= 0 || cd > 0 || state.phase !== 'brewing';
       btn.classList.toggle('buff-active', buffTime > 0);
       btn.classList.toggle('on-cooldown', cd > 0);
@@ -4575,6 +4740,20 @@
     }
     if(orderPanelShell) orderPanelShell.classList.toggle('boss-order', boss && state.phase === 'brewing');
     if(cauldronStage) cauldronStage.classList.toggle('boss-order', boss && state.phase === 'brewing');
+    if(keystoneHud){
+      const ks = getKeystoneById(meta && meta.activeKeystone);
+      if(ks){
+        keystoneHud.classList.remove('hidden');
+        keystoneHud.classList.add('show');
+        keystoneHud.innerHTML = icon(ks.icon, 'ic-amber') + ' ' + ks.name + ' [ACTIVE]';
+        keystoneHud.title = ks.upside + ' / ' + ks.drawback;
+      } else {
+        keystoneHud.classList.add('hidden');
+        keystoneHud.classList.remove('show');
+        keystoneHud.innerHTML = '';
+        keystoneHud.title = '';
+      }
+    }
   }
   function updateUI(){
     applyAffixPresentation();
@@ -4602,9 +4781,9 @@
     timerFill.classList.toggle('frozen', (state.timeFreezeTimer || 0) > 0);
     timerLabelText.textContent = Math.max(0,state.timer).toFixed(1) + 's';
 
-    const surplusUrgent = state.phase === 'brewing' && state.quotaMet && (state.surplusTimer || 0) >= SURPLUS_WARN_AT;
+    const surplusUrgent = state.phase === 'brewing' && state.quotaMet && (state.surplusTimer || 0) >= getSurplusWarnAt();
     if(state.phase === 'brewing' && state.quotaMet){
-      const remain = Math.max(0, SURPLUS_AUTO_FINISH - (state.surplusTimer || 0));
+      const remain = Math.max(0, getSurplusAutoFinish() - (state.surplusTimer || 0));
       fulfillBtn.classList.add('show');
       fulfillBtn.classList.toggle('surplus-urgent', surplusUrgent);
       fulfillBtn.innerHTML = 'CASH OUT (+' + fmt(getSurplusGoldPreview()) + ' ' + icon('coin','ic-gold') + ') &amp; END ROUND · Auto-finish in ' + Math.ceil(remain) + 's';
@@ -4826,14 +5005,14 @@
     const critDisabled = hasAffix('spectralInterference');
     const moon = getRelicStats('moonstone');
     if(!critDisabled && moon.critEvery && state.clickCountRun % moon.critEvery === 0){
-      power *= (moon.critMult || 3);
+      power *= getCritSurgeMult(moon.critMult || 3);
       crit = true;
     } else if(!critDisabled && Math.random() < getTalentLevel('arcaneKeenness') * 0.01){
-      power *= 3;
+      power *= getCritSurgeMult();
       crit = true;
     }
     if(!critDisabled && (state.moltenEmberTimer || 0) > 0){
-      if(!crit) power *= 3;
+      if(!crit) power *= getCritSurgeMult();
       crit = true;
     }
     if(crit) triggerScreenShake();
@@ -4952,7 +5131,7 @@
     if(!state.charmCooldowns) state.charmCooldowns = normalizeCharmCooldowns(null);
     if(getCharmCooldown(id) > 0) return;
     state.consumables[id]--;
-    state.charmCooldowns[id] = hasAffix('midnightEclipse') ? 0 : (charm.cooldown || 0);
+    state.charmCooldowns[id] = getCharmMaxCooldown(charm);
     if(id === 'stirFrenzy'){
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
@@ -4995,6 +5174,13 @@
       } else {
         spawnFloatNumber('NO MANA TO CONVERT', 'danger', 50, 22);
       }
+    }
+    if(hasKeystone('philosophersTransmutation')){
+      const remain = Math.max(0, (state.target || 0) - (state.mana || 0));
+      const transmuted = remain * 0.15;
+      if(transmuted > 0) addMana(transmuted);
+      bumpGold(3);
+      spawnFloatNumber('TRANSMUTE +' + fmt(transmuted) + '  +3 ' + icon('coin','ic-gold'), 'gold', 50, 30);
     }
     if(hasRelic('absoluteZero')){
       const extraFreeze = clampFreeze((getRelicStats('absoluteZero').charmFreezeSec || 1.5) + getFreezeBonus());
@@ -5080,6 +5266,7 @@
     state.cinderbrandBurnTimer = 0;
     state.magmaGeodeTriggered = false;
     state.secondBreathUsed = false;
+    state.siphonCritClock = 0;
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * (getRelicStats('starter').quotaPct || 0.10));
       if(state.mana >= state.target){ state.quotaMet = true; }
@@ -5339,7 +5526,7 @@
       const c = counts[t];
       const info = TAG_INFO[t];
       const tiers = TAG_TIERS[t];
-      const boosted = tiers ? c >= tiers[0].count : c >= 2;
+      const boosted = tiers ? c >= getTierRequiredCount(tiers[0]) : c >= 2;
       return `<button type="button" class="tag-pill tag-${t} synergy-badge${boosted ? ' boosted' : ''}" data-tag="${t}">${icon(info.icon, 'ic-'+t)} ${info.label} x${c}</button>`;
     }).join('');
     container.querySelectorAll('.synergy-badge').forEach(btn => {
@@ -5363,15 +5550,17 @@
       html += `<div class="tooltip-line${c >= 2 ? ' active' : ' inactive'}">${c >= 2 ? icon('check','ic-check') + ' ACTIVE' : icon('lock','ic-lock') + ' LOCKED'} — Owning 2+ scales each ${info.label} relic's own effects (currently x${mult.toFixed(2)}).</div>`;
       return html;
     }
-    const maxCount = tiers[tiers.length - 1].count;
+    const maxCount = getTierRequiredCount(tiers[tiers.length - 1]);
     let html = `<div class="tooltip-title">${icon(info.icon, 'ic-'+tag)} ${info.label} (${c}/${maxCount})</div>`;
     tiers.forEach(tier => {
-      const active = c >= tier.count;
-      html += `<div class="tooltip-line ${active ? 'active' : 'inactive'}">${active ? icon('check','ic-check') + ' ACTIVE' : icon('lock','ic-lock') + ' LOCKED'} — (${tier.count}) ${tier.label}: ${tier.desc}</div>`;
+      const need = getTierRequiredCount(tier);
+      const active = c >= need;
+      html += `<div class="tooltip-line ${active ? 'active' : 'inactive'}">${active ? icon('check','ic-check') + ' ACTIVE' : icon('lock','ic-lock') + ' LOCKED'} — (${need}) ${tier.label}: ${tier.desc}</div>`;
     });
-    const next = tiers.find(t => c < t.count);
+    const next = tiers.find(t => c < getTierRequiredCount(t));
     if(next){
-      html += `<div class="tooltip-next">Next at ${next.count}: ${next.label} (need ${next.count - c} more)</div>`;
+      const need = getTierRequiredCount(next);
+      html += `<div class="tooltip-next">Next at ${need}: ${next.label} (need ${need - c} more)</div>`;
     } else {
       html += `<div class="tooltip-next">${icon('sparkle','ic-amber')} All tiers unlocked!</div>`;
     }
@@ -5459,10 +5648,10 @@
       const tiers = TAG_TIERS[t];
       const c = tagCounts[t] || 0;
       if(tiers){
-        const active = tiers.slice().reverse().find(ti => c >= ti.count);
-        const next = tiers.find(ti => c < ti.count);
-        if(active) html += `<div class="${cls} active">${icon('check','ic-check')} ${info.label} Tier (${active.count}) ACTIVE — ${active.desc}</div>`;
-        if(next) html += `<div class="${cls} inactive">${icon('lock','ic-lock')} Next ${info.label} Tier at ${next.count}: ${next.label} (${c}/${next.count})</div>`;
+        const active = tiers.slice().reverse().find(ti => c >= getTierRequiredCount(ti));
+        const next = tiers.find(ti => c < getTierRequiredCount(ti));
+        if(active) html += `<div class="${cls} active">${icon('check','ic-check')} ${info.label} Tier (${getTierRequiredCount(active)}) ACTIVE — ${active.desc}</div>`;
+        if(next) html += `<div class="${cls} inactive">${icon('lock','ic-lock')} Next ${info.label} Tier at ${getTierRequiredCount(next)}: ${next.label} (${c}/${getTierRequiredCount(next)})</div>`;
       } else {
         const mult = getSynergyMult(t);
         html += c >= 2
@@ -5522,7 +5711,7 @@
       <div class="tooltip-title">${icon(c.icon)} ${c.name}</div>
       ${rareLine}
       <div class="tooltip-desc">${c.desc}</div>
-      <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')} &nbsp;·&nbsp; Recharge: ${(c.cooldown || 0).toFixed(1)}s</div>
+      <div class="tooltip-line">Owned: ${owned} &nbsp;·&nbsp; Shop Price: ${cost} ${icon('coin','ic-gold')} &nbsp;·&nbsp; Recharge: ${getCharmMaxCooldown(c).toFixed(1)}s</div>
     `;
   }
 
@@ -5532,8 +5721,9 @@
     const newCount = currentCount + 1;
     if(tiers){
       for(const tier of tiers){
-        if(currentCount < tier.count && newCount >= tier.count){
-          return `${icon(info.icon, 'ic-'+tag)} ${info.label} -&gt; Activates (${tier.count}) ${tier.label}!`;
+        const need = getTierRequiredCount(tier);
+        if(currentCount < need && newCount >= need){
+          return `${icon(info.icon, 'ic-'+tag)} ${info.label} -&gt; Activates (${need}) ${tier.label}!`;
         }
       }
       return null;
@@ -5755,6 +5945,89 @@
     sanctumTree.querySelectorAll('.talent-buy').forEach(btn => {
       btn.addEventListener('click', () => buyTalent(btn.getAttribute('data-tid')));
     });
+    renderKeystones();
+  }
+  function renderKeystones(){
+    if(!keystoneSection) return;
+    keystoneSection.innerHTML = `
+      <div class="keystone-section-header">
+        <div class="keystone-section-title">${icon('sparkle','ic-amber')} KEYSTONE MASTERY</div>
+        <div class="keystone-section-sub">Mutually exclusive playstyles. Buy with shards, then equip only one. Unequip anytime from the Sanctum.</div>
+      </div>
+      <div class="keystone-grid"></div>
+    `;
+    const grid = keystoneSection.querySelector('.keystone-grid');
+    TALENT_PATHS.forEach(path => {
+      const col = document.createElement('div');
+      col.className = 'keystone-col';
+      col.innerHTML = '<div class="keystone-col-label">' + path.name + '</div>';
+      KEYSTONES.filter(k => k.path === path.id).forEach(k => {
+        const owned = isKeystoneUnlocked(k.id);
+        const active = hasKeystone(k.id);
+        const canBuy = !owned && meta.manaShards >= k.cost;
+        let stateCls = ' locked';
+        if(active) stateCls = ' active';
+        else if(owned) stateCls = ' owned';
+        else if(canBuy) stateCls = ' available';
+        const node = document.createElement('div');
+        node.className = 'keystone-node' + stateCls;
+        let action = '';
+        if(active){
+          action = '<button class="talent-buy" data-kact="unequip" data-kid="' + k.id + '">UNEQUIP</button>';
+        } else if(owned){
+          action = '<button class="talent-buy" data-kact="equip" data-kid="' + k.id + '">EQUIP</button>';
+        } else {
+          action = '<button class="talent-buy" data-kact="buy" data-kid="' + k.id + '"' + (canBuy ? '' : ' disabled') + '>BUY ' + k.cost + '</button>';
+        }
+        node.innerHTML = `
+          ${owned || canBuy ? '' : '<div class="talent-lock">' + icon('lock') + '</div>'}
+          <div class="keystone-hex-wrap"><div class="keystone-hex">${icon(k.icon)}</div></div>
+          <div class="keystone-name">${k.name}</div>
+          ${active ? '<div class="keystone-active-tag">[ACTIVE]</div>' : ''}
+          <div class="keystone-up">▲ ${k.upside}</div>
+          <div class="keystone-down">▼ ${k.drawback}</div>
+          <div class="keystone-actions">${action}</div>
+        `;
+        col.appendChild(node);
+      });
+      grid.appendChild(col);
+    });
+    keystoneSection.querySelectorAll('[data-kact]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const act = btn.getAttribute('data-kact');
+        const id = btn.getAttribute('data-kid');
+        if(act === 'buy') buyKeystone(id);
+        else if(act === 'equip') equipKeystone(id);
+        else if(act === 'unequip') unequipKeystone();
+      });
+    });
+  }
+  function refreshKeystoneSurfaces(){
+    renderSanctum();
+    if(!state) return;
+    updateUI();
+    if(state.phase === 'shop') renderShop();
+  }
+  function buyKeystone(id){
+    const k = getKeystoneById(id);
+    if(!k || isKeystoneUnlocked(id)) return;
+    if(meta.manaShards < k.cost) return;
+    meta.manaShards -= k.cost;
+    meta.unlockedKeystones[id] = true;
+    saveMeta();
+    sfxBuy();
+    refreshKeystoneSurfaces();
+  }
+  function equipKeystone(id){
+    if(!isKeystoneUnlocked(id)) return;
+    meta.activeKeystone = id;
+    saveMeta();
+    refreshKeystoneSurfaces();
+  }
+  function unequipKeystone(){
+    meta.activeKeystone = null;
+    saveMeta();
+    refreshKeystoneSurfaces();
   }
   function buyTalent(id){
     const talent = getTalentById(id);
@@ -6325,6 +6598,21 @@
     if(!isPaused && state && state.phase === 'brewing'){
       const mps = getManaPerSecond();
       if(mps > 0) addMana(mps * dt, true);
+      if(hasKeystone('aethericSiphon') && mps > 0){
+        state.siphonCritClock = (state.siphonCritClock || 0) + dt;
+        while(state.siphonCritClock >= 1){
+          state.siphonCritClock -= 1;
+          if(Math.random() < 0.10){
+            const surge = getRawClickPower() * getCritSurgeMult();
+            if(surge > 0){
+              addMana(surge, true);
+              spawnFloatNumber('CRITICAL!', 'crit', 50, 18);
+              triggerScreenShake();
+              sfxClick(true);
+            }
+          }
+        }
+      }
 
       if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
       if(state.moltenEmberTimer > 0) state.moltenEmberTimer = Math.max(0, state.moltenEmberTimer - dt);
@@ -6335,7 +6623,7 @@
           }
         });
       }
-      if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, Math.min(MAX_FREEZE_TIME, state.timeFreezeTimer - dt));
+      if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, Math.min(getMaxFreezeTime(), state.timeFreezeTimer - dt));
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
 
@@ -6368,7 +6656,7 @@
       if(state.phase === 'brewing'){
         if(state.mana >= state.target){
           state.surplusTimer = (state.surplusTimer || 0) + dt;
-          if(state.surplusTimer >= SURPLUS_AUTO_FINISH){
+          if(state.surplusTimer >= getSurplusAutoFinish()){
             succeedRound();
           }
         } else {
@@ -6384,6 +6672,7 @@
             timerDt *= (1 - (getRelicStats('rimeCaliper').slowPct || 0.25));
           }
           if(hasAffix('rapidBoil')) timerDt *= 1.3;
+          if(hasKeystone('volatileOvercharge')) timerDt *= 1.25;
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
@@ -6438,6 +6727,17 @@
       if(!affix) return;
       const html = '<div class="tooltip-title">' + affix.name + '</div><div class="tooltip-body">' + affix.desc + '</div>';
       toggleTooltip(affixBanner, html, 'affix-' + affix.id);
+    });
+  }
+  if(keystoneHud){
+    keystoneHud.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ks = getKeystoneById(meta && meta.activeKeystone);
+      if(!ks) return;
+      const html = '<div class="tooltip-title">' + icon(ks.icon, 'ic-amber') + ' ' + ks.name + ' [ACTIVE]</div>'
+        + '<div class="tooltip-line active">▲ ' + ks.upside + '</div>'
+        + '<div class="tooltip-line inactive">▼ ' + ks.drawback + '</div>';
+      toggleTooltip(keystoneHud, html, 'keystone-' + ks.id);
     });
   }
   startBtn.addEventListener('click', startRun);
