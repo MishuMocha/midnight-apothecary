@@ -252,6 +252,20 @@
     box-shadow: inset 0 1px 0 rgba(255,160,175,0.6), 0 0 18px rgba(184, 13, 36, 0.95);
     animation: timerDangerGlow 0.35s ease-in-out infinite alternate;
   }
+  #timerFill.frozen,
+  #timerFill.frozen.low{
+    background: linear-gradient(180deg, #c8f7ff 0%, #6ed4f2 42%, #2a8bb8 78%, #145a7a 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(10,40,60,0.65), 0 0 12px 3px rgba(140, 230, 255, 0.75);
+    animation: none;
+  }
+  #timerFill.frozen::before,
+  #timerFill.frozen::after{
+    animation-play-state: paused;
+    background:
+      radial-gradient(ellipse 50px 10px at 25% 45%, rgba(210, 250, 255, 0.55) 0%, transparent 75%),
+      linear-gradient(90deg, transparent 0%, rgba(160, 230, 255, 0.35) 45%, rgba(230, 255, 255, 0.5) 55%, transparent 100%);
+    mix-blend-mode: screen;
+  }
   @keyframes timerDangerGlow{
     0%{ filter: brightness(1) drop-shadow(0 0 4px #b80d24); }
     100%{ filter: brightness(1.35) drop-shadow(0 0 12px #ff2045); }
@@ -1038,7 +1052,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.13</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">ALPHA v0.10.14</div>
     <p>Tap the cauldron to brew Mana Essence and fulfil the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early. Spend Gold on rare Relics between rounds.</p>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
   </div>
@@ -1081,7 +1095,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.13</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Alpha v0.10.14</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -1127,7 +1141,13 @@
         <button class="subpanel-close" id="closeChangelogBtn">✕ CLOSE</button>
       </div>
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.13 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.14 (Latest)</div>
+        <ul class="changelog-list">
+          <li>The Order Deadline bar now turns icy whenever the clock is frozen, and the Time Freeze charm only pulses when you actually use it — Frost relics no longer light it up.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Alpha v0.10.13</div>
         <ul class="changelog-list">
           <li>Winter's Grasp no longer locks the deadline forever when you tap very quickly — each Critical Surge still chills the clock, but rapid crits can't keep it frozen.</li>
         </ul>
@@ -1580,6 +1600,7 @@
       consumables: consumables,
       stirFrenzyTimer: 0,
       timeFreezeTimer: 0,
+      activeCharmTimeFreezeTimer: 0,
       wintersGraspCooldown: 0,
       unstableBrewClock: 0,
       discoveredRelics: [],
@@ -1948,7 +1969,7 @@
 
   function getConsumableBuffTimer(id){
     if(id === 'stirFrenzy') return state.stirFrenzyTimer || 0;
-    if(id === 'timeFreeze') return state.timeFreezeTimer || 0;
+    if(id === 'timeFreeze') return state.activeCharmTimeFreezeTimer || 0;
     return 0;
   }
 
@@ -2208,6 +2229,7 @@
     const timerPct = clamp((state.timer/getRoundTime())*100, 0, 100);
     timerFill.style.width = timerPct + '%';
     timerFill.classList.toggle('low', state.timer < getRoundTime()*0.25);
+    timerFill.classList.toggle('frozen', (state.timeFreezeTimer || 0) > 0);
     timerLabelText.textContent = Math.max(0,state.timer).toFixed(1) + 's';
 
     if(state.phase === 'brewing' && state.quotaMet){
@@ -2400,6 +2422,7 @@
       spawnFloatNumber('STIR FRENZY!', 'crit', 50, 22);
     } else if(id === 'timeFreeze'){
       state.timeFreezeTimer = 3;
+      state.activeCharmTimeFreezeTimer = 3;
       spawnFloatNumber('TIME FROZEN!', 'crit', 50, 22);
     } else if(id === 'goldenDrop'){
       const bonus = Math.floor(state.target * 0.15);
@@ -2451,6 +2474,7 @@
     state.quotaMet = false;
     state.stirFrenzyTimer = 0;
     state.timeFreezeTimer = 0;
+    state.activeCharmTimeFreezeTimer = 0;
     state.wintersGraspCooldown = 0;
     state.unstableBrewClock = 0;
     state.glacialMilestones = { q25:false, q50:false, q75:false };
@@ -3121,6 +3145,7 @@
 
       if(state.stirFrenzyTimer > 0) state.stirFrenzyTimer = Math.max(0, state.stirFrenzyTimer - dt);
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, state.timeFreezeTimer - dt);
+      if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
 
       if(hasRelic('unstableBrew')){
