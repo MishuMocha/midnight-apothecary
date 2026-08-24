@@ -940,6 +940,152 @@
     50%{ filter: contrast(1.14) saturate(1.2) drop-shadow(0 0 18px rgba(255,48,80,0.95)); }
   }
 
+  /* ---------- BOSS PHASE HAZARDS ---------- */
+  .boss-gilded-seal{
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    z-index: 15;
+    pointer-events: auto;
+    cursor: pointer;
+    background: radial-gradient(circle, rgba(120, 20, 30, 0.96) 0%, rgba(40, 10, 15, 0.98) 100%);
+    border: 3px solid #ffd043;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), inset -1px -1px 0 rgba(0,0,0,0.6), 0 0 16px rgba(255, 77, 106, 0.8), 0 0 24px rgba(255, 208, 67, 0.5);
+    padding: 10px 14px;
+    text-align: center;
+    clip-path: polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+    animation: bossSealFloat 1.2s ease-in-out infinite alternate;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  @keyframes bossSealFloat{
+    0%{ transform: translate(-50%, -50%) scale(0.98); box-shadow: 0 0 12px rgba(255, 77, 106, 0.6); }
+    100%{ transform: translate(-50%, -50%) scale(1.03); box-shadow: 0 0 22px rgba(255, 77, 106, 0.95), 0 0 14px rgba(255, 208, 67, 0.7); }
+  }
+  .boss-gilded-seal.hit-flash{
+    animation: bossSealHit 0.16s ease-out;
+  }
+  @keyframes bossSealHit{
+    0%{ transform: translate(-50%, -50%) scale(1.15); filter: brightness(1.7); }
+    100%{ transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
+  }
+  .boss-seal-icon{
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+  .boss-seal-icon .icon{ width: 28px; height: 28px; filter: drop-shadow(0 0 6px #ff4d6a); }
+  .boss-seal-text{
+    font-size: 0.65rem;
+    font-weight: bold;
+    color: #ffe37a;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(255, 208, 67, 0.7);
+  }
+  .boss-seal-sub{
+    font-size: 0.52rem;
+    color: #ff9eaf;
+    margin: 2px 0 4px;
+    letter-spacing: 0.3px;
+  }
+  .boss-seal-counter{
+    font-size: 0.625rem;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(255, 77, 106, 0.4);
+    border: 1px solid #ff4d6a;
+    padding: 2px 8px;
+    display: inline-block;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.25);
+  }
+
+  /* Frost Baron Ice Lock */
+  #consumablesPanel.boss-ice-locked{
+    border-color: #8fd0f5;
+    box-shadow: inset 2px 2px 0 var(--px-light), inset -2px -2px 0 var(--px-dark), 0 0 16px rgba(143, 208, 245, 0.7);
+  }
+  .boss-ice-overlay{
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    pointer-events: auto;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgba(80, 160, 220, 0.75) 0%, rgba(30, 80, 140, 0.8) 100%);
+    backdrop-filter: blur(2px);
+    border: 3px solid #8fd0f5;
+    box-shadow: inset 0 0 16px rgba(143, 208, 245, 0.7), 0 0 14px rgba(143, 208, 245, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    clip-path: polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+    animation: bossIcePulse 1.5s ease-in-out infinite alternate;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  @keyframes bossIcePulse{
+    0%{ filter: brightness(0.95); box-shadow: inset 0 0 12px rgba(143, 208, 245, 0.5); }
+    100%{ filter: brightness(1.15); box-shadow: inset 0 0 22px rgba(220, 245, 255, 0.85), 0 0 18px rgba(143, 208, 245, 0.8); }
+  }
+  .boss-ice-overlay.hit-flash{
+    animation: bossIceHit 0.16s ease-out;
+  }
+  @keyframes bossIceHit{
+    0%{ filter: brightness(2) contrast(1.2); }
+    100%{ filter: brightness(1) contrast(1); }
+  }
+  .boss-ice-title{
+    font-size: 0.6875rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 10px #8fd0f5, 0 0 4px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .boss-ice-title .icon{ width: 18px; height: 18px; color: #d0f0ff; }
+  .boss-ice-sub{
+    font-size: 0.55rem;
+    color: #e6f6ff;
+    margin: 2px 0 4px;
+    letter-spacing: 0.3px;
+    text-shadow: 0 0 4px #000;
+  }
+  .boss-ice-counter{
+    font-size: 0.625rem;
+    font-weight: bold;
+    color: #8fd0f5;
+    background: rgba(10, 30, 60, 0.85);
+    border: 1px solid #8fd0f5;
+    padding: 2px 8px;
+    display: inline-block;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+  }
+
+  /* Midnight Eclipse Hazard Notice */
+  .boss-eclipse-notice{
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    background: rgba(30, 8, 45, 0.95);
+    border: 2px solid #c186ff;
+    box-shadow: 0 0 14px rgba(193, 134, 255, 0.7);
+    padding: 4px 10px;
+    font-size: 0.58rem;
+    color: #ffe37a;
+    letter-spacing: 0.4px;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: bossEclipsePulse 1s ease-in-out infinite alternate;
+  }
+  @keyframes bossEclipsePulse{
+    0%{ border-color:#c186ff; box-shadow: 0 0 8px rgba(193, 134, 255, 0.5); }
+    100%{ border-color:#ff5d6c; box-shadow: 0 0 16px rgba(255, 93, 108, 0.8); }
+  }
+
   /* Align the animated liquid within the cauldron rim */
   #liquidPixel {
     position: absolute;
@@ -1346,6 +1492,83 @@
     padding:20px 24px 16px;
     text-align:left;
   }
+  /* Boss Intel Forecast Banner inside Shop */
+  #bossForecastBanner{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:10px 14px;
+    background: linear-gradient(135deg, rgba(60, 10, 20, 0.95) 0%, rgba(35, 12, 28, 0.96) 55%, rgba(55, 30, 8, 0.95) 100%);
+    border: 2px solid #ff4d6a;
+    box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 10px rgba(255, 77, 106, 0.4);
+    animation: bossForecastPulse 2s ease-in-out infinite alternate;
+    flex-shrink:0;
+  }
+  @keyframes bossForecastPulse{
+    0%{
+      border-color:#ff4d6a;
+      box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 8px rgba(255, 77, 106, 0.35);
+    }
+    100%{
+      border-color:#ffd043;
+      box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 16px rgba(255, 77, 106, 0.65), 0 0 10px rgba(255, 208, 67, 0.35);
+    }
+  }
+  .boss-forecast-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    border-bottom:1px dashed rgba(255, 208, 67, 0.25);
+    padding-bottom:6px;
+  }
+  .boss-forecast-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.6875rem;
+    color:#ff5d6c;
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-shadow: 0 0 6px rgba(255, 77, 106, 0.5);
+  }
+  .boss-forecast-tag .icon{ width:16px; height:16px; flex-shrink:0; }
+  .boss-forecast-prep{
+    font-size:0.625rem;
+    color:#ffe37a;
+    letter-spacing:0.5px;
+    text-shadow: 0 0 8px rgba(255, 208, 67, 0.6);
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .boss-forecast-body{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .boss-forecast-title{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.8125rem;
+    color:#ffe37a;
+    font-weight:bold;
+    white-space:nowrap;
+    text-shadow: 0 0 8px rgba(255, 77, 106, 0.65);
+  }
+  .boss-forecast-title .icon{ width:22px; height:22px; flex-shrink:0; }
+  .boss-forecast-mandate{
+    font-size:0.6875rem;
+    line-height:1.55;
+    color:var(--text-light);
+    flex:1 1 280px;
+  }
+  .boss-forecast-mandate strong{
+    color:#ff9eaf;
+  }
   .shop-header{
     display:grid;
     grid-template-columns:minmax(0, 1fr) auto;
@@ -1524,6 +1747,19 @@
       gap:12px;
       padding:12px 12px 16px;
     }
+    #bossForecastBanner{
+      padding:8px 10px;
+      gap:6px;
+    }
+    .boss-forecast-header{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:4px;
+    }
+    .boss-forecast-tag{ font-size:0.625rem; }
+    .boss-forecast-prep{ font-size:0.5625rem; line-height:1.45; }
+    .boss-forecast-title{ font-size:0.75rem; }
+    .boss-forecast-mandate{ font-size:0.625rem; line-height:1.5; }
     .shop-header{ gap:10px; }
     .shop-header-copy h2{ font-size:0.8rem; margin-bottom:6px; }
     .shop-header-copy p{ font-size:0.58rem; line-height:1.55; }
@@ -2962,6 +3198,15 @@
         <img id="cauldronImg" src="cauldron.png?v=4" alt="cauldron" draggable="false" />
         <canvas id="cauldronFxCanvas"></canvas>
         <div id="numbersLayer"></div>
+        <div id="bossGildedSeal" class="boss-gilded-seal hidden">
+          <div class="boss-seal-icon"><svg class="icon ic-danger"><use href="#icon-skull"></use></svg></div>
+          <div class="boss-seal-text">GRAND INQUISITOR'S SEAL</div>
+          <div class="boss-seal-sub">TAP 5 TIMES TO DISPEL!</div>
+          <div class="boss-seal-counter"><span id="bossSealHits">5</span> HITS LEFT</div>
+        </div>
+      </div>
+      <div id="bossEclipseNotice" class="boss-eclipse-notice hidden">
+        <svg class="icon ic-moon"><use href="#icon-moon"></use></svg> MIDNIGHT ECLIPSE: TIME WARP ACTIVE (+50% DRAIN) — USE ANY CHARM TO DISPEL! (<span id="bossEclipseTimer">6.0</span>s)
       </div>
     </div>
     <div id="relicTray"></div>
@@ -2983,6 +3228,13 @@
   <div id="consumablesPanel" class="pixel-panel">
     <div class="consumable-label"><svg class="icon ic-amber"><use href="#icon-flask"></use></svg> INGREDIENT CHARMS</div>
     <div id="consumableButtons" class="consumable-row"></div>
+    <div id="bossIceOverlay" class="boss-ice-overlay hidden">
+      <div class="boss-ice-inner">
+        <div class="boss-ice-title"><svg class="icon ic-frost"><use href="#icon-frost"></use></svg> FROST BARON'S ICE LOCK</div>
+        <div class="boss-ice-sub">TAP 4 TIMES TO SHATTER THE ICE!</div>
+        <div class="boss-ice-counter"><span id="bossIceHits">4</span> HITS LEFT</div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -2991,7 +3243,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.4.6</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.6</div>
     <p>Tap the cauldron to brew Mana Essence and fulfill the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -3015,6 +3267,8 @@
         <div id="synergySummary"></div>
       </div>
     </header>
+
+    <div id="bossForecastBanner" class="boss-forecast-banner hidden"></div>
 
     <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> RELIC PEDESTAL</div>
     <div id="shopCards" class="shop-vault"></div>
@@ -3048,7 +3302,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.4.6</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.6</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -3128,7 +3382,19 @@
       </div>
       <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
       <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.6 (Latest)</div>
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.6 (Latest)</div>
+        <ul class="changelog-list">
+          <li>Guild Boss encounters now unleash mid-round reactive phase hazards at 50% quota — shatter the Frost Baron's ice lock on your charms, tap and break the Grand Inquisitor's gilded seal to restore cauldron tapping power, and consume any charm to dispel the Midnight Eclipse's time warp.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.5</div>
+        <ul class="changelog-list">
+          <li>The apothecary shop now scans ahead and displays an Upcoming Boss Intel Warning banner before every Guild Boss encounter, revealing the incoming boss mandate so you can prepare relics and charms.</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.6</div>
         <ul class="changelog-list">
           <li>The between-round shop on a phone now scrolls as a full page, so relic cards stay large enough to read.</li>
         </ul>
@@ -4240,6 +4506,11 @@
       currentAffix: null,
       isBossOrder: false,
       lastAffix: null,
+      bossHazardActive: false,
+      bossHazardType: null,
+      bossHazardHitsNeeded: 0,
+      bossHazardTriggered: false,
+      bossHazardTimer: 0,
     };
   }
 
@@ -4576,6 +4847,7 @@
   const shopTitle = $('shopTitle');
   const shopSummary = $('shopSummary');
   const shopGoldValue = $('shopGoldValue');
+  const bossForecastBanner = $('bossForecastBanner');
   const shopCards = $('shopCards');
   const rerollBtn = $('rerollBtn');
   const continueBtn = $('continueBtn');
@@ -4601,6 +4873,13 @@
   const bgmVolumeValue = $('bgmVolumeValue');
   const sfxVolumeValue = $('sfxVolumeValue');
   const consumableButtons = $('consumableButtons');
+  const consumablesPanel = $('consumablesPanel');
+  const bossGildedSeal = $('bossGildedSeal');
+  const bossSealHits = $('bossSealHits');
+  const bossIceOverlay = $('bossIceOverlay');
+  const bossIceHits = $('bossIceHits');
+  const bossEclipseNotice = $('bossEclipseNotice');
+  const bossEclipseTimer = $('bossEclipseTimer');
   const consumableShop = $('consumableShop');
   const synergySummary = $('synergySummary');
   const mainSynergyRow = $('mainSynergyRow');
@@ -5444,6 +5723,7 @@
     if(hasAffix('denseLiquid') || hasKeystone('pyroKineticism')) bubbler = 0;
     else if(hasAffix('spectralInterference')) bubbler *= 2;
     if(hasKeystone('aethericSiphon')) bubbler *= 3;
+    if(state.bossHazardActive && state.bossHazardType === 'frostBaron') bubbler *= 0.5;
     let mps = bubbler;
     const whisk = getRelicStats('whisk');
     if(whisk.whiskPct){
@@ -6419,6 +6699,125 @@
   /* =========================================================
      CORE GAMEPLAY
   ========================================================= */
+  const BOSS_HAZARD_HITS = { frostBaron:4, grandInquisitor:5 };
+  const BOSS_ECLIPSE_HAZARD_SEC = 6;
+
+  function isBossHazard(type){
+    return !!(state && state.bossHazardActive && state.bossHazardType === type);
+  }
+  function flashHazardEl(el){
+    if(!el) return;
+    el.classList.remove('hit-flash');
+    void el.offsetWidth;
+    el.classList.add('hit-flash');
+    setTimeout(function(){
+      if(el) el.classList.remove('hit-flash');
+    }, 180);
+  }
+  function syncBossHazardPresentation(){
+    const active = !!(state && state.bossHazardActive);
+    const type = active ? state.bossHazardType : null;
+    if(consumablesPanel) consumablesPanel.classList.toggle('boss-ice-locked', type === 'frostBaron');
+    if(bossIceOverlay){
+      bossIceOverlay.classList.toggle('hidden', type !== 'frostBaron');
+      if(type !== 'frostBaron') bossIceOverlay.classList.remove('hit-flash');
+    }
+    if(bossIceHits && type === 'frostBaron') bossIceHits.textContent = String(Math.max(0, state.bossHazardHitsNeeded || 0));
+    if(bossGildedSeal){
+      bossGildedSeal.classList.toggle('hidden', type !== 'grandInquisitor');
+      if(type !== 'grandInquisitor') bossGildedSeal.classList.remove('hit-flash');
+    }
+    if(bossSealHits && type === 'grandInquisitor') bossSealHits.textContent = String(Math.max(0, state.bossHazardHitsNeeded || 0));
+    if(bossEclipseNotice) bossEclipseNotice.classList.toggle('hidden', type !== 'midnightEclipse');
+    if(bossEclipseTimer && type === 'midnightEclipse'){
+      bossEclipseTimer.textContent = Math.max(0, state.bossHazardTimer || 0).toFixed(1);
+    }
+  }
+  function clearBossHazardOverlays(){
+    if(consumablesPanel) consumablesPanel.classList.remove('boss-ice-locked');
+    if(bossIceOverlay){
+      bossIceOverlay.classList.add('hidden');
+      bossIceOverlay.classList.remove('hit-flash');
+    }
+    if(bossGildedSeal){
+      bossGildedSeal.classList.add('hidden');
+      bossGildedSeal.classList.remove('hit-flash');
+    }
+    if(bossEclipseNotice) bossEclipseNotice.classList.add('hidden');
+    if(bossIceHits) bossIceHits.textContent = '4';
+    if(bossSealHits) bossSealHits.textContent = '5';
+    if(bossEclipseTimer) bossEclipseTimer.textContent = BOSS_ECLIPSE_HAZARD_SEC.toFixed(1);
+  }
+  function resetBossHazardState(){
+    if(state){
+      state.bossHazardActive = false;
+      state.bossHazardType = null;
+      state.bossHazardHitsNeeded = 0;
+      state.bossHazardTriggered = false;
+      state.bossHazardTimer = 0;
+    }
+    clearBossHazardOverlays();
+  }
+  function dispelBossHazard(){
+    if(!state || !state.bossHazardActive) return;
+    state.bossHazardActive = false;
+    state.bossHazardHitsNeeded = 0;
+    state.bossHazardTimer = 0;
+    syncBossHazardPresentation();
+    spawnFloatNumber('HAZARD CLEARED!', 'crit', 50, 18);
+    sfxQuotaMet();
+  }
+  function expireBossHazard(){
+    if(!state || !state.bossHazardActive) return;
+    state.bossHazardActive = false;
+    state.bossHazardHitsNeeded = 0;
+    state.bossHazardTimer = 0;
+    syncBossHazardPresentation();
+  }
+  function tryTriggerBossHazard(){
+    if(!state || !state.isBossOrder || state.bossHazardTriggered) return;
+    if(state.phase !== 'brewing') return;
+    if(state.mana < (state.target || 1) * 0.50) return;
+    const type = state.currentAffix;
+    if(type !== 'frostBaron' && type !== 'grandInquisitor' && type !== 'midnightEclipse') return;
+    state.bossHazardTriggered = true;
+    state.bossHazardActive = true;
+    state.bossHazardType = type;
+    state.bossHazardHitsNeeded = BOSS_HAZARD_HITS[type] || 0;
+    state.bossHazardTimer = (type === 'midnightEclipse') ? BOSS_ECLIPSE_HAZARD_SEC : 0;
+    syncBossHazardPresentation();
+    const warn = type === 'frostBaron'
+      ? 'ICE LOCK! Charms frozen!'
+      : (type === 'grandInquisitor' ? "GILDED SEAL! Taps sealed!" : 'TIME WARP! Deadline +50%!');
+    spawnFloatNumber(warn, 'danger', 50, 16);
+    triggerScreenShake();
+    sfxRupture();
+  }
+  function hitBossHazard(type){
+    if(!state || state.phase !== 'brewing' || isPaused) return;
+    if(!isBossHazard(type)) return;
+    if(type !== 'frostBaron' && type !== 'grandInquisitor') return;
+    state.bossHazardHitsNeeded = Math.max(0, (state.bossHazardHitsNeeded || 0) - 1);
+    flashHazardEl(type === 'frostBaron' ? bossIceOverlay : bossGildedSeal);
+    syncBossHazardPresentation();
+    spawnFloatNumber('HIT! ' + state.bossHazardHitsNeeded + ' left', 'danger', type === 'frostBaron' ? 50 : 50, type === 'frostBaron' ? 82 : 28);
+    if(state.bossHazardHitsNeeded <= 0) dispelBossHazard();
+  }
+  function onBossIceHit(e){
+    if(e){
+      if(e.preventDefault) e.preventDefault();
+      if(e.stopPropagation) e.stopPropagation();
+    }
+    hitBossHazard('frostBaron');
+  }
+  function onBossSealHit(e){
+    if(e){
+      if(e.preventDefault) e.preventDefault();
+      if(e.stopPropagation) e.stopPropagation();
+    }
+    hitBossHazard('grandInquisitor');
+  }
+
   function addMana(amount, silent){
     amount *= getAlchemicalMasteryMult();
     state.mana += amount;
@@ -6426,6 +6825,7 @@
     if(state.mana > state.peakMana) state.peakMana = state.mana;
     if(hasRelic('glacialCore')) checkGlacialMilestones();
     tryMagmaEruption();
+    tryTriggerBossHazard();
     if(state.mana >= state.target){
       if(!state.quotaMet){
         state.quotaMet = true;
@@ -6620,6 +7020,11 @@
       }
     }
 
+    if(isBossHazard('grandInquisitor')){
+      power = 0;
+      crit = false;
+    }
+
     addMana(power, true);
 
     if(hasRelic('phantomLadle') && power > 0){
@@ -6693,7 +7098,11 @@
     const playSfx = (now - lastTapSfxAt) >= TAP_SFX_MIN_MS;
     if(showFx){
       lastTapFxAt = now;
-      spawnFloatNumber('+' + fmt(power * getAlchemicalMasteryMult()), crit ? 'crit' : '', xPct, yPct);
+      if(isBossHazard('grandInquisitor')){
+        spawnFloatNumber('SEALED!', 'danger', xPct, yPct);
+      } else {
+        spawnFloatNumber('+' + fmt(power * getAlchemicalMasteryMult()), crit ? 'crit' : '', xPct, yPct);
+      }
       if(crit) spawnFloatNumber('CRITICAL!', 'crit', xPct, yPct-8);
       if(hasRelic('bellows') && (state.bellowsHeatStacks || 0) >= 3) spawnCinderFlames(1);
       cauldron.classList.remove('squish');
@@ -6754,6 +7163,7 @@
     if(getCharmCooldown(id) > 0) return;
     state.consumables[id]--;
     state.charmCooldowns[id] = getCharmMaxCooldown(charm);
+    if(isBossHazard('midnightEclipse')) dispelBossHazard();
     if(id === 'stirFrenzy'){
       state.stirFrenzyTimer = 4;
       spawnFloatNumber("BERSERKER'S FANG!", 'crit', 50, 22);
@@ -6850,6 +7260,7 @@
     restoreVisualSettings(visualPrefs);
     state.phase = 'brewing';
     state.gold = getTalentLevel('merchantsPurse') * 5;
+    resetBossHazardState();
     beginOrder();
     sanctumReturnTo = null;
     closeSanctumConfirm(false);
@@ -6891,6 +7302,7 @@
     state.siphonCritClock = 0;
     state.echoBank = 0;
     state.echoTimer = 0;
+    resetBossHazardState();
     if(hasRelic('starter')){
       state.mana = Math.floor(state.target * (getRelicStats('starter').quotaPct || 0.10));
       if(state.mana >= state.target){ state.quotaMet = true; }
@@ -6905,6 +7317,7 @@
     if(state.phase !== 'brewing') return;
     stopStirHold();
     closePauseMenu();
+    resetBossHazardState();
     state.phase = 'roundEnd';
     const surplus = Math.max(0, state.mana - state.target);
     let goldEarned = getSurplusGold(surplus);
@@ -6946,6 +7359,7 @@
   function failRound(){
     stopStirHold();
     closePauseMenu();
+    resetBossHazardState();
     state.phase = 'gameover';
     ensureShardPayout();
     sfxFail();
@@ -7032,6 +7446,27 @@
 
     if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
     renderSynergyBadges(synergySummary);
+
+    const nextBoss = (state && state.round) ? getBossDefForRound(state.round + 1) : null;
+    if(bossForecastBanner){
+      if(nextBoss){
+        const bossIcon = getAffixIconName(nextBoss) || 'skull';
+        bossForecastBanner.classList.remove('hidden');
+        bossForecastBanner.innerHTML = `
+          <div class="boss-forecast-header">
+            <div class="boss-forecast-tag">${icon('skull', 'ic-danger')} UPCOMING BOSS INTEL</div>
+            <div class="boss-forecast-prep">${icon('warning', 'ic-amber')} NEXT ROUND: GUILD BOSS ENCOUNTER — Prepare your relics and charms!</div>
+          </div>
+          <div class="boss-forecast-body">
+            <div class="boss-forecast-title">${icon(bossIcon, 'ic-danger')} <span>${nextBoss.name}</span></div>
+            <div class="boss-forecast-mandate"><strong>MANDATE:</strong> ${nextBoss.desc}</div>
+          </div>
+        `;
+      } else {
+        bossForecastBanner.classList.add('hidden');
+        bossForecastBanner.innerHTML = '';
+      }
+    }
 
     if(state.shopOffers.length === 0){
       const msg = document.createElement('p');
@@ -8368,6 +8803,21 @@
         state.currentAffix = null;
         state.isBossOrder = false;
       }
+      if(typeof state.bossHazardActive !== 'boolean') state.bossHazardActive = false;
+      if(typeof state.bossHazardTriggered !== 'boolean') state.bossHazardTriggered = false;
+      if(typeof state.bossHazardHitsNeeded !== 'number') state.bossHazardHitsNeeded = 0;
+      if(typeof state.bossHazardTimer !== 'number') state.bossHazardTimer = 0;
+      if(state.bossHazardType && state.bossHazardType !== 'frostBaron' && state.bossHazardType !== 'grandInquisitor' && state.bossHazardType !== 'midnightEclipse'){
+        state.bossHazardType = null;
+        state.bossHazardActive = false;
+      }
+      if(!state.isBossOrder){
+        state.bossHazardActive = false;
+        state.bossHazardType = null;
+        state.bossHazardHitsNeeded = 0;
+        state.bossHazardTriggered = false;
+        state.bossHazardTimer = 0;
+      }
       state.target = roundQuota(applyAffixOrderTarget(getOrderTarget(state.round || 1)));
 
       startOverlay.classList.add('hidden');
@@ -8405,6 +8855,8 @@
       updateUI();
       syncVolumeUI();
       applyVisualSettings();
+      if(state.phase === 'brewing' && state.bossHazardActive) syncBossHazardPresentation();
+      else clearBossHazardOverlays();
       return true;
     } catch(e){
       console.error('Failed to load save:', e);
@@ -8474,6 +8926,11 @@
       if(state.timeFreezeTimer > 0) state.timeFreezeTimer = Math.max(0, Math.min(getMaxFreezeTime(), state.timeFreezeTimer - dt));
       if(state.activeCharmTimeFreezeTimer > 0) state.activeCharmTimeFreezeTimer = Math.max(0, state.activeCharmTimeFreezeTimer - dt);
       if(state.wintersGraspCooldown > 0) state.wintersGraspCooldown = Math.max(0, state.wintersGraspCooldown - dt);
+      if(isBossHazard('midnightEclipse')){
+        state.bossHazardTimer = Math.max(0, (state.bossHazardTimer || 0) - dt);
+        if(bossEclipseTimer) bossEclipseTimer.textContent = state.bossHazardTimer.toFixed(1);
+        if(state.bossHazardTimer <= 0) expireBossHazard();
+      }
 
       if((state.bellowsHeatTimer || 0) > 0){
         state.bellowsHeatTimer = Math.max(0, state.bellowsHeatTimer - dt);
@@ -8534,6 +8991,7 @@
           }
           if(hasAffix('rapidBoil')) timerDt *= 1.3;
           if(hasKeystone('volatileOvercharge')) timerDt *= 1.25;
+          if(isBossHazard('midnightEclipse')) timerDt *= 1.5;
           state.timer -= timerDt;
         }
         if(state.timer <= 0){
@@ -8582,6 +9040,8 @@
   ========================================================= */
   cauldron.addEventListener('pointerdown', onCauldronPointerDown);
   cauldron.addEventListener('pointermove', onCauldronHoverMove);
+  if(bossIceOverlay) bossIceOverlay.addEventListener('pointerdown', onBossIceHit);
+  if(bossGildedSeal) bossGildedSeal.addEventListener('pointerdown', onBossSealHit);
   cauldron.addEventListener('pointerup', stopStirHold);
   cauldron.addEventListener('pointerleave', stopStirHold);
   cauldron.addEventListener('pointercancel', stopStirHold);
