@@ -860,6 +860,36 @@
     border:3px solid #ffd24a;
     animation: relicGoldPulse 1.25s ease-in-out infinite;
   }
+  #relicTray .relic-badge.lv-mythic{
+    border:3px solid #ffe37a;
+    animation: relicMythicPulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes relicMythicPulse{
+    0%{
+      border-color: #ffd043;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.7),
+        inset -1px -1px 0 rgba(0,0,0,0.6),
+        0 0 10px rgba(255, 208, 67, 0.7),
+        0 0 18px rgba(193, 134, 255, 0.5);
+    }
+    50%{
+      border-color: #ff9cf0;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.9),
+        inset -1px -1px 0 rgba(0,0,0,0.6),
+        0 0 14px rgba(255, 120, 220, 0.85),
+        0 0 24px rgba(130, 210, 255, 0.65);
+    }
+    100%{
+      border-color: #ffe37a;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.8),
+        inset -1px -1px 0 rgba(0,0,0,0.6),
+        0 0 16px rgba(255, 226, 122, 0.95),
+        0 0 28px rgba(255, 160, 220, 0.7);
+    }
+  }
   #relicTray .relic-badge.corrupted.lv-1{
     border:3px solid var(--relic-bronze);
     box-shadow: inset 1px 1px 0 rgba(255,180,190,0.28), inset -1px -1px 0 rgba(0,0,0,0.55), 0 0 8px rgba(255,42,75,0.5);
@@ -871,6 +901,28 @@
   #relicTray .relic-badge.corrupted.lv-3{
     border:3px solid #ffd24a;
     animation: relicCorruptGoldPulse 1.25s ease-in-out infinite;
+  }
+  #relicTray .relic-badge.corrupted.lv-mythic{
+    border:3px solid #ff4d6a;
+    animation: relicCorruptMythicPulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes relicCorruptMythicPulse{
+    0%{
+      border-color: #ff4d6a;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,200,220,0.7),
+        inset -1px -1px 0 rgba(0,0,0,0.7),
+        0 0 10px rgba(255, 42, 75, 0.8),
+        0 0 20px rgba(255, 208, 67, 0.5);
+    }
+    100%{
+      border-color: #ffd24a;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.85),
+        inset -1px -1px 0 rgba(0,0,0,0.7),
+        0 0 18px rgba(255, 77, 106, 0.95),
+        0 0 30px rgba(200, 80, 255, 0.7);
+    }
   }
   #relicTray .relic-badge .icon{ width:28px; height:28px; }
   #relicTray:empty {
@@ -1830,6 +1882,157 @@
     border-bottom:1px dashed rgba(255,255,255,0.15); padding-bottom:6px;
   }
 
+  /* ---------- THE ALCHEMICAL CRUCIBLE / MYTHIC FUSION PEDESTAL ---------- */
+  .crucible-section{
+    margin-bottom:6px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .crucible-section.hidden{ display:none !important; }
+  .crucible-vault{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:14px;
+    margin:0 0 12px;
+  }
+  .fusionCard{
+    position:relative;
+    text-align:left;
+    padding:16px 14px 14px;
+    background: radial-gradient(circle at 50% 10%, rgba(255, 210, 122, 0.18) 0%, rgba(35, 12, 54, 0.85) 60%, rgba(12, 6, 20, 0.95) 100%);
+    border: 2px solid #ffd24a;
+    box-shadow:
+      inset 1px 1px 0 rgba(255,255,255,0.4),
+      inset -1px -1px 0 rgba(0,0,0,0.6),
+      0 0 16px rgba(255, 210, 122, 0.55),
+      0 0 28px rgba(193, 134, 255, 0.35);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    animation: mythicPedestalGlow 2.4s ease-in-out infinite alternate;
+    cursor:pointer;
+  }
+  @keyframes mythicPedestalGlow{
+    0%{
+      border-color:#e8b93d;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.35),
+        inset -1px -1px 0 rgba(0,0,0,0.6),
+        0 0 12px rgba(232, 185, 61, 0.45),
+        0 0 22px rgba(193, 134, 255, 0.25);
+    }
+    100%{
+      border-color:#ffe37a;
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.6),
+        inset -1px -1px 0 rgba(0,0,0,0.6),
+        0 0 22px rgba(255, 226, 122, 0.8),
+        0 0 36px rgba(255, 160, 220, 0.55);
+    }
+  }
+  .fusionCard .fusion-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .fusionCard .fusion-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.75rem;
+    color:#ffe37a;
+    font-weight:bold;
+    text-shadow:0 0 8px rgba(255, 210, 122, 0.7);
+  }
+  .fusionCard .fusion-title .icon{
+    width:30px; height:30px; flex-shrink:0;
+  }
+  .fusionCard .mythic-badge{
+    font-size:0.56rem;
+    padding:3px 8px;
+    background:linear-gradient(135deg, #ffd043, #d94b18);
+    color:#1a0804;
+    font-weight:bold;
+    border:1px solid #ffe37a;
+    box-shadow:0 0 8px rgba(255, 208, 67, 0.6);
+    letter-spacing:0.5px;
+  }
+  .fusion-recipe-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    background:rgba(0,0,0,0.4);
+    border:1px dashed rgba(255, 210, 122, 0.35);
+  }
+  .fusion-ingredient{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.58rem;
+    color:#eaf7ff;
+    flex:1;
+    min-width:0;
+  }
+  .fusion-ingredient .icon{
+    width:22px; height:22px; flex-shrink:0;
+  }
+  .fusion-ingredient .ing-name{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .fusion-ingredient .ing-lv{
+    font-size:0.5rem;
+    color:#ffd24a;
+    font-weight:bold;
+  }
+  .fusion-arrow{
+    font-size:0.8rem;
+    color:#ffe37a;
+    flex-shrink:0;
+    text-shadow:0 0 6px rgba(255, 210, 122, 0.8);
+  }
+  .fusionCard .fusion-desc{
+    font-size:0.62rem;
+    line-height:1.6;
+    color:var(--text-light);
+  }
+  .fusionCard .fusion-stats{
+    font-size:0.58rem;
+    line-height:1.55;
+    color:#ffe37a;
+    background:rgba(255, 210, 122, 0.08);
+    padding:6px 8px;
+    border-left:3px solid #ffd043;
+  }
+  .fusionCard .rFuseBtn{
+    align-self:stretch;
+    width:100%;
+    margin-top:auto;
+    padding:12px 14px;
+    font-size:0.7rem;
+    font-weight:bold;
+    letter-spacing:1px;
+    background:linear-gradient(180deg, #ffd043 0%, #e8891a 100%);
+    border:2px solid #fff3b0;
+    color:#2a1200;
+    box-shadow:0 3px 0 #000, 0 0 14px rgba(255, 208, 67, 0.6);
+    cursor:pointer;
+    font-family:inherit;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .fusionCard .rFuseBtn:hover{
+    filter:brightness(1.25);
+    box-shadow:0 3px 0 #000, 0 0 20px rgba(255, 226, 122, 0.9);
+  }
+  .fusionCard .rFuseBtn:active{
+    transform:translate(2px, 3px);
+    box-shadow:0 0 0 #000;
+  }
+
   #shopCards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px; margin:0 0 16px; }
   .shop-vault .relicCard{ box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark), 0 0 0 1px rgba(244,184,96,0.15); }
   .relicCard{
@@ -1978,6 +2181,34 @@
   .compendium-card.tag-arcane .cIcon{ --tag-glow-rgb: 193, 134, 255; }
   .compendium-card.tag-chaos .cIcon{ --tag-glow-rgb: 255, 77, 106; }
   .compendium-card.tag-midas .cIcon{ --tag-glow-rgb: 255, 208, 67; }
+  .compendium-card.mythic{
+    border: 2px solid #ffd24a;
+    background: radial-gradient(circle at 50% 10%, rgba(255, 210, 122, 0.15) 0%, rgba(35, 12, 54, 0.75) 60%, rgba(12, 6, 20, 0.95) 100%);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.4), inset -1px -1px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 210, 122, 0.4);
+  }
+  .compendium-card.mythic .cName{ color:#ffe37a; font-weight:bold; }
+  .compendium-card .mythic-badge{
+    display:inline-block;
+    font-size:0.42rem;
+    padding:2px 6px;
+    background:linear-gradient(135deg, #ffd043, #d94b18);
+    color:#1a0804;
+    font-weight:bold;
+    border:1px solid #ffe37a;
+    box-shadow:0 0 6px rgba(255, 208, 67, 0.5);
+    letter-spacing:0.4px;
+    margin-left:4px;
+    vertical-align:middle;
+  }
+  .compendium-card .cRecipe{
+    font-size:0.44rem;
+    color:#ffe37a;
+    background:rgba(255, 210, 122, 0.08);
+    padding:4px 6px;
+    border-left:2px solid #ffd043;
+    line-height:1.45;
+    margin-top:2px;
+  }
   .compendium-card.locked .cIcon{ filter:brightness(0.2); }
   .compendium-card.milestone-locked .cIcon{ filter:none; color:#c9a6ff; }
   .compendium-card .cName{ font-size:0.5rem; color:var(--amber-glow); line-height:1.45; }
@@ -3244,7 +3475,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.6.1</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.7</div>
     <p>Tap the cauldron to brew Mana Essence and fulfill the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -3270,6 +3501,11 @@
     </header>
 
     <div id="bossForecastBanner" class="boss-forecast-banner hidden"></div>
+
+    <div id="crucibleSection" class="crucible-section hidden">
+      <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> THE ALCHEMICAL CRUCIBLE</div>
+      <div id="crucibleCards" class="crucible-vault"></div>
+    </div>
 
     <div class="shop-tier-label"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> RELIC PEDESTAL</div>
     <div id="shopCards" class="shop-vault"></div>
@@ -3303,7 +3539,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.6.1</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.7</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -3732,8 +3968,15 @@
   const CHANGELOG_DATA = {
     prealpha: [
       {
-        version: "Pre-Alpha v1.6.1 (Latest)",
+        version: "Pre-Alpha v1.7.0 (Latest)",
         newest: true,
+        bullets: [
+          "The Alchemical Crucible is now accessible in the shop — fuse eligible pairs of MAX-level relics into powerful Mythic Relics with combined blessings, unique visual effects, and dynamic Grimoire entries."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.6.1",
+        newest: false,
         bullets: [
           "Version History still opens on the latest notes, and tapping any older build folds its details open or shut."
         ]
@@ -4987,6 +5230,8 @@
   const shopSummary = $('shopSummary');
   const shopGoldValue = $('shopGoldValue');
   const bossForecastBanner = $('bossForecastBanner');
+  const crucibleSection = $('crucibleSection');
+  const crucibleCards = $('crucibleCards');
   const shopCards = $('shopCards');
   const rerollBtn = $('rerollBtn');
   const continueBtn = $('continueBtn');
@@ -5485,7 +5730,9 @@
   }
   function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
   function makeRelicRecord(level, extra){
-    const lv = clamp(Math.floor(Number(level) || 0), 0, RELIC_MAX_LEVEL);
+    const isMythic = extra && (extra.isMythic || isMythicRelic(extra.id));
+    const maxLv = isMythic ? 1 : RELIC_MAX_LEVEL;
+    const lv = clamp(Math.floor(Number(level) || 0), 0, maxLv);
     if(lv <= 0) return null;
     const rec = extra && typeof extra === 'object' ? extra : {};
     const corrupted = !!rec.corrupted;
@@ -5493,7 +5740,8 @@
       level: lv,
       corrupted: corrupted,
       curseType: corrupted ? (rec.curseType || null) : null,
-      boonMult: corrupted ? clamp(Number(rec.boonMult) || 1.8, 1.75, 2) : 1
+      boonMult: corrupted ? clamp(Number(rec.boonMult) || 1.8, 1.75, 2) : 1,
+      isMythic: !!(rec.isMythic || (extra && extra.id && isMythicRelic(extra.id)))
     };
   }
   function mergeRelicRecords(a, b){
@@ -5504,7 +5752,8 @@
       level: Math.max(a.level, b.level),
       corrupted: corrupted,
       curseType: a.curseType || b.curseType || null,
-      boonMult: corrupted ? Math.max(a.boonMult || 1, b.boonMult || 1) : 1
+      boonMult: corrupted ? Math.max(a.boonMult || 1, b.boonMult || 1) : 1,
+      isMythic: !!(a.isMythic || b.isMythic)
     };
   }
   function normalizeRelicMap(raw){
@@ -5526,7 +5775,7 @@
     }
     if(Array.isArray(raw)){
       raw.forEach(id => {
-        if(typeof id === 'string') add(id, makeRelicRecord(1));
+        if(typeof id === 'string') add(id, makeRelicRecord(1, { id: id }));
       });
       return map;
     }
@@ -5534,9 +5783,9 @@
       Object.keys(raw).forEach(id => {
         const val = raw[id];
         if(val && typeof val === 'object' && !Array.isArray(val)){
-          add(id, makeRelicRecord(val.level, val));
+          add(id, makeRelicRecord(val.level, Object.assign({ id: id }, val)));
         } else {
-          add(id, makeRelicRecord(val));
+          add(id, makeRelicRecord(val, { id: id }));
         }
       });
     }
@@ -5583,13 +5832,13 @@
     if(!raw) return map;
     if(Array.isArray(raw)){
       raw.forEach(id => {
-        if(typeof id === 'string' && RELICS.some(r => r.id === id)) map[id] = { curseType: null, boonMult: 1.8 };
+        if(typeof id === 'string' && (RELICS.some(r => r.id === id) || MYTHIC_RELICS.some(r => r.id === id))) map[id] = { curseType: null, boonMult: 1.8 };
       });
       return map;
     }
     if(typeof raw === 'object'){
       Object.keys(raw).forEach(id => {
-        if(!RELICS.some(r => r.id === id)) return;
+        if(!RELICS.some(r => r.id === id) && !MYTHIC_RELICS.some(r => r.id === id)) return;
         const rec = raw[id] && typeof raw[id] === 'object' ? raw[id] : {};
         map[id] = {
           curseType: rec.curseType || null,
@@ -5600,7 +5849,7 @@
     return map;
   }
   function noteDiscoveredCorrupted(id, rec){
-    if(!id || !RELICS.some(r => r.id === id)) return;
+    if(!id || (!RELICS.some(r => r.id === id) && !MYTHIC_RELICS.some(r => r.id === id))) return;
     if(!state.discoveredCorrupted || typeof state.discoveredCorrupted !== 'object' || Array.isArray(state.discoveredCorrupted)){
       state.discoveredCorrupted = {};
     }
@@ -5645,7 +5894,10 @@
     return corrupted ? ('Corrupted ' + r.name) : r.name;
   }
   function getCurseCostMult(){ return hasCurse('costly') ? 1.25 : 1; }
-  function formatRelicLevel(lv, compact){
+  function formatRelicLevel(lv, compact, id){
+    if(id && isMythicRelic(id)){
+      return compact ? '★MYTHIC' : '★ MYTHIC';
+    }
     if(lv <= 0) return '';
     if(compact) return (lv >= RELIC_MAX_LEVEL ? '★' : '') + lv;
     return lv >= RELIC_MAX_LEVEL ? ('Lv ' + lv + ' [MAX]') : ('★ Lv ' + lv);
@@ -5663,8 +5915,9 @@
     return tag ? ('tag-' + tag) : '';
   }
   function relicBadgeClassName(id){
+    const isMythic = isMythicRelic(id);
     const lv = getRelicLevel(id);
-    const rank = lv >= 3 ? ' lv-3' : lv >= 2 ? ' lv-2' : ' lv-1';
+    const rank = isMythic ? ' lv-mythic' : (lv >= 3 ? ' lv-3' : lv >= 2 ? ' lv-2' : ' lv-1');
     const tagClass = relicTagTileClass(id);
     return 'relic-badge' + rank + (isRelicCorrupted(id) ? ' corrupted' : '') + (tagClass ? ' ' + tagClass : '');
   }
@@ -7529,7 +7782,7 @@
     const discovered = ((state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : []).map(id => {
       const legacy = LEGACY_CORRUPT_RELICS[id];
       return legacy ? legacy.id : id;
-    }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
+    }).filter((id, i, arr) => (RELICS.some(r => r.id === id) || MYTHIC_RELICS.some(r => r.id === id)) && arr.indexOf(id) === i);
     const discoveredCorrupted = normalizeDiscoveredCorrupted(state && state.discoveredCorrupted);
     const bgmVolume = clampVolume(state && state.bgmVolume, 60);
     const sfxVolume = clampVolume(state && state.sfxVolume, 80);
@@ -7732,6 +7985,73 @@
 
     if(shopGoldValue) shopGoldValue.textContent = fmt(state.gold);
     renderSynergyBadges(synergySummary);
+
+    // --- ALCHEMICAL CRUCIBLE: FUSIONS ---
+    const fusionPairs = getFusionPairs();
+    if(crucibleSection && crucibleCards){
+      if(fusionPairs.length > 0){
+        crucibleSection.classList.remove('hidden');
+        crucibleCards.innerHTML = '';
+        fusionPairs.forEach(pair => {
+          const { tag, relicA, relicB, mythic } = pair;
+          const defA = getAnyRelicDef(relicA);
+          const defB = getAnyRelicDef(relicB);
+          const stats = getRelicStats(mythic.id, 1);
+          const card = document.createElement('div');
+          card.className = 'fusionCard tag-' + tag;
+          card.setAttribute('data-id', mythic.id);
+          card.innerHTML = `
+            <div class="fusion-header">
+              <div class="fusion-title">${icon(mythic.icon, relicTagIconClass(mythic))} <span>${mythic.name}</span></div>
+              <span class="mythic-badge">★ MYTHIC FUSION</span>
+            </div>
+            <div class="fusion-recipe-row">
+              <div class="fusion-ingredient">
+                ${icon(defA.icon, relicTagIconClass(defA))}
+                <span class="ing-name">${defA.name}</span>
+                <span class="ing-lv">[MAX]</span>
+              </div>
+              <span class="fusion-arrow">+</span>
+              <div class="fusion-ingredient">
+                ${icon(defB.icon, relicTagIconClass(defB))}
+                <span class="ing-name">${defB.name}</span>
+                <span class="ing-lv">[MAX]</span>
+              </div>
+            </div>
+            <div class="fusion-desc">${mythic.desc}</div>
+            <div class="fusion-stats"><strong>Combined Power:</strong> ${stats.summary}</div>
+            <button type="button" class="rFuseBtn" data-mythic-id="${mythic.id}" data-relic-a="${relicA}" data-relic-b="${relicB}">
+              FUSE INTO MYTHIC
+            </button>
+          `;
+          crucibleCards.appendChild(card);
+        });
+
+        crucibleCards.querySelectorAll('.rFuseBtn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const mythicId = btn.getAttribute('data-mythic-id');
+            const relicA = btn.getAttribute('data-relic-a');
+            const relicB = btn.getAttribute('data-relic-b');
+            fuseRelics(relicA, relicB, mythicId);
+          });
+        });
+
+        crucibleCards.querySelectorAll('.fusionCard').forEach(card => {
+          const id = card.getAttribute('data-id');
+          card.addEventListener('click', (e) => {
+            if(e.target.closest('.rFuseBtn')) return;
+            e.stopPropagation();
+            toggleTooltip(card, getRelicTooltipHTML(id), 'crucible-relic-' + id);
+          });
+          card.addEventListener('mouseenter', () => showHoverTooltip(card, getRelicTooltipHTML(id), 'crucible-relic-' + id));
+          card.addEventListener('mouseleave', hideHoverTooltip);
+        });
+      } else {
+        crucibleSection.classList.add('hidden');
+        crucibleCards.innerHTML = '';
+      }
+    }
 
     const nextBoss = (state && state.round) ? getBossDefForRound(state.round + 1) : null;
     if(bossForecastBanner){
@@ -8029,23 +8349,31 @@
   function getRelicTooltipHTML(relicId, overlay){
     const r = getAnyRelicDef(relicId);
     if(!r) return '';
+    const isMythic = isMythicRelic(relicId);
     const lv = getRelicLevel(relicId);
     const preview = overlay || getRelicRecord(relicId);
     const showCorrupted = !!(preview && preview.corrupted);
     const now = lv > 0 ? getRelicStats(relicId, lv) : null;
-    const next = lv < RELIC_MAX_LEVEL ? getRelicStats(relicId, Math.max(1, lv + 1), overlay || getRelicRecord(relicId)) : getRelicStats(relicId, 1, overlay);
+    const next = isMythic ? null : (lv < RELIC_MAX_LEVEL ? getRelicStats(relicId, Math.max(1, lv + 1), overlay || getRelicRecord(relicId)) : getRelicStats(relicId, 1, overlay));
     const shown = now || next;
     const tagsHtml = (r.tags||[]).map(t => {
       const info = TAG_INFO[t];
       return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
     }).join('');
-    const levelLine = lv > 0
-      ? `<div class="tooltip-line relic-lv-badge">${formatRelicLevel(lv)}</div>`
-      : `<div class="tooltip-line relic-lv-badge">Not owned</div>`;
-    const currentLine = now ? `<div class="tooltip-line">Now: ${now.summary}</div>` : '';
-    const nextLine = lv >= RELIC_MAX_LEVEL
-      ? `<div class="tooltip-line">Next: MAXED</div>`
-      : (next ? `<div class="tooltip-line">${lv > 0 ? ('Next ' + formatRelicLevel(Math.max(1, lv + 1)) + ': ') : 'Lv 1: '}${next.summary}</div>` : '');
+    const levelLine = isMythic
+      ? `<div class="tooltip-line relic-lv-badge">★ MYTHIC RELIC</div>`
+      : (lv > 0
+        ? `<div class="tooltip-line relic-lv-badge">${formatRelicLevel(lv)}</div>`
+        : `<div class="tooltip-line relic-lv-badge">Not owned</div>`);
+    const recipeLine = (isMythic && Array.isArray(r.components) && r.components.length >= 2)
+      ? `<div class="tooltip-line" style="color:#ffe37a;">${icon('sparkle','ic-amber')} Fused from ${r.components.map(cid => { const cdef = getAnyRelicDef(cid); return cdef ? cdef.name : cid; }).join(' + ')}</div>`
+      : '';
+    const currentLine = now ? `<div class="tooltip-line">${isMythic ? 'Combined Power: ' : 'Now: '}${now.summary}</div>` : '';
+    const nextLine = isMythic
+      ? ''
+      : (lv >= RELIC_MAX_LEVEL
+        ? `<div class="tooltip-line">Next: MAXED</div>`
+        : (next ? `<div class="tooltip-line">${lv > 0 ? ('Next ' + formatRelicLevel(Math.max(1, lv + 1)) + ': ') : 'Lv 1: '}${next.summary}</div>` : ''));
     const boonLine = (showCorrupted && shown && shown.boonMult)
       ? `<div class="tooltip-line tooltip-boon">Corrupted Boon x${shown.boonMult.toFixed(2)}</div>`
       : '';
@@ -8053,9 +8381,10 @@
       ? `<div class="tooltip-line tooltip-curse">${icon('warning','ic-danger')} ${shown.curseText}</div>`
       : '';
     return `
-      <div class="tooltip-title">${icon(r.icon)} ${getRelicDisplayName(relicId, showCorrupted)}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
+      <div class="tooltip-title">${icon(r.icon)} ${getRelicDisplayName(relicId, showCorrupted)}${isMythic ? ' <span class="mythic-badge">★ MYTHIC</span>' : ''}${showCorrupted ? ' <span class="corrupted-badge">' + icon('warning','ic-danger') + ' CORRUPTED</span>' : ''}</div>
       <div class="rTags" style="margin-bottom:6px;">${tagsHtml}</div>
       ${levelLine}
+      ${recipeLine}
       <div class="tooltip-desc">${r.desc}</div>
       ${currentLine}
       ${nextLine}
@@ -8141,6 +8470,58 @@
       itemEl.addEventListener('mouseenter', () => showHoverTooltip(itemEl, getCharmTooltipHTML(id), 'shelfitem-' + id, true));
       itemEl.addEventListener('mouseleave', hideHoverTooltip);
     });
+  }
+
+  function fuseMythicRelic(mythicId, relicAId, relicBId){
+    const mythic = MYTHIC_RELICS.find(m => m.id === mythicId);
+    if(!mythic) return;
+    if(hasRelic(mythicId)) return;
+
+    // Verify ingredients
+    const pairs = getFusionPairs();
+    const match = pairs.find(p => p.mythic.id === mythicId && (!relicAId || (p.relicA === relicAId && p.relicB === relicBId) || (p.relicA === relicBId && p.relicB === relicAId)));
+    if(!match) return;
+
+    const relicA = relicAId || match.relicA;
+    const relicB = relicBId || match.relicB;
+    const recA = getRelicRecord(relicA);
+    const recB = getRelicRecord(relicB);
+
+    const isCorrupt = !!((recA && recA.corrupted) || (recB && recB.corrupted));
+    const curse = (recA && recA.curseType) || (recB && recB.curseType) || (isCorrupt ? rollCurseType() : null);
+    const boon = isCorrupt ? Math.max((recA && recA.boonMult) || 1, (recB && recB.boonMult) || 1, rollBoonMult()) : 1;
+
+    // Consume ingredient relics (freeing up a rail slot)
+    if(Array.isArray(state.relics)) state.relics = normalizeRelicMap(state.relics);
+    delete state.relics[relicA];
+    delete state.relics[relicB];
+
+    // Grant mythic relic
+    state.relics[mythicId] = makeRelicRecord(1, {
+      corrupted: isCorrupt,
+      curseType: curse,
+      boonMult: boon,
+      isMythic: true
+    });
+
+    if(!Array.isArray(state.discoveredRelics)) state.discoveredRelics = [];
+    if(!state.discoveredRelics.includes(mythicId)) state.discoveredRelics.push(mythicId);
+    if(isCorrupt) noteDiscoveredCorrupted(mythicId, state.relics[mythicId]);
+
+    if(mythic.liquidTheme) state.liquidTheme = mythic.liquidTheme;
+
+    // Sound & visual FX
+    sfxSuccess();
+    sfxQuotaMet();
+    triggerScreenShake();
+    updateCauldronVisuals();
+    renderShop();
+    renderRelicTray();
+    saveGame();
+  }
+
+  function fuseRelics(relicAId, relicBId, mythicId){
+    return fuseMythicRelic(mythicId, relicAId, relicBId);
   }
 
   function buyRelic(id){
@@ -8786,8 +9167,9 @@
   function createCompendiumCard(r){
     const card = document.createElement('div');
     const tile = relicTagTileClass(r);
+    const isMythic = isMythicRelic(r.id);
     const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
-    if(!isMetaUnlocked(r)){
+    if(!isMythic && !isMetaUnlocked(r)){
       card.className = 'compendium-card locked milestone-locked' + (tile ? ' ' + tile : '');
       card.innerHTML = `
         <div class="cIcon">${icon('lock','ic-lock')}</div>
@@ -8800,7 +9182,7 @@
     if(grimoireTab === 'corrupted'){
       const seen = isCorruptedDiscovered(r.id);
       const catalog = (state && state.discoveredCorrupted && state.discoveredCorrupted[r.id]) || null;
-      card.className = 'compendium-card' + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
+      card.className = 'compendium-card' + (isMythic ? ' mythic' : '') + (seen ? ' corrupted' : ' locked') + (tile ? ' ' + tile : '');
       if(seen){
         const overlay = catalog
           ? { corrupted:true, curseType: catalog.curseType, boonMult: catalog.boonMult }
@@ -8810,10 +9192,14 @@
           const info = TAG_INFO[t];
           return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
         }).join('');
+        const recipeHtml = (isMythic && Array.isArray(r.components) && r.components.length >= 2)
+          ? `<div class="cRecipe">${icon('sparkle','ic-amber')} Fused from ${r.components.map(cid => { const cdef = getAnyRelicDef(cid); return cdef ? cdef.name : cid; }).join(' + ')}</div>`
+          : '';
         card.innerHTML = `
           <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-          <div class="cName">${getRelicDisplayName(r.id, true)} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span></div>
+          <div class="cName">${getRelicDisplayName(r.id, true)}${isMythic ? ' <span class="mythic-badge">★ MYTHIC</span>' : ''} <span class="corrupted-badge">${icon('warning','ic-danger')} CORRUPTED</span></div>
           <div class="rTags">${tagsHtml}</div>
+          ${recipeHtml}
           <div class="cDesc">${r.desc}</div>
           ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Swollen Boon: ' + stats.summary + (stats.boonMult ? ' (x' + stats.boonMult.toFixed(2) + ')' : '') + '</div>' : ''}
           ${stats && stats.curseText ? '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' ' + stats.curseText + '</div>' : '<div class="cDesc rCurse">' + icon('warning','ic-danger') + ' A crimson curse is bound to this offering.</div>'}
@@ -8821,33 +9207,37 @@
       } else {
         card.innerHTML = `
           <div class="cIcon">${icon('lock','ic-lock')}</div>
-          <div class="cName">CORRUPTED ???</div>
-          <div class="cDesc">Encounter a Corrupted offering of this relic in the shop to catalogue its swollen blessing and curse.</div>
+          <div class="cName">${isMythic ? 'MYTHIC CORRUPTED ???' : 'CORRUPTED ???'}</div>
+          <div class="cDesc">${isMythic ? 'Fuse corrupted ingredients in the Crucible to catalogue this corrupted Mythic relic.' : 'Encounter a Corrupted offering of this relic in the shop to catalogue its swollen blessing and curse.'}</div>
         `;
       }
       return card;
     }
 
     const known = discovered.includes(r.id);
-    card.className = 'compendium-card' + (known ? '' : ' locked') + (tile ? ' ' + tile : '');
+    card.className = 'compendium-card' + (isMythic ? ' mythic' : '') + (known ? '' : ' locked') + (tile ? ' ' + tile : '');
     if(known){
       const tagsHtml = (r.tags||[]).map(t => {
         const info = TAG_INFO[t];
         return info ? `<span class="tag-pill tag-${t}">${icon(info.icon, 'ic-'+t)} ${info.label}</span>` : '';
       }).join('');
       const stats = getRelicStats(r.id, 1, { corrupted:false });
+      const recipeHtml = (isMythic && Array.isArray(r.components) && r.components.length >= 2)
+        ? `<div class="cRecipe">${icon('sparkle','ic-amber')} Fused from ${r.components.map(cid => { const cdef = getAnyRelicDef(cid); return cdef ? cdef.name : cid; }).join(' + ')}</div>`
+        : '';
       card.innerHTML = `
         <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-        <div class="cName">${getRelicDisplayName(r.id, false)}</div>
+        <div class="cName">${getRelicDisplayName(r.id, false)}${isMythic ? ' <span class="mythic-badge">★ MYTHIC</span>' : ''}</div>
         <div class="rTags">${tagsHtml}</div>
+        ${recipeHtml}
         <div class="cDesc">${r.desc}</div>
-        ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">Baseline: ' + stats.summary + '</div>' : ''}
+        ${stats && stats.summary ? '<div class="cDesc relic-lv-badge">' + (isMythic ? 'Combined Power: ' : 'Baseline: ') + stats.summary + '</div>' : ''}
       `;
     } else {
       card.innerHTML = `
         <div class="cIcon">${icon(r.icon, relicTagIconClass(r))}</div>
-        <div class="cName">???</div>
-        <div class="cDesc">Discover this relic in the shop to reveal its alchemical secrets.</div>
+        <div class="cName">${isMythic ? 'MYTHIC ???' : '???'}</div>
+        <div class="cDesc">${isMythic ? 'Fuse two MAX-level ingredient relics in the Alchemical Crucible to unlock this mythic fusion.' : 'Discover this relic in the shop to reveal its alchemical secrets.'}</div>
       `;
     }
     return card;
@@ -8856,17 +9246,18 @@
   function renderCompendium(){
     if(!compendiumGrid) return;
     const discovered = (state && Array.isArray(state.discoveredRelics)) ? state.discoveredRelics : [];
-    const corruptKnown = RELICS.filter(r => isCorruptedDiscovered(r.id)).length;
+    const allCatalog = RELICS.concat(MYTHIC_RELICS);
+    const corruptKnown = allCatalog.filter(r => isCorruptedDiscovered(r.id)).length;
     if(compendiumProgress){
       compendiumProgress.textContent = grimoireTab === 'corrupted'
-        ? (corruptKnown + ' / ' + RELICS.length + ' Corrupted Catalogued')
-        : (discovered.length + ' / ' + RELICS.length + ' Discovered');
+        ? (corruptKnown + ' / ' + allCatalog.length + ' Corrupted Catalogued')
+        : (discovered.length + ' / ' + allCatalog.length + ' Discovered');
     }
     const groups = {};
     const tagOrder = Object.keys(TAG_INFO);
     tagOrder.forEach(tag => { groups[tag] = []; });
     groups.other = [];
-    RELICS.forEach(r => {
+    allCatalog.forEach(r => {
       const tag = getRelicPrimaryTag(r);
       if(tag && groups[tag]) groups[tag].push(r);
       else groups.other.push(r);
@@ -9080,7 +9471,7 @@
       state.discoveredRelics = state.discoveredRelics.map(id => {
         const legacy = LEGACY_CORRUPT_RELICS[id];
         return legacy ? legacy.id : id;
-      }).filter((id, i, arr) => RELICS.some(r => r.id === id) && arr.indexOf(id) === i);
+      }).filter((id, i, arr) => (RELICS.some(r => r.id === id) || MYTHIC_RELICS.some(r => r.id === id)) && arr.indexOf(id) === i);
       getOwnedRelicIds().forEach(id => {
         if(!state.discoveredRelics.includes(id)) state.discoveredRelics.push(id);
         if(isRelicCorrupted(id)) noteDiscoveredCorrupted(id, getRelicRecord(id));
