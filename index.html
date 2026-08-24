@@ -925,6 +925,20 @@
     }
   }
   #relicTray .relic-badge .icon{ width:28px; height:28px; }
+  #relicTray .relic-tray-header{
+    font-size:0.42rem;
+    color:var(--amber-glow);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-align:center;
+    padding:2px 0;
+    width:100%;
+    border-bottom:1px solid rgba(255,210,122,0.3);
+    margin-bottom:2px;
+    white-space:nowrap;
+    user-select:none;
+    text-shadow:1px 1px 0 #000;
+  }
   #relicTray:empty {
     display: none;
   }
@@ -3706,6 +3720,7 @@
   const EARLY_COMPLETION_GOLD = { 1: 16, 2: 8, 3: 4 };
   const RELIC_COST_SCALE_PER_ROUND = 0.5;
   const RELIC_MAX_LEVEL = 3;
+  const MAX_RELIC_SLOTS = 6;
   const SYNERGY_BONUS_PER_EXTRA = 0.25;
 
   const TAG_INFO = {
@@ -3737,83 +3752,83 @@
     ],
   };
 
-  const RELICS = [
-    { id:'dragonfire', name:"Dragonfire Pepper", icon:'pepper', cost:22, tags:['fire'],
-      desc:"Clicks generate +40% Mana per level.",
-      liquidTheme:'dragonfire' },
-    { id:'whisk', name:"Familiar's Whisk", icon:'whisk', cost:28, tags:['arcane'],
-      desc:"A spectral cat stirs the pot every second, generating 6% of your click power as bonus Mana/sec.",
-      liquidTheme:null },
-    { id:'moonstone', name:"Moonstone Dust", icon:'moon', cost:26, tags:['frost'],
-      desc:"Every 5th click triggers a Critical Surge (every 4th at Lv 2, every 3rd at Lv 3), yielding 3x Mana for that tap.",
-      liquidTheme:'moonstone' },
-    { id:'hourglass', name:"Stasis Hourglass", icon:'hourglass', cost:18, tags:['frost'],
-      desc:"Adds +8 seconds to every order deadline at Lv 1, +14s at Lv 2, and +20s at Lv 3.",
-      liquidTheme:null },
-    { id:'bifrost', name:"Bifrost Blossom", icon:'bifrost', cost:24, tags:['chaos'],
-      desc:"Every tap has a 10% chance to also yield 1 Gold Coin directly.",
-      liquidTheme:'bifrost', unlockOrder:3 },
-    { id:'crucible', name:"Philosopher's Crucible", icon:'crucible', cost:32, tags:['arcane'],
-      desc:"Increases the Gold conversion rate for surplus Mana by 50%.",
-      liquidTheme:'crucible', unlockOrder:4 },
-    { id:'starter', name:"Alchemist's Starter", icon:'starter', cost:28, tags:['arcane'],
-      desc:"Instantly satisfies 10% of the required quota at the start of every order.",
-      liquidTheme:null, unlockTotalTaps:200 },
-    { id:'catalyst', name:"Volatile Catalyst", icon:'catalyst', cost:26, tags:['chaos'],
-      desc:"Mana generated per second is boosted +40% per level.",
-      liquidTheme:null, unlockOrder:3 },
-    { id:'pandemoniumDie', name:"Pandemonium Die", icon:'pandemoniumDie', cost:24, tags:['chaos'],
-      desc:"Every 8th tap unleashes a Chaos Burst for 1.2x Click Power as bonus Mana (1.6x at Lv 2, 2.0x at Lv 3). The burst is not a Critical Surge.",
-      liquidTheme:null, unlockOrder:3 },
-    { id:'phantomLadle', name:"Phantom Ladle", icon:'phantomLadle', cost:26, tags:['chaos'],
-      desc:"A ghostly afterimage of each tap returns 0.5s later, echoing 35% of that tap's Mana (50% at Lv 2, 65% at Lv 3).",
-      liquidTheme:null, unlockOrder:4 },
-    { id:'ashenSigil', name:"Ashen Sigil", icon:'sigil', cost:22, tags:['fire'],
-      desc:"Residual embers linger in the pot, adding +25% Click Power per level to every tap.",
-      liquidTheme:null },
-    { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
-      desc:"Cheat Death: if an order boils over without meeting quota, this relic is consumed to restore +6.0s at Lv 1 (+8.0s / +10.0s at higher levels) and erupt the brew in flame.",
-      liquidTheme:null, unlockOrder:5 },
-    { id:'bellows', name:"Combustion Bellows", icon:'bellows', cost:24, tags:['fire'],
-      desc:"Every consecutive tap without a 1.0s pause builds +5% Heat (up to +50% Click Power at Lv 1, +75% at Lv 2, +100% at Lv 3); pausing resets the streak.",
-      liquidTheme:null },
-    { id:'cinderbrand', name:"Cinderbrand Crucible", icon:'cinderbrand', cost:26, tags:['fire'],
-      desc:"Active taps have an 8% chance to ignite the brew for 3.0s, passively ticking for 50% of your click power (65% at Lv 2, 80% at Lv 3) each second.",
-      liquidTheme:null },
-    { id:'magmaGeode', name:"Magma Geode", icon:'explosion', cost:28, tags:['fire'],
-      desc:"Reaching 50% of an order's quota triggers a Magma Eruption, instantly brewing 10% of the remaining quota at Lv 1 (15% at Lv 2, 20% at Lv 3) in a burst of fire particles.",
-      liquidTheme:'dragonfire' },
-    { id:'glacialCore', name:"Glacial Core", icon:'glacialCore', cost:22, tags:['frost'],
-      desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline for 2.0s (longer at higher levels).",
-      liquidTheme:null, unlockOrder:3 },
-    { id:'wintersGrasp', name:"Winter's Grasp", icon:'wintersGrasp', cost:24, tags:['frost'],
-      desc:"Every tap has a 6% chance at Lv 1 (9% at Lv 2, 12% at Lv 3) to freeze the deadline for 0.75s (longer at higher levels).",
-      liquidTheme:null, unlockOrder:4 },
-    { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'rimeCaliper', cost:22, tags:['frost'],
-      desc:"Slows deadline drain speed by 25% at Lv 1 (35% at Lv 2, 45% at Lv 3) whenever less than 10.0s remain on the clock.",
-      liquidTheme:null, unlockOrder:3 },
-    { id:'permafrostShard', name:"Permafrost Shard", icon:'permafrostShard', cost:26, tags:['frost'],
-      desc:"Whenever the deadline is frozen, active Click Power is multiplied by 2.0x at Lv 1 (2.5x at Lv 2, 3.0x at Lv 3).",
-      liquidTheme:null, unlockOrder:4 },
-    { id:'absoluteZero', name:"Absolute Zero", icon:'absoluteZero', cost:30, tags:['frost'],
-      desc:"Consuming any Ingredient Charm instantly triggers a 1.5s deadline freeze (2.0s at Lv 2, 2.5s at Lv 3).",
-      liquidTheme:null, unlockOrder:5 },
-    { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcaneConduit', cost:30, tags:['arcane'],
-      desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec by +15%.",
-      liquidTheme:null, unlockLifetimeShards:50 },
-    { id:'hoardersScale', name:"Hoarder's Scale", icon:'hoardersScale', cost:24, tags:['midas'],
-      desc:"Earn +10% interest on unspent Gold when completing an order (up to +15 Gold).",
-      liquidTheme:null, unlockLifetimeShards:25 },
-    { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'pawnTicket', cost:20, tags:['midas'],
-      desc:"Stirring Power and Bubbler upgrades cost 30% less Mana, and even more at higher levels.",
-      liquidTheme:null, unlockTotalTaps:400 },
-    { id:'gildedLedger', name:"Gilded Ledger", icon:'gildedLedger', cost:28, tags:['midas'],
-      desc:"Fulfilling an order grants a +12 Gold bounty per level.",
-      liquidTheme:null, unlockOrder:5 },
-    { id:'auricSignet', name:"Auric Signet", icon:'auricSignet', cost:24, tags:['midas'],
-      desc:"Every 6th tap stamps +1 Gold into your purse (+2 at Lv 2, +3 at Lv 3).",
-      liquidTheme:null, unlockOrder:4 },
-  ];
+const RELICS = [
+  { id:'dragonfire', name:"Dragonfire Pepper", icon:'pepper', cost:22, tags:['fire'],
+    desc:"Clicks generate bonus Mana Essence.",
+    liquidTheme:'dragonfire' },
+  { id:'whisk', name:"Familiar's Whisk", icon:'whisk', cost:28, tags:['arcane'],
+    desc:"A spectral cat stirs the pot every second, generating a portion of your click power as bonus Mana/sec.",
+    liquidTheme:null },
+  { id:'moonstone', name:"Moonstone Dust", icon:'moon', cost:26, tags:['frost'],
+    desc:"Every 5th click triggers a Critical Surge, yielding 3x Mana for that tap.",
+    liquidTheme:'moonstone' },
+  { id:'hourglass', name:"Stasis Hourglass", icon:'hourglass', cost:18, tags:['frost'],
+    desc:"Adds extra seconds to every order deadline.",
+    liquidTheme:null },
+  { id:'bifrost', name:"Bifrost Blossom", icon:'bifrost', cost:24, tags:['chaos'],
+    desc:"Every tap has a chance to award a Gold Coin directly.",
+    liquidTheme:'bifrost', unlockOrder:3 },
+  { id:'crucible', name:"Philosopher's Crucible", icon:'crucible', cost:32, tags:['arcane'],
+    desc:"Increases the Gold conversion rate for surplus Mana.",
+    liquidTheme:'crucible', unlockOrder:4 },
+  { id:'starter', name:"Alchemist's Starter", icon:'starter', cost:28, tags:['arcane'],
+    desc:"Instantly satisfies a portion of the required quota at the start of every order.",
+    liquidTheme:null, unlockTotalTaps:200 },
+  { id:'catalyst', name:"Volatile Catalyst", icon:'catalyst', cost:26, tags:['chaos'],
+    desc:"Boosts Mana generated per second.",
+    liquidTheme:null, unlockOrder:3 },
+  { id:'pandemoniumDie', name:"Pandemonium Die", icon:'pandemoniumDie', cost:24, tags:['chaos'],
+    desc:"Every 8th tap unleashes a Chaos Burst for bonus Mana.",
+    liquidTheme:null, unlockOrder:3 },
+  { id:'phantomLadle', name:"Phantom Ladle", icon:'phantomLadle', cost:26, tags:['chaos'],
+    desc:"A ghostly afterimage of each tap returns 0.5s later, echoing a portion of that tap's Mana.",
+    liquidTheme:null, unlockOrder:4 },
+  { id:'ashenSigil', name:"Ashen Sigil", icon:'sigil', cost:22, tags:['fire'],
+    desc:"Residual embers linger in the pot, granting bonus Click Power to every tap.",
+    liquidTheme:null },
+  { id:'phoenixDown', name:"Phoenix Down", icon:'feather', cost:26, tags:['fire'],
+    desc:"Cheat Death: if an order boils over without meeting quota, this relic is consumed to restore deadline time and erupt the brew in flame.",
+    liquidTheme:null, unlockOrder:5 },
+  { id:'bellows', name:"Combustion Bellows", icon:'bellows', cost:24, tags:['fire'],
+    desc:"Every consecutive tap without a 1.0s pause builds Heat to increase Click Power; pausing resets the streak.",
+    liquidTheme:null },
+  { id:'cinderbrand', name:"Cinderbrand Crucible", icon:'cinderbrand', cost:26, tags:['fire'],
+    desc:"Active taps have an 8% chance to ignite the brew, passively dealing Click Power as burn damage over time.",
+    liquidTheme:null },
+  { id:'magmaGeode', name:"Magma Geode", icon:'explosion', cost:28, tags:['fire'],
+    desc:"Reaching 50% of an order's quota triggers a Magma Eruption, instantly brewing a burst of remaining quota.",
+    liquidTheme:'dragonfire' },
+  { id:'glacialCore', name:"Glacial Core", icon:'glacialCore', cost:22, tags:['frost'],
+    desc:"Frostbite Surge: Crossing 25%, 50%, and 75% of the order quota instantly freezes the deadline.",
+    liquidTheme:null, unlockOrder:3 },
+  { id:'wintersGrasp', name:"Winter's Grasp", icon:'wintersGrasp', cost:24, tags:['frost'],
+    desc:"Every tap has a chance to briefly freeze the deadline.",
+    liquidTheme:null, unlockOrder:4 },
+  { id:'rimeCaliper', name:"Rime-Bound Caliper", icon:'rimeCaliper', cost:22, tags:['frost'],
+    desc:"Slows deadline drain speed whenever less than 10.0s remain on the clock.",
+    liquidTheme:null, unlockOrder:3 },
+  { id:'permafrostShard', name:"Permafrost Shard", icon:'permafrostShard', cost:26, tags:['frost'],
+    desc:"Active Click Power is multiplied while the deadline is frozen.",
+    liquidTheme:null, unlockOrder:4 },
+  { id:'absoluteZero', name:"Absolute Zero", icon:'absoluteZero', cost:30, tags:['frost'],
+    desc:"Consuming any Ingredient Charm instantly triggers a deadline freeze.",
+    liquidTheme:null, unlockOrder:5 },
+  { id:'arcaneConduit', name:"Arcane Conduit", icon:'arcaneConduit', cost:30, tags:['arcane'],
+    desc:"Channels ambient magic through your Bubblers, boosting all Passive Mana/sec.",
+    liquidTheme:null, unlockLifetimeShards:50 },
+  { id:'hoardersScale', name:"Hoarder's Scale", icon:'hoardersScale', cost:24, tags:['midas'],
+    desc:"Earn interest on unspent Gold when completing an order.",
+    liquidTheme:null, unlockLifetimeShards:25 },
+  { id:'pawnTicket', name:"Alchemist's Pawn Ticket", icon:'pawnTicket', cost:20, tags:['midas'],
+    desc:"Stirring Power and Bubbler upgrades cost less Mana.",
+    liquidTheme:null, unlockTotalTaps:400 },
+  { id:'gildedLedger', name:"Gilded Ledger", icon:'gildedLedger', cost:28, tags:['midas'],
+    desc:"Fulfilling an order grants a bonus Gold bounty.",
+    liquidTheme:null, unlockOrder:5 },
+  { id:'auricSignet', name:"Auric Signet", icon:'auricSignet', cost:24, tags:['midas'],
+    desc:"Every 6th tap stamps bonus Gold into your purse.",
+    liquidTheme:null, unlockOrder:4 },
+];
 
   const MYTHIC_RELICS = [
     // FIRE FUSIONS
@@ -3968,8 +3983,17 @@
   const CHANGELOG_DATA = {
     prealpha: [
       {
-        version: "Pre-Alpha v1.7.0 (Latest)",
+        version: "Pre-Alpha v1.7.1 (Latest)",
         newest: true,
+        bullets: [
+          "Relic inventory is now capped at 6 slots, and reaching capacity focuses the apothecary shop exclusively on upgrades for your existing relics.",
+          "Synergy tag limit: runs are limited to a maximum of 3 distinct synergy tags at a time; once 3 tags are held, shop offerings dynamically narrow to support your chosen build.",
+          "Simplified relic descriptions in the shop and grimoire to focus on baseline mechanics, with dynamic stat summaries tracking your exact level progression."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.7.0",
+        newest: false,
         bullets: [
           "The Alchemical Crucible is now accessible in the shop — fuse eligible pairs of MAX-level relics into powerful Mythic Relics with combined blessings, unique visual effects, and dynamic Grimoire entries."
         ]
@@ -5394,6 +5418,23 @@
     if(sfxVolumeSlider) sfxVolumeSlider.value = String(sfx);
     if(bgmVolumeValue) bgmVolumeValue.textContent = bgm + '%';
     if(sfxVolumeValue) sfxVolumeValue.textContent = sfx + '%';
+    syncVersionUI();
+  }
+
+  function syncVersionUI(){
+    const latestVer = (CHANGELOG_DATA && CHANGELOG_DATA.prealpha && CHANGELOG_DATA.prealpha[0])
+      ? CHANGELOG_DATA.prealpha[0].version.replace(/\s*\(Latest\)$/i, '')
+      : 'Pre-Alpha v1.7.1';
+    if(startOverlay){
+      const startBadge = startOverlay.querySelector('div[style*="letter-spacing:1px;"]');
+      if(startBadge) startBadge.textContent = latestVer.toUpperCase();
+    }
+    if(pauseOverlay){
+      const pauseBadge = pauseOverlay.querySelector('.pause-ver-tag');
+      if(pauseBadge){
+        pauseBadge.innerHTML = `<svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: ${latestVer}`;
+      }
+    }
   }
 
   function normalizeParticleSetting(value){
@@ -6162,6 +6203,14 @@
     });
     return counts;
   }
+  function getOwnedTagTypes(){
+    const ownedTags = new Set();
+    getOwnedRelicIds().forEach(id => {
+      const tag = getRelicPrimaryTag(id);
+      if(tag) ownedTags.add(tag);
+    });
+    return Array.from(ownedTags);
+  }
   function getSynergyMult(tag){
     // Only used for tags without fixed tier milestones (currently: chaos).
     const counts = getTagCounts();
@@ -6398,7 +6447,15 @@
     if(sig === relicTraySignature) return;
     relicTraySignature = sig;
     relicTray.innerHTML = '';
-    getOwnedRelicIds().forEach(id => {
+    const ownedIds = getOwnedRelicIds();
+    if(ownedIds.length > 0){
+      const header = document.createElement('div');
+      header.className = 'relic-tray-header';
+      header.textContent = `RELICS (${ownedIds.length}/${MAX_RELIC_SLOTS})`;
+      header.title = `Relic Inventory: ${ownedIds.length} of ${MAX_RELIC_SLOTS} slots in use`;
+      relicTray.appendChild(header);
+    }
+    ownedIds.forEach(id => {
       const r = getAnyRelicDef(id);
       if(!r) return;
       const el = document.createElement('div');
@@ -7924,7 +7981,17 @@
      SHOP / RELIC DRAFT
   ========================================================= */
   function getShopRelicPool(){
-    return RELICS.filter(r => isMetaUnlocked(r) && getRelicLevel(r.id) < RELIC_MAX_LEVEL);
+    const ownedTags = getOwnedTagTypes();
+    const isFull = getOwnedRelicIds().length >= MAX_RELIC_SLOTS;
+
+    return RELICS.filter(r => {
+      if(!isMetaUnlocked(r) || getRelicLevel(r.id) >= RELIC_MAX_LEVEL) return false;
+      // 3-Tag Limit: Block unowned tags if 3 are already held
+      if(ownedTags.length >= 3 && !ownedTags.includes(getRelicPrimaryTag(r))) return false;
+      // 6-Slot Full Limit: When inventory is full, only offer upgrades for already-owned relics
+      if(isFull && getRelicLevel(r.id) === 0) return false;
+      return true;
+    });
   }
 
   function rollShopOffers(){
@@ -8119,15 +8186,22 @@
         const card = document.createElement('div');
         card.className = 'relicCard' + ((maxed || boughtThisVisit) ? ' owned' : '') + (isUpgrade && !maxed ? ' upgrade' : '') + (showCorrupted ? ' corrupted' : '') + (relicTagTileClass(r) ? ' ' + relicTagTileClass(r) : '');
         card.setAttribute('data-id', r.id);
+        const isFull = lv === 0 && !boughtThisVisit && getOwnedRelicIds().length >= MAX_RELIC_SLOTS;
+        const ownedTags = getOwnedTagTypes();
+        const isTagBlocked = lv === 0 && !boughtThisVisit && ownedTags.length >= 3 && !ownedTags.includes(getRelicPrimaryTag(r));
         const buyLabel = boughtThisVisit
           ? (lv > 1 ? 'UPGRADED' : 'PURCHASED')
           : (maxed
             ? 'MAXED'
-            : (offer.free
-              ? 'CLAIM — FREE'
-              : (isUpgrade
-                ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
-                : ('BUY — ' + price + ' ' + icon('coin','ic-gold')))));
+            : (isFull
+              ? 'SLOTS FULL (' + MAX_RELIC_SLOTS + '/' + MAX_RELIC_SLOTS + ')'
+              : (isTagBlocked
+                ? 'TAG LIMIT REACHED (3/3)'
+                : (offer.free
+                  ? 'CLAIM — FREE'
+                  : (isUpgrade
+                    ? ('UPGRADE TO LV ' + nextLv + ' — ' + price + ' ' + icon('coin','ic-gold'))
+                    : ('BUY — ' + price + ' ' + icon('coin','ic-gold')))))));
         if(offer.free) card.classList.add('free-draft');
         const levelBadge = boughtThisVisit
           ? formatRelicLevel(lv)
@@ -8143,7 +8217,7 @@
           ${preview}
           ${boonHtml}
           ${curseHtml}
-          <button class="rBuy" data-id="${r.id}" ${maxed || boughtThisVisit || state.gold < price ? 'disabled' : ''}>
+          <button class="rBuy" data-id="${r.id}" ${maxed || boughtThisVisit || isFull || isTagBlocked || state.gold < price ? 'disabled' : ''}>
             ${buyLabel}
           </button>
         `;
@@ -8531,6 +8605,9 @@
     if(state.purchasedOffers.includes(id)) return;
     const lv = getRelicLevel(id);
     if(lv >= RELIC_MAX_LEVEL) return;
+    if(lv === 0 && getOwnedRelicIds().length >= MAX_RELIC_SLOTS) return;
+    const ownedTags = getOwnedTagTypes();
+    if(lv === 0 && ownedTags.length >= 3 && !ownedTags.includes(getRelicPrimaryTag(r))) return;
     const price = getRelicCost(r);
     if(state.gold < price) return;
     state.gold -= price;
