@@ -2177,6 +2177,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     width:100%; margin-bottom:0; padding:7px 8px;
     color: var(--amber-glow); font-size: 0.58rem; font-family:inherit; text-align:left;
+    appearance:none; -webkit-appearance:none;
     background: rgba(0,0,0,0.28); border:2px solid #000; cursor:pointer;
     box-shadow: inset 1px 1px 0 var(--px-light), inset -1px -1px 0 var(--px-dark);
   }
@@ -3243,7 +3244,7 @@
 <div class="overlay" id="startOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon ic-mana"><use href="#icon-moon"></use></svg> THE MIDNIGHT<br>APOTHECARY</h1>
-    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.6</div>
+    <div style="font-size:0.56rem; color:var(--amber); margin-top:-8px; margin-bottom:14px; letter-spacing:1px;">PRE-ALPHA v1.6.1</div>
     <p>Tap the cauldron to brew Mana Essence and fulfill the Guild's Orders before the deadline boils over. Once a quota is met, keep brewing for bonus Gold, or cash out early — linger too long and the order cashes out on its own. Spend Gold on rare Relics between rounds.</p>
     <div class="sanctum-vault">Mana Shards: <span data-shard-count>0</span></div>
     <button class="pixel-btn bigBtn" id="startBtn">START NEW BREW</button>
@@ -3302,7 +3303,7 @@
 <div class="overlay hidden" id="pauseOverlay">
   <div class="panelCard pixel-panel">
     <h1><svg class="icon"><use href="#icon-pause"></use></svg> GAME PAUSED</h1>
-    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.6</div>
+    <div class="pause-ver-tag"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Current Build: Pre-Alpha v1.6.1</div>
     <p>Brewing cycle frozen. Feel free to tap your Relics, Synergy badges, or Ingredient Charms to inspect them before resuming — the deadline won't move.</p>
 
     <div class="pause-inspect" id="pauseInspectSection">
@@ -3380,743 +3381,8 @@
         <button type="button" class="changelog-era-tab active" role="tab" aria-selected="true" data-era="prealpha" id="changelogTabPrealpha">PRE-ALPHA VERSIONS</button>
         <button type="button" class="changelog-era-tab" role="tab" aria-selected="false" data-era="devtest" id="changelogTabDevtest">DEV TEST VERSIONS</button>
       </div>
-      <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel">
-      <div class="changelog-entry open">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.6 (Latest)</div>
-        <ul class="changelog-list">
-          <li>Guild Boss encounters now unleash mid-round reactive phase hazards at 50% quota — shatter the Frost Baron's ice lock on your charms, tap and break the Grand Inquisitor's gilded seal to restore cauldron tapping power, and consume any charm to dispel the Midnight Eclipse's time warp.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.5</div>
-        <ul class="changelog-list">
-          <li>The apothecary shop now scans ahead and displays an Upcoming Boss Intel Warning banner before every Guild Boss encounter, revealing the incoming boss mandate so you can prepare relics and charms.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.6</div>
-        <ul class="changelog-list">
-          <li>The between-round shop on a phone now scrolls as a full page, so relic cards stay large enough to read.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.5</div>
-        <ul class="changelog-list">
-          <li>On a phone, the brew now fits on one screen — Gold, Shards, the pot, upgrades, and Ingredient Charms stay in view without scrolling.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.4</div>
-        <ul class="changelog-list">
-          <li>Firefox no longer freezes the whole browser while you brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.3</div>
-        <ul class="changelog-list">
-          <li>The brew stays smoother on Firefox.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.2</div>
-        <ul class="changelog-list">
-          <li>Arcane and Chaos particles now swirl as glowing spiral vortexes instead of simple circular sparks.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4.1</div>
-        <ul class="changelog-list">
-          <li>Tapping the cauldron no longer throws a burst of sparks — relic embers still rise from the brew on their own.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.4</div>
-        <ul class="changelog-list">
-          <li>The brew now throws smooth glowing sparks from the cauldron mouth — Fire embers, Frost flecks, Arcane swirls, and Midas glints rise on their own and burst when you land a Critical Surge.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.3</div>
-        <ul class="changelog-list">
-          <li>Sanctum stars you cannot afford no longer glow like they are for sale — they gray out until you have the shards.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.2</div>
-        <ul class="changelog-list">
-          <li>Sanctum branch names now sit on their own plaques between the Core and the first star, and the three paths no longer crowd each other.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3.1</div>
-        <ul class="changelog-list">
-          <li>The Alchemical Sanctum now fills the screen, with larger stars, clearer ranks, and more room between the three branches.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.3</div>
-        <ul class="changelog-list">
-          <li>The Alchemical Sanctum unfolds as a radial constellation — Alchemy, Chronos, and Commerce branch from the Apothecary Core, with Keystones flanking each outer star.</li>
-          <li>Hover a star to read its ranks, shard cost, and effect. Click a talent to allocate a point, or click a Keystone to buy it and equip or unequip — still only one Keystone at a time.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.4</div>
-        <ul class="changelog-list">
-          <li>Every talent gem and Keystone hex in the Alchemical Sanctum now wears its own painted pixel icon.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.3</div>
-        <ul class="changelog-list">
-          <li>Fire now flickers in chunky 16-bit pixel clusters, with bright ember flecks dancing around each rising flame.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.2</div>
-        <ul class="changelog-list">
-          <li>Fire relics now throw jagged pixel flame tongues and tiny rising embers from the brew instead of soft orange droplets.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2.1</div>
-        <ul class="changelog-list">
-          <li>The cauldron's colored glow no longer washes over the Stirring Power, Bubbler, and Ingredient Charm buttons.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.2</div>
-        <ul class="changelog-list">
-          <li>A fourth Midas relic joins the pedestal — the Auric Signet — with its own painted gold-ring icon.</li>
-          <li>Every 6th tap, the Signet stamps bonus Gold into your purse, more at higher ranks.</li>
-          <li>Ingredient Charms no longer flash a ticking number while they recharge — the dark sweep on the button is enough.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.1</div>
-        <ul class="changelog-list">
-          <li>Two new Chaos relics join the pedestal — the Pandemonium Die and the Phantom Ladle — each with its own painted icon.</li>
-          <li>Every 8th tap, the Die hurls a Chaos Burst of bonus Mana that is not a Critical Surge.</li>
-          <li>The Ladle leaves a ghostly afterimage of each tap that returns half a second later as echoed Mana.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.3</div>
-        <ul class="changelog-list">
-          <li>The night behind the cauldron now slowly drifts — faint stars twinkle, purple haze rolls past, and a quiet moon breathes in the corner without crowding the brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.2</div>
-        <ul class="changelog-list">
-          <li>Each new order's Mana Essence quota now rounds to a cleaner hundred — 3,325 becomes 3,300, and 7,347 becomes 7,300.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0.1</div>
-        <ul class="changelog-list">
-          <li>Hover an Ingredient Charm to see what it does, how many you own, and how long it takes to recharge.</li>
-          <li>Gold earned from passive effects no longer makes the coin banner bounce over the Mana Shards — the top bar now gives Gold and Shards their own breathing room.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Pre-Alpha v1.0</div>
-        <ul class="changelog-list">
-          <li>The Midnight Apothecary steps out of Dev Test and into Pre-Alpha — Version History now keeps Pre-Alpha builds and the older Dev Test archive on their own tabs.</li>
-          <li>The Cash Out plaque now sheds the same gold sparks and Midas coins that drift off a Midas cauldron, instead of tiny white specks.</li>
-        </ul>
-      </div>
-      </div>
-      <div class="changelog-era hidden" data-era="devtest" id="changelogEraDevtest" role="tabpanel">
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.7</div>
-        <ul class="changelog-list">
-          <li>The Cash Out button is now a gilded plaque with larger text — payout and auto-finish sit on their own lines so they're easier to read.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.6</div>
-        <ul class="changelog-list">
-          <li>The between-round shop now fills the screen — relic cards sit in a wider grid with larger text, and the supply shelf sits beside the continue buttons.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.5</div>
-        <ul class="changelog-list">
-          <li>Midas relics now have their own painted pixel icons — a hoarder's scale, a pawn ticket, a gilded ledger, and a cursed gold coin.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.4</div>
-        <ul class="changelog-list">
-          <li>Arcane and Chaos relics now have their own painted pixel icons — a familiar, a gilded crucible, a starter scroll, a conduit spire, a bifrost blossom, and a volatile catalyst.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.3</div>
-        <ul class="changelog-list">
-          <li>The seven Frost relics now have their own painted pixel icons — moon dust, a frozen hourglass, a glacial core, winter's grasp, rime calipers, a permafrost shard, and absolute zero.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.2</div>
-        <ul class="changelog-list">
-          <li>The six Fire relics now wear their own painted pixel icons — a chili, bellows, magma burst, phoenix plume, ashen rune, and cinderbrand crucible.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27.1</div>
-        <ul class="changelog-list">
-          <li>Order affixes and Guild Boss mandates now sit as a hoverable badge on the left of the cauldron, instead of a bulky banner under the order title.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.27</div>
-        <ul class="changelog-list">
-          <li>The Sanctum now has Keystone Masteries — six mutually exclusive playstyles with sharp trade-offs. Buy them with shards, then equip only one at a time.</li>
-          <li>Alchemy keystones split click-storms from idle bubblers, Chronos keystones trade gold-rush overcharge for glacial time, and Commerce keystones shrink synergy requirements or transmute every charm into essence and gold.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.26</div>
-        <ul class="changelog-list">
-          <li>From Order 3 onward, each Guild order can carry a wild affix that twists the brew — doubled stirring, faster boils, silenced crits, or mercurial gold taps.</li>
-          <li>Every fifth order is a Guild Boss with its own mandate, a pulsing crimson title, and a shard bounty plus a free corrupted relic if you prevail.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.25</div>
-        <ul class="changelog-list">
-          <li>Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfill more orders.</li>
-          <li>Sanctum talents cost more, and later nodes stay locked until you have spent enough shards in that branch.</li>
-          <li>Each path now has a late-game sink — Alchemical Mastery, Temporal Anchor, and Gilded Prosperity — that keeps taking shards for more essence, longer deadlines, or richer gold.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24.5</div>
-        <ul class="changelog-list">
-          <li>Setting Music Volume to 0% now fully silences the brew theme instead of leaving the loop playing underneath.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24.4</div>
-        <ul class="changelog-list">
-          <li>Winter's Grasp now has a chance to freeze the deadline on any tap — 6% at Lv 1 for 0.75s, more often and longer as you rank it — instead of waiting for a Critical Surge.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24.3</div>
-        <ul class="changelog-list">
-          <li>Philosopher's Crucible now wraps the pot in a living gold radiance instead of a dull brown halo.</li>
-          <li>Midas relics throw bright gold sparkles and tiny coin-glints from the rim and feet, and a tap or hover can flick a little gold speck off the brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24.2</div>
-        <ul class="changelog-list">
-          <li>Frost relics now throw crisp ice crystals up from the brew instead of dropping crescent rings from above.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24.1</div>
-        <ul class="changelog-list">
-          <li>Particle Density now has High, Medium, Low, and Off. Medium is the familiar brew; High whips the pot into a storm of sparks and wisps.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.24</div>
-        <ul class="changelog-list">
-          <li>Settings now has a Display / Visuals panel for particle density, CRT scanlines, screen shake, and the cauldron's colored aura.</li>
-          <li>You can turn the brew's ambient sparkles down or off if the pot gets too busy.</li>
-          <li>Optional CRT scanlines sit over the whole screen, crits and Magma Eruptions can shake the brew, and the glow under the pot can be switched off.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.23.1</div>
-        <ul class="changelog-list">
-          <li>The Alchemical Grimoire now groups relics by synergy tag — Fire, Frost, Arcane, Chaos, and Midas — on both the Standard and Corrupted pages.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.23</div>
-        <ul class="changelog-list">
-          <li>Three new Frost relics join the Relic Pedestal: Rime-Bound Caliper, Permafrost Shard, and Absolute Zero.</li>
-          <li>Rime-Bound Caliper slows a boiling-over deadline once fewer than 10 seconds remain, and it gets stingier as you rank it up.</li>
-          <li>Permafrost Shard multiplies your stir while the clock is frozen, from 2x at rank one up to 3x at rank three.</li>
-          <li>Absolute Zero snaps a short freeze onto the deadline whenever you toss any Ingredient Charm.</li>
-          <li>All three count toward your Frost set, so Chill State is easier to lock in.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.22</div>
-        <ul class="changelog-list">
-          <li>After you fill an order, overcharging now auto-cashes out after 30 seconds so you cannot farm Gold and shards forever.</li>
-          <li>The cash-out button shows the auto-finish countdown, and the cauldron rim flashes a warning in the last 5 seconds.</li>
-          <li>Hold-to-stir sparks, crits, and floating numbers now follow your cursor or finger instead of staying on the first tap.</li>
-          <li>Sacrificing with the Philosopher's Stone after filling an order immediately withdraws the cash-out if you drop back below quota.</li>
-          <li>The Grimoire's Standard tab always shows clean relic baselines, and the Corrupted tab only shows catalogued curses and swollen blessings.</li>
-          <li>The Sanctum retreat prompt now sits cleanly above the shop, and Stay &amp; Brew or Escape return you to the brew with the music playing.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.21.3</div>
-        <ul class="changelog-list">
-          <li>Gold and Mana Shards now sit in their own recessed pills that grow with the total, so five-digit Gold no longer disappears under the shard count.</li>
-          <li>The top bar lines up your order, synergies, and actions more cleanly on wide screens.</li>
-          <li>Mana and deadline numbers stay put instead of jittering as they tick.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.21.2</div>
-        <ul class="changelog-list">
-          <li>The top bar now has a matching Sanctum seal next to the Grimoire — tap it mid-brew to retreat, or from the menu to visit freely.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.21.1</div>
-        <ul class="changelog-list">
-          <li>Winter's Grasp no longer refreshes a freeze that is already running, so a crit streak can't lock the deadline forever.</li>
-          <li>No freeze — relic, charm, or otherwise — can hold the deadline longer than 4 seconds.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.21</div>
-        <ul class="changelog-list">
-          <li>Opening the Sanctum mid-brew or from the shop now asks you to abandon the run. Confirming banks your Mana Shards and ends the brew; staying puts you right back to work.</li>
-          <li>After a retreat, closing the Sanctum returns you to the main menu, ready to start a new brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.20</div>
-        <ul class="changelog-list">
-          <li>Ingredient Charms now need a moment to recharge after you toss them — the button darkens with a sweeping overlay and counts down the wait.</li>
-          <li>Charm pouch buttons and Supply Shelf cards wear a richer violet-gold rim.</li>
-          <li>The number tags are gone from the charm buttons. Keys 1 through 6 still toss your pouch in order.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.19</div>
-        <ul class="changelog-list">
-          <li>Your Mana Shard count now sits beside Gold on the top bar, and a Sanctum button lets you spend shards mid-brew — the deadline freezes until you close it.</li>
-          <li>The Alchemical Sanctum is now a branching tree: Alchemy, Chronos, and Commerce. Later nodes stay locked until you put a rank in the talent above them.</li>
-          <li>New talents: Stasis Mastery lengthens every freeze, Second Breath saves a boiled-over order once, and Bargain Master cheapens shop rerolls.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.18</div>
-        <ul class="changelog-list">
-          <li>The Alchemist's Supply Shelf now stocks three random Ingredient Charms each visit — rerolling the shop restocks those slots too.</li>
-          <li>Stir Frenzy, Time Freeze, and Golden Droplet have been renamed Berserker's Fang, Stasis Crystal, and Midas Tear.</li>
-          <li>New charms: Molten Ember guarantees Critical Surges for a few seconds, Aetheric Dew dumps five seconds of Bubbler Mana at once, and the rare Philosopher's Stone turns half your current Mana into Gold.</li>
-          <li>Philosopher's Stone only rarely appears on the shelf, glowing amber-gold with a RARE badge when it does.</li>
-          <li>Keys 1 through 6 toss the charms you currently carry, in pouch order, and those same numbers now sit on the active charm buttons.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.17.1</div>
-        <ul class="changelog-list">
-          <li>The Grimoire's Standard tab always shows the clean relic. Corrupted variants stay in the Corrupted tab, even if that's the copy you're brewing with.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.17</div>
-        <ul class="changelog-list">
-          <li>Holding the cauldron now stirs on its own once you unlock Continuous Stirring in the Sanctum — no extra clicker required.</li>
-          <li>The Grimoire splits into Standard and Corrupted catalogues, and keys 1, 2, and 3 toss Stir Frenzy, Time Freeze, and Golden Droplet.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.16.1</div>
-        <ul class="changelog-list">
-          <li>Relic icons now glow in their synergy color — fire, frost, arcane, chaos, or midas — on the rail, in the shop, and in the Grimoire.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.16</div>
-        <ul class="changelog-list">
-          <li>Three new Fire relics join the pedestal: Combustion Bellows builds Heat from a rapid stirring streak, Cinderbrand Crucible can ignite the brew to keep ticking, and Magma Geode erupts when you cross half the quota.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.15.4</div>
-        <ul class="changelog-list">
-          <li>Rank 1 relic frames are a softer brown-bronze now, so they read less like cheap gold.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.15.3</div>
-        <ul class="changelog-list">
-          <li>Silver and gold relic frames now actually pulse and twinkle instead of sitting still.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.15.2</div>
-        <ul class="changelog-list">
-          <li>Silver and gold relic frames now pulse with a soft glow and tiny sparkles so upgraded ranks stand out from bronze.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.15.1</div>
-        <ul class="changelog-list">
-          <li>Relic icons now wear a metal frame instead of a number badge: bronze at rank 1, silver at rank 2, and gold at rank 3.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.15.0</div>
-        <ul class="changelog-list">
-          <li>Boiling over now yields Mana Shards you can spend in the Alchemical Sanctum on permanent talents that last between brews.</li>
-          <li>Sanctum talents stretch every deadline, start you with extra Gold, add innate Critical Surges, deepen the cauldron's brew power, or unlock a fifth Relic Pedestal slot.</li>
-          <li>Rarer relics and charms stay locked until you hit career milestones — the Grimoire shows a padlock and tells you what to chase.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.14.1</div>
-        <ul class="changelog-list">
-          <li>Spending your last Gold on Ingredient Charms now greys out shop relics you can no longer afford.</li>
-          <li>The dark puddle of shadow under the cauldron is gone, and tap bubbles are a little more see-through.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.14.0</div>
-        <ul class="changelog-list">
-          <li>Any shop relic can now arrive Corrupted — swollen blessings with a crimson curse. Clean relics keep their upside; the old dedicated cursed relics are gone.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.13.1</div>
-        <ul class="changelog-list">
-          <li>Wide screens now stretch the brewing table, with a larger cauldron and a roomier relic rail along the right edge.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.13.0</div>
-        <ul class="changelog-list">
-          <li>A cozy 16-bit apothecary theme now hums in the background, and Pause Settings lets you fade Music and SFX separately.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.6</div>
-        <ul class="changelog-list">
-          <li>The first few orders now pay out more Gold, so a normal opening brew is enough to pick up a relic from the shop.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.5</div>
-        <ul class="changelog-list">
-          <li>Each shop card can only be bought once per visit — reroll or finish another order if you want to upgrade that relic again.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.4</div>
-        <ul class="changelog-list">
-          <li>Golden Tithe and Familiar's Whisk no longer snowball off each other — unspent Gold still boosts you, but it can't explode your passive brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.3</div>
-        <ul class="changelog-list">
-          <li>Hitting the Mana quota now washes a pulsing violet glow off the bar and onto the HUD around it.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.2</div>
-        <ul class="changelog-list">
-          <li>The Mana Essence bar is a deeper purple, and hitting quota makes it pulse with a violet glow instead of turning gold.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.1</div>
-        <ul class="changelog-list">
-          <li>Your relics now sit in a larger vertical rail on the right of the brewing stage, with clearer icons and level badges in the corner.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.12.0</div>
-        <ul class="changelog-list">
-          <li>Relics can now be upgraded to Level 3 — the shop shows four offers, including upgrades for relics you already own.</li>
-          <li>Higher levels grow that relic's bonuses and timings, and a ★ level badge marks each one on your tray, in pause, and in the shop.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.11.0</div>
-        <ul class="changelog-list">
-          <li>Phoenix Down now Cheats Death: if an order boils over without the quota, the relic burns itself to give you +6 seconds and a burst of flame.</li>
-          <li>Ashen Sigil is now the Fire relic for raw tap power, granting +25% Click Power.</li>
-          <li>The Cursed Midas Coin no longer does nothing when you're broke — every 10th tap tosses you +2 Gold, but your in-round upgrades cost 25% more Mana.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.14</div>
-        <ul class="changelog-list">
-          <li>The Order Deadline bar now turns icy whenever the clock is frozen, and the Time Freeze charm only pulses when you actually use it — Frost relics no longer light it up.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.13</div>
-        <ul class="changelog-list">
-          <li>Winter's Grasp no longer locks the deadline forever when you tap very quickly — each Critical Surge still chills the clock, but rapid crits can't keep it frozen.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.12</div>
-        <ul class="changelog-list">
-          <li>A leftover patch of background in the cauldron's handle is gone.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.11</div>
-        <ul class="changelog-list">
-          <li>The cauldron now shows its latest pot art, so a leftover older cauldron no longer sits in front of the brew.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.10</div>
-        <ul class="changelog-list">
-          <li>The brew now sits inside the cauldron's rim instead of showing through the handle rings, and sparks rise from that same opening.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.9</div>
-        <ul class="changelog-list">
-          <li>The cauldron is larger on the brewing stage, and the colored glow behind the pot is gone.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.8</div>
-        <ul class="changelog-list">
-          <li>The cauldron and its glow are larger and more prominent on the brewing stage.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.7</div>
-        <ul class="changelog-list">
-          <li>The cauldron art is recut, and the brew, sparks, and glow now sit cleanly in the pot's new rim and opening.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.6</div>
-        <ul class="changelog-list">
-          <li>The glow now rings the cauldron instead of shining through the pot, and the black silhouette under the sprite is gone.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.5</div>
-        <ul class="changelog-list">
-          <li>The glow behind the cauldron no longer seeps through the rim, clawed feet, or ring hooks.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.4</div>
-        <ul class="changelog-list">
-          <li>The glow behind the cauldron no longer bleeds through the pot's rim, clawed feet, or side rings.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.3</div>
-        <ul class="changelog-list">
-          <li>Version History now folds each build into a clickable tab — only the newest notes are open when you first look.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.2</div>
-        <ul class="changelog-list">
-          <li>The Grimoire button now uses its own leather-bound book art, and it lifts with a gold shimmer when you hover it.</li>
-          <li>On a wide screen, the brew stage stretches out, and the Shop, Grimoire, and Pause menus open as broad panels with relics in columns.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.1</div>
-        <ul class="changelog-list">
-          <li>The Alchemical Grimoire button now shows an open book so it is easy to spot next to Pause.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.10.0</div>
-        <ul class="changelog-list">
-          <li>Open the Alchemical Grimoire from the top bar to browse every relic you've discovered — unknown ones stay locked until you buy them.</li>
-          <li>Glacial Core now unleashes Frostbite Surge, freezing the deadline for 2 seconds each time you cross 25%, 50%, and 75% of an order's quota.</li>
-          <li>Inspection cards now fade away when you move the cursor off a relic, synergy badge, or charm.</li>
-          <li>The cauldron's glow stays put when you tap, and no longer stains the pot's feet or side rings.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.9.0</div>
-        <ul class="changelog-list">
-          <li>A new Midas synergy tag joins the brew: two matching relics grant Midas Touch, and four grant Golden Tithe.</li>
-          <li>Four new relics arrive — Hoarder's Scale, Alchemist's Pawn Ticket, Gilded Ledger, and the cursed Cursed Midas Coin.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.7</div>
-        <ul class="changelog-list">
-          <li>Hovering relics and charms no longer stacks a second, native browser tooltip on top of the in-game inspection card.</li>
-          <li>Background sparkles are now glowing four-point stars that twinkle as they drift up the night sky.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.6</div>
-        <ul class="changelog-list">
-          <li>Tap bubbles and relic sparks now rise out of the brew itself instead of popping in well above the cauldron's rim.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.5</div>
-        <ul class="changelog-list">
-          <li>Bubbles, sparks, and floating numbers now rise cleanly above the cauldron instead of getting cut off at the pot's edge.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.4</div>
-        <ul class="changelog-list">
-          <li>Tightened the glow so it hugs the cauldron instead of washing out the whole brewing stage.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.3</div>
-        <ul class="changelog-list">
-          <li>Removed the Familiar's Whisk companion cat from the brewing stage — the relic still grants its bonus, just without the extra sprite beside the pot.</li>
-          <li>Softened the glow behind the cauldron so it fades cleanly into the background instead of clipping against the edges of the stage.</li>
-          <li>Locked the HUD so Stirring Power, Enchanted Bubblers, and Ingredient Charms stay flush at the bottom of the screen without pushing the brew off-screen or adding a scrollbar.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.2</div>
-        <ul class="changelog-list">
-          <li>Brewing effects (swirls, smoke, sparkles) now rise directly out of the bubbling liquid instead of the middle of the pot, and tap bubbles always pop up from the brew's surface.</li>
-          <li>Removed a stray floating highlight that was glitching above the cauldron's rim.</li>
-          <li>The glow behind the cauldron is now a soft ambient wash instead of a visible circular spotlight.</li>
-          <li>Redrew the Familiar's Whisk companion as a crisp pixel-art black cat with pointed ears, a curling tail, a gold collar charm, and glowing amber eyes — and fixed its tail occasionally vanishing mid-sway.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8.1</div>
-        <ul class="changelog-list">
-          <li>Smoothed out the glow behind the cauldron — it now dissolves softly into the background instead of showing a hard circular edge.</li>
-          <li>Gave the Familiar's Whisk cat a full redesign: pointed ears with inner highlights, glowing golden almond eyes, a curling swaying tail, and a tiny glinting collar charm.</li>
-          <li>Sharpened the look of Arcane Swirls, Smoke Wisps, Bubble Clusters, and Stardust so each brewing effect twinkles and drifts more distinctly.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.8</div>
-        <ul class="changelog-list">
-          <li>Overhauled the cauldron's backdrop glow into a richer, layered aura with real depth — and it now dynamically blends its color toward whichever Synergy Tags your owned Relics lean into.</li>
-          <li>Added crisp rim-shine and rivet-stud highlights to the cauldron, plus a grounding shadow beneath its feet for a more polished, high-definition pixel-art look.</li>
-          <li>Reworked relic ambient effects into four clearly distinct families — spinning Arcane Swirls, curling Smoke Wisps, clustered Bubble bursts (tied to your Enchanted Bubblers), and twinkling Stardust glints.</li>
-          <li>The Familiar's Whisk companion cat is now a fully independent black cat with its own idle animation (breathing, blinking amber eyes, swaying tail) that no longer flinches or squishes when you tap the cauldron.</li>
-          <li>Relic Pedestal cards in the shop are now fully self-contained — each card shows its own Synergy Tier progress directly in the card, so there's no popup to tap through anymore.</li>
-          <li>Ingredient Charm tooltips on the Alchemist's Supply Shelf now open above the item so they never cover the Buy or Reroll buttons.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.7</div>
-        <ul class="changelog-list">
-          <li>Rebalanced late-game Gold payouts — earning huge Gold windfalls by Order 8+ and buying out the entire shop in one visit is now much harder. Early orders are unaffected.</li>
-          <li>Redesigned the Apothecary Shop into two tiers: a "Relic Pedestal" for your 3 randomized Relic choices, and a compact "Alchemist's Supply Shelf" for Ingredient Charms.</li>
-          <li>Added a persistent Gold counter at the top of the shop so your balance is always visible while browsing.</li>
-          <li>Relics and Ingredient Charms can now be tapped or hovered — both in the shop and on your HUD — to inspect their full description, tags, and exact synergy tier bonuses without buying or using them.</li>
-          <li>The Pause menu now shows a live readout of your active Synergies, Relics, and Ingredient Charms so you can study your build at your own pace, and its Pause/Play button icon now reflects the current state.</li>
-          <li>Renamed "Resume Game" to "Resume Brewing" and made sure every ambient particle and animation truly freezes solid while paused.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6.5</div>
-        <ul class="changelog-list">
-          <li>Smoothed the Order 4-6 difficulty spike — quotas still climb fast, but no longer hit a sudden brick wall right when players have the least upgrades.</li>
-          <li>Click power upgrades get a little cheaper to purchase repeatedly, so active clicking keeps pace with rising quotas.</li>
-          <li>Increased Gold earned from completed orders so early runs can afford enough upgrades heading into the tougher Order 5-6 brews.</li>
-          <li>Round timers are unchanged — the pacing is still just as fast and snappy.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6.4</div>
-        <ul class="changelog-list">
-          <li>Fixed missing cauldron particle effects for most relics — ambient effects were only wired to 5 specific relics, so any other Fire/Frost/Arcane/Chaos relic (Ashen Sigil, Phoenix Down, Arcane Conduit, Winter's Grasp, Glacial Core, Cursed Ember, Unstable Brew, Familiar's Whisk, Philosopher's Crucible, Alchemist's Starter) showed nothing.</li>
-          <li>Ambient effects are now driven by a relic's Synergy Tag, so every relic in the game reliably shows a themed effect around the cauldron.</li>
-          <li>Added a new glowing violet orb + twinkle effect for Arcane relics.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6.3</div>
-        <ul class="changelog-list">
-          <li>Shop upgrade buttons, relic "Buy" buttons, and every pause menu button now share the same satisfying hover glow and click-press feedback as the Ingredient Charms.</li>
-          <li>Relic ambient particle effects reworked — flames, frost, sparks, shimmer, and rainbow effects now render as proper bubbles, curling swirls, and drifting smoke wisps instead of flat colored squares.</li>
-          <li>Added a smoky wisp effect that lingers above the cauldron while brewing with the Dragonfire Pepper relic.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6.2</div>
-        <ul class="changelog-list">
-          <li>Fixed unresponsive Ingredient Charm buttons (Stir Frenzy, Time Freeze, Golden Droplet) — they were being fully rebuilt every animation frame, which destroyed the button under the player's tap before the click could register.</li>
-          <li>Charm buttons are now built once and updated in place, keeping their event listeners intact.</li>
-          <li>Added a glowing pulse + live countdown on charm buttons while their buff is active, plus clearer hover/press feedback.</li>
-          <li>Badge overlays (count, buff timer) no longer intercept clicks meant for the button underneath.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6.1</div>
-        <ul class="changelog-list">
-          <li>Replaced every raw Unicode emoji with unified, retro-styled inline SVG pixel icons for consistent visuals across iOS, Android, Windows, and macOS.</li>
-          <li>Added a shared icon sprite and helper covering currency, synergy tags, relic/consumable art, and pause menu indicators.</li>
-          <li>Icons now tint to match their theme (gold coin, icy frost, fiery ember, arcane violet, chaos crimson).</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.6</div>
-        <ul class="changelog-list">
-          <li>Implemented persistent Save &amp; Load system via browser localStorage (apothecary_save_v1).</li>
-          <li>Auto-saves state on completed orders, shop transactions, upgrade purchases, and every 10s.</li>
-          <li>Restores gold, mana, order level, upgrades, relics, synergies, and charms upon page reload.</li>
-          <li>Added "Reset Progress / New Run" option in Pause Settings menu with confirmation prompt.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.5</div>
-        <ul class="changelog-list">
-          <li>Rendering performance optimizations specifically tuned for Firefox / Gecko layout engines.</li>
-          <li>Applied strict CSS containment (contain: layout paint style) and pointer-events isolation on particle containers.</li>
-          <li>Upgraded particle animations to hardware-accelerated 3D transforms (translate3d) with will-change hints.</li>
-          <li>Removed expensive paint filters (box-shadows and drop-shadows) from dynamically spawned particles.</li>
-          <li>Throttled tap particle spawning to a single lightweight burst bubble per click.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.4</div>
-        <ul class="changelog-list">
-          <li>Overhauled Synergy Tags with fixed Set Tier milestones: <svg class="icon ic-fire"><use href="#icon-fire"></use></svg> Fire (2: +30% Click Power, 4: Overheat Surge), <svg class="icon ic-frost"><use href="#icon-frost"></use></svg> Frost (2: +3s Deadline, 4: Chill State), <svg class="icon ic-arcane"><use href="#icon-arcane"></use></svg> Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).</li>
-          <li>Added 5 new relics (Ashen Sigil, Phoenix Down, Glacial Core, Winter's Grasp, Arcane Conduit) so every tiered tag can reach its 4-piece milestone.</li>
-          <li>Synergy badges on the top bar and shop are now interactive — tap or hover to see a retro tooltip with active tiers and the next threshold.</li>
-          <li>Boosted synergy badges now glow with a pulsing amber border once a tier is unlocked.</li>
-          <li>Shop relic cards now show a hint when purchasing will activate or upgrade a Synergy Tier.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.3</div>
-        <ul class="changelog-list">
-          <li>Added consumable Ingredient Charms (Stir Frenzy, Time Freeze, Golden Droplet) — one-time boosts usable mid-shift.</li>
-          <li>Introduced Corrupted Relics (Cursed Ember, Unstable Brew) — massive power with dangerous drawbacks.</li>
-          <li>Added Synergy Tags (<svg class="icon ic-fire"><use href="#icon-fire"></use></svg> Fire, <svg class="icon ic-frost"><use href="#icon-frost"></use></svg> Frost, <svg class="icon ic-arcane"><use href="#icon-arcane"></use></svg> Arcane, <svg class="icon ic-chaos"><use href="#icon-chaos"></use></svg> Chaos) — collecting multiple relics of the same tag multiplies their passives.</li>
-          <li>Expanded the Apothecary Shop with a dedicated Ingredients section and a live Synergy tracker.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.2</div>
-        <ul class="changelog-list">
-          <li>Increased font sizes across relic cards, upgrades, and descriptions for desktop readability.</li>
-          <li>Overhauled Order Deadline bar with pure crimson gradients and smooth liquid wave shimmer.</li>
-          <li>Refined pause menu with dedicated version history drawer and build badge.</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-ver"><svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> Dev Test v0.1</div>
-        <ul class="changelog-list">
-          <li>Rebalanced gold economy and quota exponential scaling.</li>
-          <li>Upgraded cauldron visuals to transparent pixel art.</li>
-          <li>Liquid-style animated UI meters for Mana and Deadline.</li>
-          <li>Bubble-based tap particle effects.</li>
-          <li>Added pause menu, settings, and changelog system.</li>
-        </ul>
-      </div>
-      </div>
+      <div class="changelog-era" data-era="prealpha" id="changelogEraPrealpha" role="tabpanel"></div>
+      <div class="changelog-era hidden" data-era="devtest" id="changelogEraDevtest" role="tabpanel"></div>
     </div>
   </div>
 </div>
@@ -4441,6 +3707,859 @@
     moonstone:  { c1:'#eaf7ff', c2:'#8fd0f5', c3:'#3d6fa8', glow:'143, 208, 245' },
     bifrost:    { c1:'#ffe37a', c2:'#7ad4ff', c3:'#ffb3e6', glow:'255, 160, 220' },
     crucible:   { c1:'#fff3b0', c2:'#e8b93d', c3:'#a9760a', glow:'232, 185, 61' },
+  };
+
+  const CHANGELOG_DATA = {
+    prealpha: [
+      {
+        version: "Pre-Alpha v1.6.1 (Latest)",
+        newest: true,
+        bullets: [
+          "Version History still opens on the latest notes, and tapping any older build folds its details open or shut."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.6",
+        newest: false,
+        bullets: [
+          "Guild Boss encounters now unleash mid-round reactive phase hazards at 50% quota — shatter the Frost Baron's ice lock on your charms, tap and break the Grand Inquisitor's gilded seal to restore cauldron tapping power, and consume any charm to dispel the Midnight Eclipse's time warp."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.5",
+        newest: false,
+        bullets: [
+          "The apothecary shop now scans ahead and displays an Upcoming Boss Intel Warning banner before every Guild Boss encounter, revealing the incoming boss mandate so you can prepare relics and charms."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.6",
+        newest: false,
+        bullets: [
+          "The between-round shop on a phone now scrolls as a full page, so relic cards stay large enough to read."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.5",
+        newest: false,
+        bullets: [
+          "On a phone, the brew now fits on one screen — Gold, Shards, the pot, upgrades, and Ingredient Charms stay in view without scrolling."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.4",
+        newest: false,
+        bullets: [
+          "Firefox no longer freezes the whole browser while you brew."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.3",
+        newest: false,
+        bullets: [
+          "The brew stays smoother on Firefox."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.2",
+        newest: false,
+        bullets: [
+          "Arcane and Chaos particles now swirl as glowing spiral vortexes instead of simple circular sparks."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4.1",
+        newest: false,
+        bullets: [
+          "Tapping the cauldron no longer throws a burst of sparks — relic embers still rise from the brew on their own."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.4",
+        newest: false,
+        bullets: [
+          "The brew now throws smooth glowing sparks from the cauldron mouth — Fire embers, Frost flecks, Arcane swirls, and Midas glints rise on their own and burst when you land a Critical Surge."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.3.3",
+        newest: false,
+        bullets: [
+          "Sanctum stars you cannot afford no longer glow like they are for sale — they gray out until you have the shards."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.3.2",
+        newest: false,
+        bullets: [
+          "Sanctum branch names now sit on their own plaques between the Core and the first star, and the three paths no longer crowd each other."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.3.1",
+        newest: false,
+        bullets: [
+          "The Alchemical Sanctum now fills the screen, with larger stars, clearer ranks, and more room between the three branches."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.3",
+        newest: false,
+        bullets: [
+          "The Alchemical Sanctum unfolds as a radial constellation — Alchemy, Chronos, and Commerce branch from the Apothecary Core, with Keystones flanking each outer star.",
+          "Hover a star to read its ranks, shard cost, and effect. Click a talent to allocate a point, or click a Keystone to buy it and equip or unequip — still only one Keystone at a time."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.2.4",
+        newest: false,
+        bullets: [
+          "Every talent gem and Keystone hex in the Alchemical Sanctum now wears its own painted pixel icon."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.2.3",
+        newest: false,
+        bullets: [
+          "Fire now flickers in chunky 16-bit pixel clusters, with bright ember flecks dancing around each rising flame."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.2.2",
+        newest: false,
+        bullets: [
+          "Fire relics now throw jagged pixel flame tongues and tiny rising embers from the brew instead of soft orange droplets."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.2.1",
+        newest: false,
+        bullets: [
+          "The cauldron's colored glow no longer washes over the Stirring Power, Bubbler, and Ingredient Charm buttons."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.2",
+        newest: false,
+        bullets: [
+          "A fourth Midas relic joins the pedestal — the Auric Signet — with its own painted gold-ring icon.",
+          "Every 6th tap, the Signet stamps bonus Gold into your purse, more at higher ranks.",
+          "Ingredient Charms no longer flash a ticking number while they recharge — the dark sweep on the button is enough."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.1",
+        newest: false,
+        bullets: [
+          "Two new Chaos relics join the pedestal — the Pandemonium Die and the Phantom Ladle — each with its own painted icon.",
+          "Every 8th tap, the Die hurls a Chaos Burst of bonus Mana that is not a Critical Surge.",
+          "The Ladle leaves a ghostly afterimage of each tap that returns half a second later as echoed Mana."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.0.3",
+        newest: false,
+        bullets: [
+          "The night behind the cauldron now slowly drifts — faint stars twinkle, purple haze rolls past, and a quiet moon breathes in the corner without crowding the brew."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.0.2",
+        newest: false,
+        bullets: [
+          "Each new order's Mana Essence quota now rounds to a cleaner hundred — 3,325 becomes 3,300, and 7,347 becomes 7,300."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.0.1",
+        newest: false,
+        bullets: [
+          "Hover an Ingredient Charm to see what it does, how many you own, and how long it takes to recharge.",
+          "Gold earned from passive effects no longer makes the coin banner bounce over the Mana Shards — the top bar now gives Gold and Shards their own breathing room."
+        ]
+      },
+      {
+        version: "Pre-Alpha v1.0",
+        newest: false,
+        bullets: [
+          "The Midnight Apothecary steps out of Dev Test and into Pre-Alpha — Version History now keeps Pre-Alpha builds and the older Dev Test archive on their own tabs.",
+          "The Cash Out plaque now sheds the same gold sparks and Midas coins that drift off a Midas cauldron, instead of tiny white specks."
+        ]
+      }
+    ],
+    devtest: [
+      {
+        version: "Dev Test v0.27.7",
+        newest: true,
+        bullets: [
+          "The Cash Out button is now a gilded plaque with larger text — payout and auto-finish sit on their own lines so they're easier to read."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.6",
+        newest: false,
+        bullets: [
+          "The between-round shop now fills the screen — relic cards sit in a wider grid with larger text, and the supply shelf sits beside the continue buttons."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.5",
+        newest: false,
+        bullets: [
+          "Midas relics now have their own painted pixel icons — a hoarder's scale, a pawn ticket, a gilded ledger, and a cursed gold coin."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.4",
+        newest: false,
+        bullets: [
+          "Arcane and Chaos relics now have their own painted pixel icons — a familiar, a gilded crucible, a starter scroll, a conduit spire, a bifrost blossom, and a volatile catalyst."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.3",
+        newest: false,
+        bullets: [
+          "The seven Frost relics now have their own painted pixel icons — moon dust, a frozen hourglass, a glacial core, winter's grasp, rime calipers, a permafrost shard, and absolute zero."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.2",
+        newest: false,
+        bullets: [
+          "The six Fire relics now wear their own painted pixel icons — a chili, bellows, magma burst, phoenix plume, ashen rune, and cinderbrand crucible."
+        ]
+      },
+      {
+        version: "Dev Test v0.27.1",
+        newest: false,
+        bullets: [
+          "Order affixes and Guild Boss mandates now sit as a hoverable badge on the left of the cauldron, instead of a bulky banner under the order title."
+        ]
+      },
+      {
+        version: "Dev Test v0.27",
+        newest: false,
+        bullets: [
+          "The Sanctum now has Keystone Masteries — six mutually exclusive playstyles with sharp trade-offs. Buy them with shards, then equip only one at a time.",
+          "Alchemy keystones split click-storms from idle bubblers, Chronos keystones trade gold-rush overcharge for glacial time, and Commerce keystones shrink synergy requirements or transmute every charm into essence and gold."
+        ]
+      },
+      {
+        version: "Dev Test v0.26",
+        newest: false,
+        bullets: [
+          "From Order 3 onward, each Guild order can carry a wild affix that twists the brew — doubled stirring, faster boils, silenced crits, or mercurial gold taps.",
+          "Every fifth order is a Guild Boss with its own mandate, a pulsing crimson title, and a shard bounty plus a free corrupted relic if you prevail."
+        ]
+      },
+      {
+        version: "Dev Test v0.25",
+        newest: false,
+        bullets: [
+          "Mana Shards are harder to wring from raw essence, but deep runs now pay more as you fulfill more orders.",
+          "Sanctum talents cost more, and later nodes stay locked until you have spent enough shards in that branch.",
+          "Each path now has a late-game sink — Alchemical Mastery, Temporal Anchor, and Gilded Prosperity — that keeps taking shards for more essence, longer deadlines, or richer gold."
+        ]
+      },
+      {
+        version: "Dev Test v0.24.5",
+        newest: false,
+        bullets: [
+          "Setting Music Volume to 0% now fully silences the brew theme instead of leaving the loop playing underneath."
+        ]
+      },
+      {
+        version: "Dev Test v0.24.4",
+        newest: false,
+        bullets: [
+          "Winter's Grasp now has a chance to freeze the deadline on any tap — 6% at Lv 1 for 0.75s, more often and longer as you rank it — instead of waiting for a Critical Surge."
+        ]
+      },
+      {
+        version: "Dev Test v0.24.3",
+        newest: false,
+        bullets: [
+          "Philosopher's Crucible now wraps the pot in a living gold radiance instead of a dull brown halo.",
+          "Midas relics throw bright gold sparkles and tiny coin-glints from the rim and feet, and a tap or hover can flick a little gold speck off the brew."
+        ]
+      },
+      {
+        version: "Dev Test v0.24.2",
+        newest: false,
+        bullets: [
+          "Frost relics now throw crisp ice crystals up from the brew instead of dropping crescent rings from above."
+        ]
+      },
+      {
+        version: "Dev Test v0.24.1",
+        newest: false,
+        bullets: [
+          "Particle Density now has High, Medium, Low, and Off. Medium is the familiar brew; High whips the pot into a storm of sparks and wisps."
+        ]
+      },
+      {
+        version: "Dev Test v0.24",
+        newest: false,
+        bullets: [
+          "Settings now has a Display / Visuals panel for particle density, CRT scanlines, screen shake, and the cauldron's colored aura.",
+          "You can turn the brew's ambient sparkles down or off if the pot gets too busy.",
+          "Optional CRT scanlines sit over the whole screen, crits and Magma Eruptions can shake the brew, and the glow under the pot can be switched off."
+        ]
+      },
+      {
+        version: "Dev Test v0.23.1",
+        newest: false,
+        bullets: [
+          "The Alchemical Grimoire now groups relics by synergy tag — Fire, Frost, Arcane, Chaos, and Midas — on both the Standard and Corrupted pages."
+        ]
+      },
+      {
+        version: "Dev Test v0.23",
+        newest: false,
+        bullets: [
+          "Three new Frost relics join the Relic Pedestal: Rime-Bound Caliper, Permafrost Shard, and Absolute Zero.",
+          "Rime-Bound Caliper slows a boiling-over deadline once fewer than 10 seconds remain, and it gets stingier as you rank it up.",
+          "Permafrost Shard multiplies your stir while the clock is frozen, from 2x at rank one up to 3x at rank three.",
+          "Absolute Zero snaps a short freeze onto the deadline whenever you toss any Ingredient Charm.",
+          "All three count toward your Frost set, so Chill State is easier to lock in."
+        ]
+      },
+      {
+        version: "Dev Test v0.22",
+        newest: false,
+        bullets: [
+          "After you fill an order, overcharging now auto-cashes out after 30 seconds so you cannot farm Gold and shards forever.",
+          "The cash-out button shows the auto-finish countdown, and the cauldron rim flashes a warning in the last 5 seconds.",
+          "Hold-to-stir sparks, crits, and floating numbers now follow your cursor or finger instead of staying on the first tap.",
+          "Sacrificing with the Philosopher's Stone after filling an order immediately withdraws the cash-out if you drop back below quota.",
+          "The Grimoire's Standard tab always shows clean relic baselines, and the Corrupted tab only shows catalogued curses and swollen blessings.",
+          "The Sanctum retreat prompt now sits cleanly above the shop, and Stay &amp; Brew or Escape return you to the brew with the music playing."
+        ]
+      },
+      {
+        version: "Dev Test v0.21.3",
+        newest: false,
+        bullets: [
+          "Gold and Mana Shards now sit in their own recessed pills that grow with the total, so five-digit Gold no longer disappears under the shard count.",
+          "The top bar lines up your order, synergies, and actions more cleanly on wide screens.",
+          "Mana and deadline numbers stay put instead of jittering as they tick."
+        ]
+      },
+      {
+        version: "Dev Test v0.21.2",
+        newest: false,
+        bullets: [
+          "The top bar now has a matching Sanctum seal next to the Grimoire — tap it mid-brew to retreat, or from the menu to visit freely."
+        ]
+      },
+      {
+        version: "Dev Test v0.21.1",
+        newest: false,
+        bullets: [
+          "Winter's Grasp no longer refreshes a freeze that is already running, so a crit streak can't lock the deadline forever.",
+          "No freeze — relic, charm, or otherwise — can hold the deadline longer than 4 seconds."
+        ]
+      },
+      {
+        version: "Dev Test v0.21",
+        newest: false,
+        bullets: [
+          "Opening the Sanctum mid-brew or from the shop now asks you to abandon the run. Confirming banks your Mana Shards and ends the brew; staying puts you right back to work.",
+          "After a retreat, closing the Sanctum returns you to the main menu, ready to start a new brew."
+        ]
+      },
+      {
+        version: "Dev Test v0.20",
+        newest: false,
+        bullets: [
+          "Ingredient Charms now need a moment to recharge after you toss them — the button darkens with a sweeping overlay and counts down the wait.",
+          "Charm pouch buttons and Supply Shelf cards wear a richer violet-gold rim.",
+          "The number tags are gone from the charm buttons. Keys 1 through 6 still toss your pouch in order."
+        ]
+      },
+      {
+        version: "Dev Test v0.19",
+        newest: false,
+        bullets: [
+          "Your Mana Shard count now sits beside Gold on the top bar, and a Sanctum button lets you spend shards mid-brew — the deadline freezes until you close it.",
+          "The Alchemical Sanctum is now a branching tree: Alchemy, Chronos, and Commerce. Later nodes stay locked until you put a rank in the talent above them.",
+          "New talents: Stasis Mastery lengthens every freeze, Second Breath saves a boiled-over order once, and Bargain Master cheapens shop rerolls."
+        ]
+      },
+      {
+        version: "Dev Test v0.18",
+        newest: false,
+        bullets: [
+          "The Alchemist's Supply Shelf now stocks three random Ingredient Charms each visit — rerolling the shop restocks those slots too.",
+          "Stir Frenzy, Time Freeze, and Golden Droplet have been renamed Berserker's Fang, Stasis Crystal, and Midas Tear.",
+          "New charms: Molten Ember guarantees Critical Surges for a few seconds, Aetheric Dew dumps five seconds of Bubbler Mana at once, and the rare Philosopher's Stone turns half your current Mana into Gold.",
+          "Philosopher's Stone only rarely appears on the shelf, glowing amber-gold with a RARE badge when it does.",
+          "Keys 1 through 6 toss the charms you currently carry, in pouch order, and those same numbers now sit on the active charm buttons."
+        ]
+      },
+      {
+        version: "Dev Test v0.17.1",
+        newest: false,
+        bullets: [
+          "The Grimoire's Standard tab always shows the clean relic. Corrupted variants stay in the Corrupted tab, even if that's the copy you're brewing with."
+        ]
+      },
+      {
+        version: "Dev Test v0.17",
+        newest: false,
+        bullets: [
+          "Holding the cauldron now stirs on its own once you unlock Continuous Stirring in the Sanctum — no extra clicker required.",
+          "The Grimoire splits into Standard and Corrupted catalogues, and keys 1, 2, and 3 toss Stir Frenzy, Time Freeze, and Golden Droplet."
+        ]
+      },
+      {
+        version: "Dev Test v0.16.1",
+        newest: false,
+        bullets: [
+          "Relic icons now glow in their synergy color — fire, frost, arcane, chaos, or midas — on the rail, in the shop, and in the Grimoire."
+        ]
+      },
+      {
+        version: "Dev Test v0.16",
+        newest: false,
+        bullets: [
+          "Three new Fire relics join the pedestal: Combustion Bellows builds Heat from a rapid stirring streak, Cinderbrand Crucible can ignite the brew to keep ticking, and Magma Geode erupts when you cross half the quota."
+        ]
+      },
+      {
+        version: "Dev Test v0.15.4",
+        newest: false,
+        bullets: [
+          "Rank 1 relic frames are a softer brown-bronze now, so they read less like cheap gold."
+        ]
+      },
+      {
+        version: "Dev Test v0.15.3",
+        newest: false,
+        bullets: [
+          "Silver and gold relic frames now actually pulse and twinkle instead of sitting still."
+        ]
+      },
+      {
+        version: "Dev Test v0.15.2",
+        newest: false,
+        bullets: [
+          "Silver and gold relic frames now pulse with a soft glow and tiny sparkles so upgraded ranks stand out from bronze."
+        ]
+      },
+      {
+        version: "Dev Test v0.15.1",
+        newest: false,
+        bullets: [
+          "Relic icons now wear a metal frame instead of a number badge: bronze at rank 1, silver at rank 2, and gold at rank 3."
+        ]
+      },
+      {
+        version: "Dev Test v0.15.0",
+        newest: false,
+        bullets: [
+          "Boiling over now yields Mana Shards you can spend in the Alchemical Sanctum on permanent talents that last between brews.",
+          "Sanctum talents stretch every deadline, start you with extra Gold, add innate Critical Surges, deepen the cauldron's brew power, or unlock a fifth Relic Pedestal slot.",
+          "Rarer relics and charms stay locked until you hit career milestones — the Grimoire shows a padlock and tells you what to chase."
+        ]
+      },
+      {
+        version: "Dev Test v0.14.1",
+        newest: false,
+        bullets: [
+          "Spending your last Gold on Ingredient Charms now greys out shop relics you can no longer afford.",
+          "The dark puddle of shadow under the cauldron is gone, and tap bubbles are a little more see-through."
+        ]
+      },
+      {
+        version: "Dev Test v0.14.0",
+        newest: false,
+        bullets: [
+          "Any shop relic can now arrive Corrupted — swollen blessings with a crimson curse. Clean relics keep their upside; the old dedicated cursed relics are gone."
+        ]
+      },
+      {
+        version: "Dev Test v0.13.1",
+        newest: false,
+        bullets: [
+          "Wide screens now stretch the brewing table, with a larger cauldron and a roomier relic rail along the right edge."
+        ]
+      },
+      {
+        version: "Dev Test v0.13.0",
+        newest: false,
+        bullets: [
+          "A cozy 16-bit apothecary theme now hums in the background, and Pause Settings lets you fade Music and SFX separately."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.6",
+        newest: false,
+        bullets: [
+          "The first few orders now pay out more Gold, so a normal opening brew is enough to pick up a relic from the shop."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.5",
+        newest: false,
+        bullets: [
+          "Each shop card can only be bought once per visit — reroll or finish another order if you want to upgrade that relic again."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.4",
+        newest: false,
+        bullets: [
+          "Golden Tithe and Familiar's Whisk no longer snowball off each other — unspent Gold still boosts you, but it can't explode your passive brew."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.3",
+        newest: false,
+        bullets: [
+          "Hitting the Mana quota now washes a pulsing violet glow off the bar and onto the HUD around it."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.2",
+        newest: false,
+        bullets: [
+          "The Mana Essence bar is a deeper purple, and hitting quota makes it pulse with a violet glow instead of turning gold."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.1",
+        newest: false,
+        bullets: [
+          "Your relics now sit in a larger vertical rail on the right of the brewing stage, with clearer icons and level badges in the corner."
+        ]
+      },
+      {
+        version: "Dev Test v0.12.0",
+        newest: false,
+        bullets: [
+          "Relics can now be upgraded to Level 3 — the shop shows four offers, including upgrades for relics you already own.",
+          "Higher levels grow that relic's bonuses and timings, and a ★ level badge marks each one on your tray, in pause, and in the shop."
+        ]
+      },
+      {
+        version: "Dev Test v0.11.0",
+        newest: false,
+        bullets: [
+          "Phoenix Down now Cheats Death: if an order boils over without the quota, the relic burns itself to give you +6 seconds and a burst of flame.",
+          "Ashen Sigil is now the Fire relic for raw tap power, granting +25% Click Power.",
+          "The Cursed Midas Coin no longer does nothing when you're broke — every 10th tap tosses you +2 Gold, but your in-round upgrades cost 25% more Mana."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.14",
+        newest: false,
+        bullets: [
+          "The Order Deadline bar now turns icy whenever the clock is frozen, and the Time Freeze charm only pulses when you actually use it — Frost relics no longer light it up."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.13",
+        newest: false,
+        bullets: [
+          "Winter's Grasp no longer locks the deadline forever when you tap very quickly — each Critical Surge still chills the clock, but rapid crits can't keep it frozen."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.12",
+        newest: false,
+        bullets: [
+          "A leftover patch of background in the cauldron's handle is gone."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.11",
+        newest: false,
+        bullets: [
+          "The cauldron now shows its latest pot art, so a leftover older cauldron no longer sits in front of the brew."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.10",
+        newest: false,
+        bullets: [
+          "The brew now sits inside the cauldron's rim instead of showing through the handle rings, and sparks rise from that same opening."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.9",
+        newest: false,
+        bullets: [
+          "The cauldron is larger on the brewing stage, and the colored glow behind the pot is gone."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.8",
+        newest: false,
+        bullets: [
+          "The cauldron and its glow are larger and more prominent on the brewing stage."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.7",
+        newest: false,
+        bullets: [
+          "The cauldron art is recut, and the brew, sparks, and glow now sit cleanly in the pot's new rim and opening."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.6",
+        newest: false,
+        bullets: [
+          "The glow now rings the cauldron instead of shining through the pot, and the black silhouette under the sprite is gone."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.5",
+        newest: false,
+        bullets: [
+          "The glow behind the cauldron no longer seeps through the rim, clawed feet, or ring hooks."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.4",
+        newest: false,
+        bullets: [
+          "The glow behind the cauldron no longer bleeds through the pot's rim, clawed feet, or side rings."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.3",
+        newest: false,
+        bullets: [
+          "Version History now folds each build into a clickable tab — only the newest notes are open when you first look."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.2",
+        newest: false,
+        bullets: [
+          "The Grimoire button now uses its own leather-bound book art, and it lifts with a gold shimmer when you hover it.",
+          "On a wide screen, the brew stage stretches out, and the Shop, Grimoire, and Pause menus open as broad panels with relics in columns."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.1",
+        newest: false,
+        bullets: [
+          "The Alchemical Grimoire button now shows an open book so it is easy to spot next to Pause."
+        ]
+      },
+      {
+        version: "Dev Test v0.10.0",
+        newest: false,
+        bullets: [
+          "Open the Alchemical Grimoire from the top bar to browse every relic you've discovered — unknown ones stay locked until you buy them.",
+          "Glacial Core now unleashes Frostbite Surge, freezing the deadline for 2 seconds each time you cross 25%, 50%, and 75% of an order's quota.",
+          "Inspection cards now fade away when you move the cursor off a relic, synergy badge, or charm.",
+          "The cauldron's glow stays put when you tap, and no longer stains the pot's feet or side rings."
+        ]
+      },
+      {
+        version: "Dev Test v0.9.0",
+        newest: false,
+        bullets: [
+          "A new Midas synergy tag joins the brew: two matching relics grant Midas Touch, and four grant Golden Tithe.",
+          "Four new relics arrive — Hoarder's Scale, Alchemist's Pawn Ticket, Gilded Ledger, and the cursed Cursed Midas Coin."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.7",
+        newest: false,
+        bullets: [
+          "Hovering relics and charms no longer stacks a second, native browser tooltip on top of the in-game inspection card.",
+          "Background sparkles are now glowing four-point stars that twinkle as they drift up the night sky."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.6",
+        newest: false,
+        bullets: [
+          "Tap bubbles and relic sparks now rise out of the brew itself instead of popping in well above the cauldron's rim."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.5",
+        newest: false,
+        bullets: [
+          "Bubbles, sparks, and floating numbers now rise cleanly above the cauldron instead of getting cut off at the pot's edge."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.4",
+        newest: false,
+        bullets: [
+          "Tightened the glow so it hugs the cauldron instead of washing out the whole brewing stage."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.3",
+        newest: false,
+        bullets: [
+          "Removed the Familiar's Whisk companion cat from the brewing stage — the relic still grants its bonus, just without the extra sprite beside the pot.",
+          "Softened the glow behind the cauldron so it fades cleanly into the background instead of clipping against the edges of the stage.",
+          "Locked the HUD so Stirring Power, Enchanted Bubblers, and Ingredient Charms stay flush at the bottom of the screen without pushing the brew off-screen or adding a scrollbar."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.2",
+        newest: false,
+        bullets: [
+          "Brewing effects (swirls, smoke, sparkles) now rise directly out of the bubbling liquid instead of the middle of the pot, and tap bubbles always pop up from the brew's surface.",
+          "Removed a stray floating highlight that was glitching above the cauldron's rim.",
+          "The glow behind the cauldron is now a soft ambient wash instead of a visible circular spotlight.",
+          "Redrew the Familiar's Whisk companion as a crisp pixel-art black cat with pointed ears, a curling tail, a gold collar charm, and glowing amber eyes — and fixed its tail occasionally vanishing mid-sway."
+        ]
+      },
+      {
+        version: "Dev Test v0.8.1",
+        newest: false,
+        bullets: [
+          "Smoothed out the glow behind the cauldron — it now dissolves softly into the background instead of showing a hard circular edge.",
+          "Gave the Familiar's Whisk cat a full redesign: pointed ears with inner highlights, glowing golden almond eyes, a curling swaying tail, and a tiny glinting collar charm.",
+          "Sharpened the look of Arcane Swirls, Smoke Wisps, Bubble Clusters, and Stardust so each brewing effect twinkles and drifts more distinctly."
+        ]
+      },
+      {
+        version: "Dev Test v0.8",
+        newest: false,
+        bullets: [
+          "Overhauled the cauldron's backdrop glow into a richer, layered aura with real depth — and it now dynamically blends its color toward whichever Synergy Tags your owned Relics lean into.",
+          "Added crisp rim-shine and rivet-stud highlights to the cauldron, plus a grounding shadow beneath its feet for a more polished, high-definition pixel-art look.",
+          "Reworked relic ambient effects into four clearly distinct families — spinning Arcane Swirls, curling Smoke Wisps, clustered Bubble bursts (tied to your Enchanted Bubblers), and twinkling Stardust glints.",
+          "The Familiar's Whisk companion cat is now a fully independent black cat with its own idle animation (breathing, blinking amber eyes, swaying tail) that no longer flinches or squishes when you tap the cauldron.",
+          "Relic Pedestal cards in the shop are now fully self-contained — each card shows its own Synergy Tier progress directly in the card, so there's no popup to tap through anymore.",
+          "Ingredient Charm tooltips on the Alchemist's Supply Shelf now open above the item so they never cover the Buy or Reroll buttons."
+        ]
+      },
+      {
+        version: "Dev Test v0.7",
+        newest: false,
+        bullets: [
+          "Rebalanced late-game Gold payouts — earning huge Gold windfalls by Order 8+ and buying out the entire shop in one visit is now much harder. Early orders are unaffected.",
+          "Redesigned the Apothecary Shop into two tiers: a \"Relic Pedestal\" for your 3 randomized Relic choices, and a compact \"Alchemist's Supply Shelf\" for Ingredient Charms.",
+          "Added a persistent Gold counter at the top of the shop so your balance is always visible while browsing.",
+          "Relics and Ingredient Charms can now be tapped or hovered — both in the shop and on your HUD — to inspect their full description, tags, and exact synergy tier bonuses without buying or using them.",
+          "The Pause menu now shows a live readout of your active Synergies, Relics, and Ingredient Charms so you can study your build at your own pace, and its Pause/Play button icon now reflects the current state.",
+          "Renamed \"Resume Game\" to \"Resume Brewing\" and made sure every ambient particle and animation truly freezes solid while paused."
+        ]
+      },
+      {
+        version: "Dev Test v0.6.5",
+        newest: false,
+        bullets: [
+          "Smoothed the Order 4-6 difficulty spike — quotas still climb fast, but no longer hit a sudden brick wall right when players have the least upgrades.",
+          "Click power upgrades get a little cheaper to purchase repeatedly, so active clicking keeps pace with rising quotas.",
+          "Increased Gold earned from completed orders so early runs can afford enough upgrades heading into the tougher Order 5-6 brews.",
+          "Round timers are unchanged — the pacing is still just as fast and snappy."
+        ]
+      },
+      {
+        version: "Dev Test v0.6.4",
+        newest: false,
+        bullets: [
+          "Fixed missing cauldron particle effects for most relics — ambient effects were only wired to 5 specific relics, so any other Fire/Frost/Arcane/Chaos relic (Ashen Sigil, Phoenix Down, Arcane Conduit, Winter's Grasp, Glacial Core, Cursed Ember, Unstable Brew, Familiar's Whisk, Philosopher's Crucible, Alchemist's Starter) showed nothing.",
+          "Ambient effects are now driven by a relic's Synergy Tag, so every relic in the game reliably shows a themed effect around the cauldron.",
+          "Added a new glowing violet orb + twinkle effect for Arcane relics."
+        ]
+      },
+      {
+        version: "Dev Test v0.6.3",
+        newest: false,
+        bullets: [
+          "Shop upgrade buttons, relic \"Buy\" buttons, and every pause menu button now share the same satisfying hover glow and click-press feedback as the Ingredient Charms.",
+          "Relic ambient particle effects reworked — flames, frost, sparks, shimmer, and rainbow effects now render as proper bubbles, curling swirls, and drifting smoke wisps instead of flat colored squares.",
+          "Added a smoky wisp effect that lingers above the cauldron while brewing with the Dragonfire Pepper relic."
+        ]
+      },
+      {
+        version: "Dev Test v0.6.2",
+        newest: false,
+        bullets: [
+          "Fixed unresponsive Ingredient Charm buttons (Stir Frenzy, Time Freeze, Golden Droplet) — they were being fully rebuilt every animation frame, which destroyed the button under the player's tap before the click could register.",
+          "Charm buttons are now built once and updated in place, keeping their event listeners intact.",
+          "Added a glowing pulse + live countdown on charm buttons while their buff is active, plus clearer hover/press feedback.",
+          "Badge overlays (count, buff timer) no longer intercept clicks meant for the button underneath."
+        ]
+      },
+      {
+        version: "Dev Test v0.6.1",
+        newest: false,
+        bullets: [
+          "Replaced every raw Unicode emoji with unified, retro-styled inline SVG pixel icons for consistent visuals across iOS, Android, Windows, and macOS.",
+          "Added a shared icon sprite and helper covering currency, synergy tags, relic/consumable art, and pause menu indicators.",
+          "Icons now tint to match their theme (gold coin, icy frost, fiery ember, arcane violet, chaos crimson)."
+        ]
+      },
+      {
+        version: "Dev Test v0.6",
+        newest: false,
+        bullets: [
+          "Implemented persistent Save &amp; Load system via browser localStorage (apothecary_save_v1).",
+          "Auto-saves state on completed orders, shop transactions, upgrade purchases, and every 10s.",
+          "Restores gold, mana, order level, upgrades, relics, synergies, and charms upon page reload.",
+          "Added \"Reset Progress / New Run\" option in Pause Settings menu with confirmation prompt."
+        ]
+      },
+      {
+        version: "Dev Test v0.5",
+        newest: false,
+        bullets: [
+          "Rendering performance optimizations specifically tuned for Firefox / Gecko layout engines.",
+          "Applied strict CSS containment (contain: layout paint style) and pointer-events isolation on particle containers.",
+          "Upgraded particle animations to hardware-accelerated 3D transforms (translate3d) with will-change hints.",
+          "Removed expensive paint filters (box-shadows and drop-shadows) from dynamically spawned particles.",
+          "Throttled tap particle spawning to a single lightweight burst bubble per click."
+        ]
+      },
+      {
+        version: "Dev Test v0.4",
+        newest: false,
+        bullets: [
+          "Overhauled Synergy Tags with fixed Set Tier milestones: <svg class=\"icon ic-fire\"><use href=\"#icon-fire\"></use></svg> Fire (2: +30% Click Power, 4: Overheat Surge), <svg class=\"icon ic-frost\"><use href=\"#icon-frost\"></use></svg> Frost (2: +3s Deadline, 4: Chill State), <svg class=\"icon ic-arcane\"><use href=\"#icon-arcane\"></use></svg> Arcane (2: +25% Passive Mana/sec, 4: Transmutation +50% surplus Gold).",
+          "Added 5 new relics (Ashen Sigil, Phoenix Down, Glacial Core, Winter's Grasp, Arcane Conduit) so every tiered tag can reach its 4-piece milestone.",
+          "Synergy badges on the top bar and shop are now interactive — tap or hover to see a retro tooltip with active tiers and the next threshold.",
+          "Boosted synergy badges now glow with a pulsing amber border once a tier is unlocked.",
+          "Shop relic cards now show a hint when purchasing will activate or upgrade a Synergy Tier."
+        ]
+      },
+      {
+        version: "Dev Test v0.3",
+        newest: false,
+        bullets: [
+          "Added consumable Ingredient Charms (Stir Frenzy, Time Freeze, Golden Droplet) — one-time boosts usable mid-shift.",
+          "Introduced Corrupted Relics (Cursed Ember, Unstable Brew) — massive power with dangerous drawbacks.",
+          "Added Synergy Tags (<svg class=\"icon ic-fire\"><use href=\"#icon-fire\"></use></svg> Fire, <svg class=\"icon ic-frost\"><use href=\"#icon-frost\"></use></svg> Frost, <svg class=\"icon ic-arcane\"><use href=\"#icon-arcane\"></use></svg> Arcane, <svg class=\"icon ic-chaos\"><use href=\"#icon-chaos\"></use></svg> Chaos) — collecting multiple relics of the same tag multiplies their passives.",
+          "Expanded the Apothecary Shop with a dedicated Ingredients section and a live Synergy tracker."
+        ]
+      },
+      {
+        version: "Dev Test v0.2",
+        newest: false,
+        bullets: [
+          "Increased font sizes across relic cards, upgrades, and descriptions for desktop readability.",
+          "Overhauled Order Deadline bar with pure crimson gradients and smooth liquid wave shimmer.",
+          "Refined pause menu with dedicated version history drawer and build badge."
+        ]
+      },
+      {
+        version: "Dev Test v0.1",
+        newest: false,
+        bullets: [
+          "Rebalanced gold economy and quota exponential scaling.",
+          "Upgraded cauldron visuals to transparent pixel art.",
+          "Liquid-style animated UI meters for Mana and Deadline.",
+          "Bubble-based tap particle effects.",
+          "Added pause menu, settings, and changelog system."
+        ]
+      }
+    ]
   };
 
   /* =========================================================
@@ -8674,6 +8793,51 @@
     if(header) header.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
+  function bindChangelogAccordion(header){
+    if(!header) return;
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+    const entry = header.closest('.changelog-entry');
+    header.setAttribute('aria-expanded', entry && entry.classList.contains('open') ? 'true' : 'false');
+    header.addEventListener('click', function(){
+      const wrap = header.closest('.changelog-entry');
+      if(wrap) setChangelogEntryOpen(wrap, !wrap.classList.contains('open'));
+    });
+    header.addEventListener('keydown', function(e){
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      const wrap = header.closest('.changelog-entry');
+      if(wrap) setChangelogEntryOpen(wrap, !wrap.classList.contains('open'));
+    });
+  }
+
+  function renderChangelog(era){
+    const key = era === 'devtest' ? 'devtest' : 'prealpha';
+    const container = document.getElementById(key === 'devtest' ? 'changelogEraDevtest' : 'changelogEraPrealpha');
+    if(!container) return;
+    const entries = CHANGELOG_DATA[key] || [];
+    container.innerHTML = '';
+    entries.forEach(function(item){
+      const wrap = document.createElement('div');
+      wrap.className = item.newest ? 'changelog-entry open' : 'changelog-entry';
+      const header = document.createElement('button');
+      header.type = 'button';
+      header.className = 'changelog-ver';
+      header.innerHTML = '<svg class="icon ic-amber"><use href="#icon-sparkle"></use></svg> ' + String(item.version || '');
+      const list = document.createElement('ul');
+      list.className = 'changelog-list';
+      (item.bullets || []).forEach(function(note){
+        const li = document.createElement('li');
+        li.innerHTML = note;
+        list.appendChild(li);
+      });
+      wrap.appendChild(header);
+      wrap.appendChild(list);
+      container.appendChild(wrap);
+      bindChangelogAccordion(header);
+    });
+  }
+
   function setChangelogEra(era){
     if(!changelogSubpanel) return;
     changelogSubpanel.querySelectorAll('.changelog-era-tab').forEach(tab => {
@@ -8684,9 +8848,7 @@
     changelogSubpanel.querySelectorAll('.changelog-era').forEach(panel => {
       panel.classList.toggle('hidden', panel.getAttribute('data-era') !== era);
     });
-    changelogSubpanel.querySelectorAll('.changelog-entry').forEach(entry => setChangelogEntryOpen(entry, false));
-    const first = changelogSubpanel.querySelector('.changelog-era[data-era="' + era + '"] .changelog-entry');
-    setChangelogEntryOpen(first, true);
+    renderChangelog(era);
   }
 
   function resetChangelogAccordion(){
@@ -8697,6 +8859,7 @@
     const willShow = changelogSubpanel.classList.contains('hidden');
     if(willShow){
       resetChangelogAccordion();
+      renderChangelog('prealpha');
       changelogSubpanel.classList.remove('hidden');
       settingsSubpanel.classList.add('hidden');
       changelogBtn.classList.add('active');
@@ -9099,25 +9262,7 @@
       const eraTab = e.target.closest('.changelog-era-tab');
       if(eraTab && changelogSubpanel.contains(eraTab)){
         setChangelogEra(eraTab.getAttribute('data-era'));
-        return;
       }
-      const header = e.target.closest('.changelog-ver');
-      if(!header || !changelogSubpanel.contains(header)) return;
-      const entry = header.closest('.changelog-entry');
-      if(entry) setChangelogEntryOpen(entry, !entry.classList.contains('open'));
-    });
-    changelogSubpanel.addEventListener('keydown', (e) => {
-      if(e.key !== 'Enter' && e.key !== ' ') return;
-      const header = e.target.closest('.changelog-ver');
-      if(!header) return;
-      e.preventDefault();
-      const entry = header.closest('.changelog-entry');
-      if(entry) setChangelogEntryOpen(entry, !entry.classList.contains('open'));
-    });
-    changelogSubpanel.querySelectorAll('.changelog-ver').forEach(header => {
-      header.setAttribute('role', 'button');
-      header.setAttribute('tabindex', '0');
-      header.setAttribute('aria-expanded', header.closest('.changelog-entry').classList.contains('open') ? 'true' : 'false');
     });
   }
   closeSettingsBtn.addEventListener('click', () => {
